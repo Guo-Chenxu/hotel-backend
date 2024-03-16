@@ -35,6 +35,7 @@ public class TimerController {
     @ApiOperation("获取时间, 建立连接后不断, 使用sse每100ms向前端推一次当前时间")
     @GetMapping("/now")
     public void getTime(HttpServletResponse response) throws IOException, InterruptedException {
+        response.setContentType("text/event-stream;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         while (true) {
             writer.write("data: " + timerService.getTime() + "\n\n");
