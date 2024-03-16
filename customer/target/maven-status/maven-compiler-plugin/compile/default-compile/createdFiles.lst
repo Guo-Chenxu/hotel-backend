@@ -1,0 +1,7 @@
+com\hotel\customer\CustomerApplication.class
+com\hotel\customer\controller\TestController.class
+com\hotel\customer\config\RedisConfig.class
+com\hotel\customer\config\SwaggerConfig.class
+com\hotel\customer\config\MybatisPlusConfig.class
+com\hotel\customer\config\MPDateConfig.class
+com\hotel\customer\config\SaTokenConfig.class
