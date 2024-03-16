@@ -40,7 +40,7 @@ public class TimerController {
         while (true) {
             writer.write("data: " + timerService.getTime() + "\n\n");
             writer.flush();
-            Thread.sleep(50);
+            Thread.sleep(1000);
         }
     }
 }

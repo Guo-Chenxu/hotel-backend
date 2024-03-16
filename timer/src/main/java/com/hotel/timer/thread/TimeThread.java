@@ -12,7 +12,7 @@ public class TimeThread extends Thread {
 
     Date now;
 
-    // 1秒对应speed毫秒
+    // 1秒对应speed秒
     long speed;
 
     private TimeThread() {
@@ -49,13 +49,13 @@ public class TimeThread extends Thread {
     @Override
     public void run() {
         while (!stopped) {
-            //每过50ms跳动一下时间
+            //每过1s跳动一下时间
             try {
-                Thread.sleep(50);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            now = new Date(now.getTime() + speed);
+            now = new Date(now.getTime() + speed * 1000);
         }
     }
 }
