@@ -1,28 +1,19 @@
 package com.hotel.server.config;
 
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.json.JSONUtil;
-import com.hotel.common.exception.VisitLimitException;
+import cn.dev33.satoken.exception.NotPermissionException;
+import cn.dev33.satoken.stp.StpUtil;
 import com.hotel.server.annotation.CheckPermission;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 接口限流aop实现类
@@ -41,8 +32,8 @@ public class CheckPermissionAopConfig {
     @Resource
     private RedisTemplate redisTemplate;
 
-    @Value("${sa-token.token-name}")
-    private String tokenName;
+//    @Resource
+//   private UserService userService;
 
     @Before("@annotation(com.hotel.server.annotation.CheckPermission)")
     public void checkBefore(JoinPoint jp) throws Throwable {
@@ -50,31 +41,25 @@ public class CheckPermissionAopConfig {
         MethodSignature ms = (MethodSignature) jp.getSignature();
         Method method = targetCls.getDeclaredMethod(ms.getName(), ms.getParameterTypes());
         CheckPermission checkPermission = method.getAnnotation(CheckPermission.class);
-        long expireSeconds = (long) (1000.0 / checkPermission.value());
-
-        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = requestAttributes.getRequest();
-        String token = request.getHeader(tokenName);
-
-        String methodName = ms.getName();
-        Map<String, Object> paramMap = getNameAndValue(jp);
-        String paramMd5Sign = SecureUtil.md5(JSONUtil.toJsonStr(paramMap));
-
-        String limitKey = String.format("visit_limit_%s_%s_%s", token, methodName, paramMd5Sign);
-        boolean getLock = redisTemplate.opsForValue().setIfAbsent(limitKey, "1", expireSeconds, TimeUnit.MILLISECONDS);
-        if (!getLock) {
-            log.error("visit limit: token: {}, methodName:{}", token, methodName);
-            throw new VisitLimitException("访问过于频繁，请稍后再试");
+        String[] needPermissions = checkPermission.value();
+        if (needPermissions == null || needPermissions.length == 0) {
+            return;
         }
-    }
 
-    Map<String, Object> getNameAndValue(JoinPoint joinPoint) {
-        Map<String, Object> param = new HashMap<>();
-        Object[] paramValues = joinPoint.getArgs();
-        String[] paramNames = ((CodeSignature) joinPoint.getSignature()).getParameterNames();
-        for (int i = 0; i < paramNames.length; ++i) {
-            param.put(paramNames[i], paramValues[i]);
+        long id = StpUtil.getLoginIdAsLong();
+        String userPermission = "1,2"; // todo 先查缓存再查数据库
+        String[] hasPermissions = userPermission.split(",");
+
+        for (String need : needPermissions) {
+            for (String has : hasPermissions) {
+                if (need.equals(has)) {
+                    log.info("user: {}, 权限 {} 校验通过", id, need);
+                    return;
+                }
+            }
         }
-        return param;
+
+        log.error("user: {}, 权限校验失败: {}", id, needPermissions);
+        throw new NotPermissionException("权限校验失败, 用户没有权限访问");
     }
 }

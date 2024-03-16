@@ -4,9 +4,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
 /**
- * 接口限流
+ * 接口权限校验
  *
  * @author: 郭晨旭
  * @create: 2024-01-26 00:40
@@ -17,7 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface CheckPermission {
     /**
-     * 指定方法一秒内只能访问限定次数, 默认3次
+     * 访问接口需要的权限
      */
-    double value() default 3;
+    String[] value();
 }
