@@ -1,7 +1,0 @@
-com\hotel\timer\config\RedisConfig.class
-com\hotel\timer\config\SwaggerConfig.class
-com\hotel\timer\TimerApplication.class
-com\hotel\timer\config\MybatisPlusConfig.class
-com\hotel\timer\config\LogAopConfig.class
-com\hotel\timer\config\MPDateConfig.class
-com\hotel\timer\config\SaTokenConfig.class

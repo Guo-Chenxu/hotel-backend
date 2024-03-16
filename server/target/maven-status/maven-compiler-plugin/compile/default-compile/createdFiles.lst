@@ -1,7 +1,0 @@
-com\hotel\server\config\LogAopConfig.class
-com\hotel\server\config\SwaggerConfig.class
-com\hotel\server\config\SaTokenConfig.class
-com\hotel\server\ServerApplication.class
-com\hotel\server\config\MybatisPlusConfig.class
-com\hotel\server\config\RedisConfig.class
-com\hotel\server\config\MPDateConfig.class
