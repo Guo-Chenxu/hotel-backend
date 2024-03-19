@@ -47,7 +47,7 @@ public class CheckPermissionAopConfig {
         }
 
         long id = StpUtil.getLoginIdAsLong();
-        String userPermission = "1,2"; // todo 先查缓存再查数据库
+        String userPermission = "1,2,3,4,5,6"; // todo 先查缓存再查数据库
         String[] hasPermissions = userPermission.split(",");
 
         for (String need : needPermissions) {
