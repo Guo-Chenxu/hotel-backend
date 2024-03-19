@@ -11,7 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableDubbo
+@EnableDubbo(scanBasePackages = {"com.hotel.timer.serviceImpl"})
 @EnableAsync
 @EnableScheduling
 @Slf4j

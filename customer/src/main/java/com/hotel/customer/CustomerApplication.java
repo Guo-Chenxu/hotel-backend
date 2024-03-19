@@ -12,7 +12,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableDubbo
+@EnableDubbo(scanBasePackages = {"com.hotel.customer.serviceImpl"})
 @EnableMongoAuditing
 @EnableAsync
 @EnableScheduling

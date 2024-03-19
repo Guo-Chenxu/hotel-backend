@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableDubbo
+@EnableDubbo(scanBasePackages = {"com.hotel.server.serviceImpl"})
 @EnableMongoAuditing
 @EnableAsync
 @EnableScheduling

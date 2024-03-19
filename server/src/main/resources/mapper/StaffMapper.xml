@@ -4,31 +4,13 @@
 
     <resultMap type="com.hotel.common.entity.Staff" id="StaffMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="createat" column="createAt" jdbcType="TIMESTAMP"/>
+        <result property="createAt" column="create_at" jdbcType="TIMESTAMP"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="permission" column="permission" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <!-- 批量插入 -->
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into hotel.staff(createAtusernamepasswordpermission)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.createat}#{entity.username}#{entity.password}#{entity.permission})
-        </foreach>
-    </insert>
-    <!-- 批量插入或按主键更新 -->
-    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into hotel.staff(createAtusernamepasswordpermission)
-        values
-        <foreach collection="entities" item="entity" separator=",">
-            (#{entity.createat}#{entity.username}#{entity.password}#{entity.permission})
-        </foreach>
-        on duplicate key update
-        createAt = values(createAt) username = values(username) password = values(password) permission =
-        values(permission)
-    </insert>
+
 
 </mapper>
 
