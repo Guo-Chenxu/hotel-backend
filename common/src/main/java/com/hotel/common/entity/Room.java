@@ -34,25 +34,22 @@ public class Room implements Serializable {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 房型
-     */
 
-    private String type;
     /**
      * 价格/晚
      */
 
     private String price;
-    /**
-     * 状态 0-空 1-有人
-     */
-
-    private Boolean status;
 
     /**
      * 房间当前温度
      */
     private Double temperature;
+
+
+    /**
+     * 软删除
+     */
+    private Boolean deleted;
 }
 

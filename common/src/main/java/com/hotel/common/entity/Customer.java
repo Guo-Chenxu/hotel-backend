@@ -54,5 +54,10 @@ public class Customer implements Serializable {
 
     private Date leaveTime;
 
+    /**
+     * 软删除
+     */
+    private Boolean deleted;
+
 }
 

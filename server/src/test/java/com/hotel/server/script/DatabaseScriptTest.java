@@ -25,32 +25,6 @@ public class DatabaseScriptTest {
     @DubboReference
     private RoomService roomService;
 
-    @Test
-    public void initInsert() {
-        int pre = 1000;
-        for (int i = 1; i <= 40; i++) {
-            if (i % 10 == 0) {
-                pre += 100;
-            }
-            Room one = Room.builder().price("150").status(false).temperature(27.0).build();
-            roomService.save(one);
-        }
-        for (int i = 1; i <= 40; i++) {
-            if (i % 10 == 0) {
-                pre += 100;
-            }
-            Room standard = Room.builder().price("200").status(false).temperature(27.0).build();
-            roomService.save(standard);
-        }
-        for (int i = 1; i <= 20; i++) {
-            if (i % 10 == 0) {
-                pre += 100;
-            }
-            Room suite = Room.builder().price("500").status(false).temperature(27.0).build();
-            roomService.save(suite);
-        }
-    }
-
     @DubboReference
     private StaffService staffService;
 

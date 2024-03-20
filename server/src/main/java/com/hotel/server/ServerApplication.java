@@ -26,10 +26,4 @@ public class ServerApplication {
         SpringApplication.run(ServerApplication.class, args);
     }
 
-    @PostConstruct
-    public void init() {
-        log.info("数据初始化中...");
-        // todo 初始化后将所有房间数据都从数据库拿到redis中, 房间状态的修改查询均操作redis, 定期从redis同步数据到数据库中
-        log.info("所有房间数据已初始化到redis中");
-    }
 }

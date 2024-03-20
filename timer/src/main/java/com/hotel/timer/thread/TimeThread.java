@@ -56,6 +56,7 @@ public class TimeThread extends Thread {
                 throw new RuntimeException(e);
             }
             now = new Date(now.getTime() + speed * 1000);
+            // todo 异步调用 每日12点定时清理离店的房屋
         }
     }
 }

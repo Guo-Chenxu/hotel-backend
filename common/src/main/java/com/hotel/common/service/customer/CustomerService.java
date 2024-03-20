@@ -1,7 +1,8 @@
 package com.hotel.common.service.customer;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hotel.customer.entity.Customer;
+import com.hotel.common.dto.response.CustomerLoginResp;
+import com.hotel.common.entity.Customer;
 
 /**
  * 顾客表(Customer)表服务接口
@@ -12,5 +13,9 @@ import com.hotel.customer.entity.Customer;
  */
 public interface CustomerService extends IService<Customer> {
 
+    /**
+     * 顾客登录
+     */
+    CustomerLoginResp login(String name, long room);
 }
 

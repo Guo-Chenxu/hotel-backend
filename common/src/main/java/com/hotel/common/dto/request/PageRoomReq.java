@@ -31,12 +31,6 @@ public class PageRoomReq implements Serializable {
     @ApiModelProperty("每页大小")
     private Integer pageSize;
 
-    @ApiModelProperty("房型")
-    private String type;
-
-    @ApiModelProperty("房间状态")
-    private Boolean status;
-
     @ApiModelProperty("房间号")
     private Integer roomNo;
 }

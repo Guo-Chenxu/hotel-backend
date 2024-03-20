@@ -28,6 +28,11 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Resource
     private RoomMapper roomMapper;
 
-
+    @Override
+    public Page<Room> conditionPage(PageRoomReq pageRoomReq) {
+        return roomMapper.selectPage(new Page<Room>(pageRoomReq.getPage(), pageRoomReq.getPageSize()),
+                new LambdaQueryWrapper<Room>()
+                        .eq(pageRoomReq.getRoomNo() != null, Room::getId, pageRoomReq.getRoomNo()));
+    }
 }
 

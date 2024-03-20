@@ -54,5 +54,9 @@ public class Staff implements Serializable {
 
     private String permission;
 
+    /**
+     * 软删除
+     */
+    private Boolean deleted;
 }
 

@@ -33,5 +33,14 @@ public class RoomController {
     @DubboReference
     private RoomService roomService;
 
+    @PostMapping("/page")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("条件分页查询")
+    public R<Page<Room>> page(@RequestBody PageRoomReq pageRoomReq) {
+        Page<Room> roomPage = roomService.conditionPage(pageRoomReq);
+        return R.success(roomPage);
+    }
+
 }
 
