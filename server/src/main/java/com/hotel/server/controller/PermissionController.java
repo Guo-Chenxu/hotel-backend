@@ -41,7 +41,7 @@ public class PermissionController {
     @ApiOperation("列出所有权限")
     @SaCheckLogin
     @CheckPermission({Permission.ADMIN})
-    public R<List<ListPermissionResp>> list() {
+    public R<List<String>> list() {
         return R.success(permissionService.list());
     }
 }

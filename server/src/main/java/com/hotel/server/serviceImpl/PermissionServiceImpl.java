@@ -18,15 +18,14 @@ import java.util.List;
 @DubboService
 public class PermissionServiceImpl implements PermissionService {
     @Override
-    public List<ListPermissionResp> list() {
-        // 这里直接硬编码
+    public List<String> list() {
         return Arrays.asList(
-                ListPermissionResp.builder().name("管理员").code(Permission.ADMIN).build(),
-                ListPermissionResp.builder().name("前台").code(Permission.RECEPTION).build(),
-                ListPermissionResp.builder().name("餐饮").code(Permission.FOOD).build(),
-                ListPermissionResp.builder().name("保洁").code(Permission.CLEAN).build(),
-                ListPermissionResp.builder().name("纳凉").code(Permission.COOL).build(),
-                ListPermissionResp.builder().name("财务").code(Permission.FINICAL).build()
+                Permission.ADMIN,
+                Permission.RECEPTIONIST,
+                Permission.FOOD,
+                Permission.CLEANER,
+                Permission.COOL,
+                Permission.FINANCIAL
         );
     }
 }
