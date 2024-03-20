@@ -2,7 +2,6 @@ package com.hotel.server.script;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import com.hotel.common.constants.Permission;
-import com.hotel.common.constants.RoomType;
 import com.hotel.common.entity.Room;
 import com.hotel.common.entity.Staff;
 import com.hotel.common.service.server.RoomService;
@@ -33,24 +32,21 @@ public class DatabaseScriptTest {
             if (i % 10 == 0) {
                 pre += 100;
             }
-            Room one = Room.builder().price("150").type(RoomType.ONE).status(false)
-                    .no(pre + i % 10).temperature(27.0).build();
+            Room one = Room.builder().price("150").status(false).temperature(27.0).build();
             roomService.save(one);
         }
         for (int i = 1; i <= 40; i++) {
             if (i % 10 == 0) {
-                pre+=100;
+                pre += 100;
             }
-            Room standard = Room.builder().price("200").type(RoomType.STANDARD).status(false)
-                    .no(pre + i % 10).temperature(27.0).build();
+            Room standard = Room.builder().price("200").status(false).temperature(27.0).build();
             roomService.save(standard);
         }
         for (int i = 1; i <= 20; i++) {
             if (i % 10 == 0) {
-                pre+=100;
+                pre += 100;
             }
-            Room suite = Room.builder().price("500").type(RoomType.SUITE).status(false)
-                    .no(pre + i % 10).temperature(27.0).build();
+            Room suite = Room.builder().price("500").status(false).temperature(27.0).build();
             roomService.save(suite);
         }
     }

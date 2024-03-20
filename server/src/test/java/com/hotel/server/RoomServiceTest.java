@@ -1,12 +1,7 @@
 package com.hotel.server;
 
-import cn.hutool.crypto.digest.DigestUtil;
-import com.hotel.common.constants.Permission;
-import com.hotel.common.constants.RoomType;
 import com.hotel.common.entity.Room;
-import com.hotel.common.entity.Staff;
 import com.hotel.common.service.server.RoomService;
-import com.hotel.common.service.server.StaffService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.junit.jupiter.api.Test;
@@ -23,5 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Slf4j
 public class RoomServiceTest {
 
+    @DubboReference
+    private RoomService roomService;
 
+    @Test
+    public void testInsert() {
+        Room room = Room.builder().temperature(27.0).price("100").status(false).type("").build();
+        roomService.save(room);
+        log.info("插入结果：{}", room);
+    }
 }

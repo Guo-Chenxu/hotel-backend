@@ -3,6 +3,8 @@ package com.hotel.common.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,13 +31,9 @@ public class Room implements Serializable {
     /**
      * 主键id
      */
-    // todo 设成自增id
+    @TableId(type = IdType.AUTO)
     private Long id;
-    /**
-     * 房间号
-     */
-    // todo 删除字段
-    private Integer no;
+
     /**
      * 房型
      */

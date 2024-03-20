@@ -1,22 +1,22 @@
 package com.hotel.common.entity;
 
 
-import java.io.Serializable;
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Builder;
+
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
- * 酒店服务人员表(Staff)表实体类
+ * 顾客表(Customer)表实体类
  *
  * @author: guochenxu
- * @create: 2024-03-19 22:09:21
+ * @create: 2024-03-20 22:37:48
  * @version: 1.0
  */
 
@@ -24,7 +24,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Staff implements Serializable {
+public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,25 +34,25 @@ public class Staff implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     /**
-     * 创建日期
+     * 顾客名
      */
 
-    private Date createAt;
+    private String name;
     /**
-     * 用户名
+     * 房间号
      */
 
-    private String username;
+    private Long room;
     /**
-     * 员工密码
+     * 入住时间
      */
 
-    private String password;
+    private Date startTime;
     /**
-     * 权限
+     * 离店时间
      */
 
-    private String permission;
+    private Date leaveTime;
 
 }
 

@@ -13,10 +13,6 @@ import com.hotel.common.entity.Room;
  * @version: 1.0
  */
 public interface RoomService extends IService<Room> {
-    /**
-     * 分页查询
-     */
-    Page<Room> conditionPage(PageRoomReq pageRoomReq);
 
 //    Boolean bookRoom()
 }
