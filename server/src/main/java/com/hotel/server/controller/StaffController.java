@@ -45,6 +45,8 @@ public class StaffController {
         return R.success(staffService.login(username, password));
     }
 
-// todo @焦耳 增删删查
+// todo @焦耳 增删改查
+//    增改应该可以用同一个接口
+//  查包括查所有和根据权限查, 并且都是分页查询
 }
 
