@@ -2,7 +2,9 @@ package com.hotel.common.service.server;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
+import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 
 /**
@@ -18,6 +20,20 @@ public interface RoomService extends IService<Room> {
      * 分页查询
      */
     Page<Room> conditionPage(PageRoomReq pageRoomReq);
-//    Boolean bookRoom()
+
+    /**
+     * 订房
+     */
+    Boolean bookRoom(BookRoomReq bookRoomReq);
+
+    /**
+     * 查询房间详情
+     */
+    RoomInfoResp info(Long roomId);
+
+    /**
+     * 离店
+     */
+    Boolean leave(Long roomId, Long customerId);
 }
 

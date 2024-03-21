@@ -5,7 +5,9 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
+import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
+import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.RoomService;
 import com.hotel.server.annotation.CheckPermission;
@@ -42,5 +44,39 @@ public class RoomController {
         return R.success(roomPage);
     }
 
+    @PostMapping("/book")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("订房")
+    public R book(@RequestBody BookRoomReq bookRoomReq) {
+        return roomService.bookRoom(bookRoomReq)
+                ? R.success()
+                : R.error();
+    }
+
+    @GetMapping("/info/{roomId}")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("房间详情")
+    public R<RoomInfoResp> info(@PathVariable("roomId") String roomId) {
+        RoomInfoResp info = roomService.info(Long.parseLong(roomId));
+        return info != null
+                ? R.success(info)
+                : R.error("没有查询到该房间信息");
+    }
+
+    @PostMapping("/leave")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("离店, 返回账单")
+    public R leave(@RequestParam("roomId") String roomId, @RequestParam("customerId") String customerId) {
+        Boolean leave = roomService.leave(Long.parseLong(roomId), Long.parseLong(customerId));
+        if (!leave) {
+            return R.error();
+        }
+
+        // todo 调用详单接口, 返回用户账单
+        return null;
+    }
 }
 

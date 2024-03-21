@@ -1,5 +1,7 @@
 package com.hotel.server.annotation;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@SaCheckLogin
 public @interface CheckPermission {
     /**
      * 访问接口需要的权限
