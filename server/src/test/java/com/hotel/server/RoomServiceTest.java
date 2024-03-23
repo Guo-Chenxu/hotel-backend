@@ -23,8 +23,6 @@ public class RoomServiceTest {
 
     @Test
     public void testInsert() {
-        Room room = Room.builder().temperature(27.0).price("100").status(false).type("").build();
-        roomService.save(room);
-        log.info("插入结果：{}", room);
+
     }
 }

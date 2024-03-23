@@ -1,13 +1,18 @@
 package com.hotel.server.controller;
 
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
+import com.hotel.common.dto.request.SaveStaffReq;
+import com.hotel.common.dto.response.PageStaffResp;
 import com.hotel.common.dto.response.StaffLoginResp;
 import com.hotel.common.entity.Staff;
 import com.hotel.common.service.server.StaffService;
+import com.hotel.server.annotation.CheckPermission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -45,8 +50,32 @@ public class StaffController {
         return R.success(staffService.login(username, password));
     }
 
-// todo @焦耳 增删改查
-//    增改应该可以用同一个接口
-//  查包括查所有和根据权限查, 并且都是分页查询
+    @PostMapping("/saveStaff")
+    @ApiOperation("新增员工")
+    @SaCheckLogin
+    @CheckPermission({Permission.ADMIN})
+    public R saveStaff(@RequestBody SaveStaffReq saveStaffReq) {
+        return staffService.save(saveStaffReq)
+                ? R.success()
+                : R.error();
+    }
+
+    @GetMapping("/page")
+    @ApiOperation("分页查询")
+    @SaCheckLogin
+    @CheckPermission({Permission.ADMIN})
+    public R<Page<PageStaffResp>> pageStaff(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+        return R.success(staffService.pageStaff(page, pageSize));
+    }
+
+    @PostMapping("/deleteStaff")
+    @ApiOperation("删除员工")
+    @SaCheckLogin
+    @CheckPermission({Permission.ADMIN})
+    public R deleteStaff(@RequestBody List<String> ids) {
+        return staffService.delete(ids)
+                ? R.success()
+                : R.error();
+    }
 }
 

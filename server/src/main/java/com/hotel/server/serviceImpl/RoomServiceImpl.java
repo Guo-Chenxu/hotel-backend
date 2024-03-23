@@ -37,10 +37,10 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Resource
     private RoomMapper roomMapper;
 
-    @DubboReference
+    @DubboReference(check = false)
     private CustomerService customerService;
 
-    @DubboReference
+    @DubboReference(check = false)
     private TimerService timerService;
 
     @Override

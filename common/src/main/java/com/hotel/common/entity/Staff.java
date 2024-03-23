@@ -4,12 +4,14 @@ package com.hotel.common.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -58,5 +60,25 @@ public class Staff implements Serializable {
      * 软删除
      */
     private Boolean deleted;
+
+    /**
+     * 密码加密
+     */
+    public void encryptPassword() {
+        if (StringUtils.isBlank(this.password)) {
+            throw new RuntimeException("密码不能为空");
+        }
+        this.password = DigestUtil.md5Hex(this.password);
+    }
+
+    /**
+     * 密码校验
+     */
+    public boolean checkPassword(String password) {
+        if (StringUtils.isBlank(password) || StringUtils.isBlank(this.password)) {
+            return false;
+        }
+        return DigestUtil.md5Hex(password).equals(this.password);
+    }
 }
 
