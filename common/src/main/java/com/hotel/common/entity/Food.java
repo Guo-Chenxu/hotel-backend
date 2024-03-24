@@ -3,6 +3,8 @@ package com.hotel.common.entity;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,7 @@ public class Food implements Serializable {
     /**
      * 主键id
      */
-
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     /**
      * 食物名

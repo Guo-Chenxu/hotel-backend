@@ -55,7 +55,7 @@ public class FoodController {
     @ApiOperation("新增食物")
     @SaCheckLogin
     @CheckPermission({Permission.FOOD})
-    public R saveStaff(@RequestBody SaveFoodReq saveFoodReq) {
+    public R saveFood(@RequestBody SaveFoodReq saveFoodReq) {
         return foodService.saveFood(saveFoodReq)
                 ? R.success()
                 : R.error();
@@ -65,7 +65,7 @@ public class FoodController {
     @ApiOperation("分页查询")
     @SaCheckLogin
     @CheckPermission({Permission.FOOD})
-    public R<Page<PageFoodResp>> pageStaff(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageFoodResp>> pageFood(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
         return R.success(foodService.pageFood(page, pageSize));
     }
 
@@ -73,7 +73,7 @@ public class FoodController {
     @ApiOperation("删除食物")
     @SaCheckLogin
     @CheckPermission({Permission.FOOD})
-    public R deleteStaff(@RequestBody List<String> ids) {
+    public R deleteFood(@RequestBody List<String> ids) {
         return foodService.deleteFood(ids)
                 ? R.success()
                 : R.error();
@@ -83,7 +83,7 @@ public class FoodController {
     @ApiOperation("上传食物照片")
     @SaCheckLogin
     @CheckPermission({Permission.FOOD})
-    public R uploadAvatar(@RequestParam("file") @NotNull MultipartFile file) {
+    public R upload(@RequestParam("file") @NotNull MultipartFile file) {
         int idx = Optional.ofNullable(file.getOriginalFilename()).orElse(".").lastIndexOf('.');
         String imageName = "hotel/" + UUID.randomUUID().toString().replace("-", "")
                 + file.getOriginalFilename().substring(idx);

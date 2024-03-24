@@ -2,8 +2,10 @@ package com.hotel.common.service.server;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.hotel.common.dto.request.OrderFoodReq;
 import com.hotel.common.dto.request.SaveFoodReq;
 import com.hotel.common.dto.response.PageFoodResp;
+import com.hotel.common.entity.CustomerFood;
 import com.hotel.common.entity.Food;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
@@ -32,5 +34,15 @@ public interface FoodService extends IService<Food> {
      * 分页查询
      */
     Page<PageFoodResp> pageFood(int page, int pageSize);
+
+    /**
+     * 获取顾客历史订单记录
+     */
+    List<CustomerFood> history(String userId);
+
+    /**
+     * 保存一次订单记录
+     */
+    Boolean saveOrder(String userId, OrderFoodReq orderFoodReq);
 }
 

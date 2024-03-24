@@ -3,22 +3,28 @@ package com.hotel.server.serviceImpl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hotel.common.dto.request.OrderFoodReq;
 import com.hotel.common.dto.request.SaveFoodReq;
 import com.hotel.common.dto.response.PageFoodResp;
 import com.hotel.common.dto.response.PageStaffResp;
+import com.hotel.common.entity.CustomerFood;
 import com.hotel.common.entity.Staff;
 import com.hotel.common.service.server.StaffService;
+import com.hotel.server.dao.CustomerFoodDao;
 import com.hotel.server.mapper.FoodMapper;
 import com.hotel.common.entity.Food;
 import com.hotel.common.service.server.FoodService;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +40,9 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
 
     @Resource
     private FoodMapper foodMapper;
+
+    @Resource
+    private CustomerFoodDao customerFoodDao;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -62,6 +71,36 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
                         .name(e.getName()).price(e.getPrice()).img(e.getImg()).build()
         ).collect(Collectors.toList()));
         return foodRespPage;
+    }
+
+    @Override
+    public List<CustomerFood> history(String userId) {
+        return customerFoodDao.selectAll(userId);
+    }
+
+    @Override
+    public Boolean saveOrder(String userId, OrderFoodReq orderFoodReq) {
+        CustomerFood customerFood = CustomerFood.builder().customerId(userId)
+                .remarks(orderFoodReq.getRemarks()).build();
+        List<String> foodIds = new ArrayList<>(orderFoodReq.getOrder().keySet());
+        if (CollectionUtils.isEmpty(foodIds)) {
+            throw new RuntimeException("订单为空");
+        }
+
+        // 计算总价
+        List<Food> foods = foodMapper.selectBatchIds(foodIds);
+        Map<Food, Integer> map = new HashMap<>(foods.size());
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (Food f : foods) {
+            int count = orderFoodReq.getOrder().get(String.valueOf(f.getId()));
+            totalPrice = totalPrice.add(new BigDecimal(f.getPrice()).multiply(new BigDecimal(count)));
+            map.put(f, count);
+        }
+
+        customerFood.setTotalPrice(String.valueOf(totalPrice));
+        customerFood.setFoods(map);
+        customerFood = customerFoodDao.save(customerFood);
+        return customerFood != null && customerFood.getId() != null;
     }
 }
 
