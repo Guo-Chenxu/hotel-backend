@@ -17,8 +17,6 @@ import java.util.PriorityQueue;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Slf4j
 public class ACScheduleThread extends Thread {
     // 请求调度队列

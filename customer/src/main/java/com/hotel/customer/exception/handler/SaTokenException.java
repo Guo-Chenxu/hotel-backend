@@ -1,4 +1,4 @@
-package com.hotel.common.exception.handler;
+package com.hotel.customer.exception.handler;
 
 import cn.dev33.satoken.exception.*;
 import com.hotel.common.constants.HttpCode;

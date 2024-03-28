@@ -1,17 +1,17 @@
-package com.hotel.common.exception;
+package com.hotel.server.exception;
 
 /**
- * 用户非法操作
+ * 用户不存在异常
  *
  * @author: 郭晨旭
- * @create: 2024-01-27 17:01
+ * @create: 2024-01-23 16:48
  * @version: 1.0
  */
-public class IllegalException extends RuntimeException {
+public class NoUserException extends RuntimeException {
 
     private String message;
 
-    public IllegalException(String message) {
+    public NoUserException(String message) {
         super(message);
         this.message = message;
     }

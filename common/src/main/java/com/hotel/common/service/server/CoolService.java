@@ -15,5 +15,5 @@ public interface CoolService {
     /**
      * 增加一个房间的空调线程
      */
-    void addRoom(String userId, HttpServletResponse response);
+    void addRoom(String userId);
 }

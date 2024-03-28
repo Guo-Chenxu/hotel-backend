@@ -1,4 +1,4 @@
-package com.hotel.common.exception;
+package com.hotel.customer.exception;
 
 /**
  * 指定参数不存在异常

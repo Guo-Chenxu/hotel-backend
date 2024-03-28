@@ -1,11 +1,11 @@
-package com.hotel.common.exception.handler;
+package com.hotel.server.exception.handler;
 
 
 import com.hotel.common.constants.HttpCode;
 import com.hotel.common.dto.R;
-import com.hotel.common.exception.IllegalException;
-import com.hotel.common.exception.NoUserException;
-import com.hotel.common.exception.NotFoundException;
+import com.hotel.server.exception.IllegalException;
+import com.hotel.server.exception.NoUserException;
+import com.hotel.server.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

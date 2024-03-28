@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+
+import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -57,13 +59,18 @@ public class CoolServiceImpl implements CoolService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public synchronized void addRoom(String userId, HttpServletResponse response) {
-        Long roomId = customerService.getById(userId).getRoom();
-        Double temperature = roomService.getById(roomId).getTemperature();
-        // todo 少参数
-        ACThread thread = null;
+    public synchronized void addRoom(String userId) {
+        HttpServletResponse response;
+        if (RpcContext.getContext().getResponse() != null) {
+            response = RpcContext.getContext().getResponse(HttpServletResponse.class);
+        } else {
+            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
+        }
+
+        // todo 测试代码, 测试后删除
+        ACThread thread;
         try {
-            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
+            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
                     .indoorTemperatureConfig(indoorTemperatureConfig)
                     .isRunning(true).recover(true).writer(response.getWriter())
                     .timerService(timerService).build();
@@ -72,6 +79,20 @@ public class CoolServiceImpl implements CoolService {
         }
         thread.start();
         threadMap.put(userId, thread);
+//        Long roomId = customerService.getById(userId).getRoom();
+//        Double temperature = roomService.getById(roomId).getTemperature();
+//        // todo 少参数
+//        ACThread thread = null;
+//        try {
+//            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
+//                    .indoorTemperatureConfig(indoorTemperatureConfig)
+//                    .isRunning(true).recover(true).writer(response.getWriter())
+//                    .timerService(timerService).build();
+//        } catch (IOException e) {
+//            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
+//        }
+//        thread.start();
+//        threadMap.put(userId, thread);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.hotel.customer.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.CustomerACReq;
@@ -33,10 +34,12 @@ public class CoolController {
 
     @PostMapping("/watchAC")
     @ApiOperation("登陆后调用, 开始监测房间空调")
-    @SaCheckLogin
+//    @SaCheckLogin
+    @SaIgnore
     public void watchAC(HttpServletResponse response) {
         response.setContentType("text/event-stream;charset=UTF-8");
-        coolService.addRoom(StpUtil.getLoginIdAsString(), response);
+//        coolService.addRoom(StpUtil.getLoginIdAsString(), response);
+        coolService.addRoom("123");
     }
 
     @PostMapping("/turnOn")
