@@ -2,21 +2,15 @@ package com.hotel.customer.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.http.HttpResponse;
 import com.hotel.common.dto.R;
-import com.hotel.common.dto.response.CustomerLoginResp;
-import com.hotel.common.service.customer.CustomerService;
+import com.hotel.common.dto.request.CustomerACReq;
 import com.hotel.common.service.server.CoolService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,5 +39,25 @@ public class CoolController {
         coolService.addRoom(StpUtil.getLoginIdAsString(), response);
     }
 
+    @PostMapping("/turnOn")
+    @ApiOperation("开启空调")
+    @SaCheckLogin
+    public R turnOn(@RequestBody CustomerACReq customerACReq) {
+        return R.error();
+    }
+
+    @PostMapping("/turnOff")
+    @ApiOperation("关闭空调")
+    @SaCheckLogin
+    public R turnOff() {
+        return R.error();
+    }
+
+    @PostMapping("/change")
+    @ApiOperation("调节目标温度或者风速档位")
+    @SaCheckLogin
+    public R change(@RequestBody CustomerACReq customerACReq) {
+        return R.error();
+    }
 }
 

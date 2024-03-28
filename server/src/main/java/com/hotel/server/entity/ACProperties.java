@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -36,6 +38,12 @@ public class ACProperties implements Serializable {
     @ApiModelProperty("默认空调目标温度")
     @NotNull
     private Double defaultTargetTemp;
+
+    @ApiModelProperty("默认空调档位, 1: 低档, 2: 中档, 3: 高档")
+    @NotNull
+    @Max(3)
+    @Min(1)
+    private Integer defaultStatus;
 
     @ApiModelProperty("高档价格参数")
     @NotNull
