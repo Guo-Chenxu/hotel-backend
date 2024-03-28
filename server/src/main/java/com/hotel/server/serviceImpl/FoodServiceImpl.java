@@ -100,6 +100,7 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
         customerFood.setTotalPrice(String.valueOf(totalPrice));
         customerFood.setFoods(map);
         customerFood = customerFoodDao.save(customerFood);
+        // todo 写入账单
         return customerFood != null && customerFood.getId() != null;
     }
 }

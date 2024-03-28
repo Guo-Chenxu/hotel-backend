@@ -49,13 +49,13 @@ public class TimeThread extends Thread {
     @Override
     public void run() {
         while (!stopped) {
-            //每过1s跳动一下时间
+            //每过100ms跳动一下时间
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            now = new Date(now.getTime() + speed * 1000);
+            now = new Date(now.getTime() + speed * 1000 / 10);
             // todo 异步调用 每日12点定时清理离店的房屋
         }
     }

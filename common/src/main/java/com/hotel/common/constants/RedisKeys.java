@@ -8,5 +8,5 @@ package com.hotel.common.constants;
  * @version: 1.0
  */
 public interface RedisKeys {
-
+    String AC_PROPERTIES = "HOTEL:AC_PROPERTIES"; // 空调参数
 }
