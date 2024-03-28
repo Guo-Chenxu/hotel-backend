@@ -8,6 +8,7 @@ import com.hotel.common.dto.R;
 import com.hotel.common.dto.response.CustomerLoginResp;
 import com.hotel.common.dto.response.StaffLoginResp;
 import com.hotel.common.service.customer.CustomerService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -27,6 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("customer")
+@Api(tags = "顾客接口")
 @Slf4j
 public class CustomerController {
     /**

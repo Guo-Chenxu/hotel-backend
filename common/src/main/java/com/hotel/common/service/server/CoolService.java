@@ -1,5 +1,8 @@
 package com.hotel.common.service.server;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * 温度服务
  *
@@ -9,4 +12,8 @@ package com.hotel.common.service.server;
  */
 
 public interface CoolService {
+    /**
+     * 增加一个房间的空调线程
+     */
+    void addRoom(String userId, HttpServletResponse response);
 }

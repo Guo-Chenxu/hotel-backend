@@ -48,6 +48,8 @@ public class ACThread extends Thread {
 
     @Override
     public void run() {
+        isRunning = true;
+        recover = true;
         while (isRunning) {
             while (recover) {
                 if (temperature - indoorTemperatureConfig.getIndoorTemperature() > 0.0000001) {
