@@ -47,11 +47,9 @@ public class CoolController {
 
     @GetMapping("/watchAC")
     @ApiOperation("登陆后调用, 开始监测房间空调")
-//    @SaCheckLogin
-    @SaIgnore
+    @SaCheckLogin
     public R watchAC() {
-        coolService.watchAC("123");
-//        coolService.watchAC(StpUtil.getLoginIdAsString());
+        coolService.watchAC(StpUtil.getLoginIdAsString());
         return R.success();
     }
 

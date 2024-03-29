@@ -39,8 +39,7 @@ public class ACThread extends Thread {
     private Boolean recover; // 控制是否在回归室温
 
     // todo 价格 空调档位 时间 要传给财务
-
-    private PrintWriter writer; // sse输出流
+    private String price; // 价格
 
     private TimerService timerService;
 //    todo 财务服务
@@ -52,15 +51,21 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
-            while (recover) {
+            if (status == 0) {
                 if (temperature - indoorTemperatureConfig.getIndoorTemperature() > 0.0000001) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 } else if (indoorTemperatureConfig.getIndoorTemperature() - temperature > 0.0000001) {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 }
-                webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
-                mySleep(1000);
+            } else {
+                if (temperature - targetTemperature > 0.0000001) {
+                    temperature -= changeTemperature / 60.0;
+                } else if (targetTemperature - temperature < 0.0000001) {
+                    targetTemperature += changeTemperature / 60.0;
+                }
             }
+            webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
+            mySleep(1000);
         }
     }
 
@@ -74,4 +79,32 @@ public class ACThread extends Thread {
     }
 
     // todo 调温 调风 启动(时间片到达以后将自己弄一个新请求放入优先队列) 关机
+
+    public void turnOff() {
+        if (status == 0) {
+            return;
+        }
+        status = 0;
+        ACScheduleThread.removeOne(userId);
+        // todo 写入账单
+        price = "0";
+        endTime = timerService.getTime();
+    }
+
+    public void turnOn(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
+        startTime = timerService.getTime();
+        targetTemperature = _targetTemperature;
+        changeTemperature = _changeTemperature;
+        status = _status;
+        price = _price;
+    }
+
+    public void change(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
+        // todo 先关闭 再放入等待队列
+        if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
+                && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
+            return;
+        }
+        turnOff();
+    }
 }

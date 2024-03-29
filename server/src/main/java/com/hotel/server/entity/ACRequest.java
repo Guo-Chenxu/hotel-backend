@@ -27,6 +27,8 @@ public class ACRequest implements Serializable {
     private Date startTime; // 申请空调启动时间
     private Double targetTemperature; // 目标温度
     private Double changeTemperature; // 每分钟变化温度
+    private Integer status; // 请求档位 1 低档 2 中档 3 高档
+    private String price; // 加个
 
     @Override
     public int hashCode() {

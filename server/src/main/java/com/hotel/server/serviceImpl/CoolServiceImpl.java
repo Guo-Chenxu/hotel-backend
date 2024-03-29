@@ -62,28 +62,24 @@ public class CoolServiceImpl implements CoolService {
     @Transactional(rollbackFor = Exception.class)
     public synchronized void watchAC(String userId) {
         // todo 测试代码, 测试后删除
-        ACThread thread;
-        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
+//        ACThread thread;
+//        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
+//                .indoorTemperatureConfig(indoorTemperatureConfig)
+//                .isRunning(true).recover(true).webSocketServer(webSocketServer)
+//                .timerService(timerService).build();
+//        thread.start();
+//        threadMap.put(userId, thread);
+
+        Long roomId = customerService.getById(userId).getRoom();
+        Double temperature = roomService.getById(roomId).getTemperature();
+        // todo 少参数
+        ACThread thread = null;
+        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
                 .indoorTemperatureConfig(indoorTemperatureConfig)
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
                 .timerService(timerService).build();
         thread.start();
         threadMap.put(userId, thread);
-
-//        Long roomId = customerService.getById(userId).getRoom();
-//        Double temperature = roomService.getById(roomId).getTemperature();
-//        // todo 少参数
-//        ACThread thread = null;
-//        try {
-//            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
-//                    .indoorTemperatureConfig(indoorTemperatureConfig)
-//                    .isRunning(true).recover(true).webSocketServer(webSocketServer)
-//                    .timerService(timerService).build();
-//        } catch (IOException e) {
-//            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
-//        }
-//        thread.start();
-//        threadMap.put(userId, thread);
     }
 
     /**
