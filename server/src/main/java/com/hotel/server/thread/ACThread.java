@@ -1,12 +1,11 @@
 package com.hotel.server.thread;
 
-import com.hotel.common.service.server.CoolService;
 import com.hotel.common.service.timer.TimerService;
 import com.hotel.server.config.IndoorTemperatureConfig;
+import com.hotel.server.ws.WebSocketServer;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nonnull;
 import java.io.PrintWriter;
 import java.util.Date;
 
@@ -46,6 +45,8 @@ public class ACThread extends Thread {
     private TimerService timerService;
 //    todo 财务服务
 
+    private WebSocketServer webSocketServer; //websocket 连接
+
     @Override
     public void run() {
         isRunning = true;
@@ -57,8 +58,7 @@ public class ACThread extends Thread {
                 } else if (indoorTemperatureConfig.getIndoorTemperature() - temperature > 0.0000001) {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 }
-                writer.write("data: " + temperature + "\n\n");
-                writer.flush();
+                webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
                 mySleep(1000);
             }
         }

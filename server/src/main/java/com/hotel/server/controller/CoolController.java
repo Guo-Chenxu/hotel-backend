@@ -2,6 +2,7 @@ package com.hotel.server.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.HttpCode;
 import com.hotel.common.constants.Permission;
@@ -19,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
@@ -60,5 +63,16 @@ public class CoolController {
         }
         return R.success(JSON.parseObject(json, ACProperties.class));
     }
+
+//    @GetMapping("/watchAC/{userId}")
+//    @SaIgnore
+//    @ApiOperation("监控空调温度, 顾客端专用")
+//    public void watchAC(@PathVariable("userId") String userId, HttpServletRequest request, HttpServletResponse response) {
+//        if (!"Customer".equals(request.getHeaders("From").nextElement())) {
+//            throw new RuntimeException("请求来源不合法");
+//        }
+//        response.setContentType("text/event-stream;charset=UTF-8");
+//        coolService.watchAC(userId, response);
+//    }
 }
 

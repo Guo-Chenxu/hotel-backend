@@ -2,9 +2,8 @@ package com.hotel.server.serviceImpl;
 
 import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.ACStatus;
-import com.hotel.common.constants.HttpCode;
+import com.hotel.server.ws.WebSocketServer;
 import com.hotel.common.constants.RedisKeys;
-import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.CustomerACReq;
 import com.hotel.common.service.customer.CustomerService;
 import com.hotel.common.service.server.CacheService;
@@ -19,13 +18,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 
-import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.annotation.Tainted;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,28 +55,21 @@ public class CoolServiceImpl implements CoolService {
     @DubboReference
     private CacheService cacheService;
 
+    @Resource
+    private WebSocketServer webSocketServer;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public synchronized void addRoom(String userId) {
-        HttpServletResponse response;
-        if (RpcContext.getContext().getResponse() != null) {
-            response = RpcContext.getContext().getResponse(HttpServletResponse.class);
-        } else {
-            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
-        }
-
+    public synchronized void watchAC(String userId) {
         // todo 测试代码, 测试后删除
         ACThread thread;
-        try {
-            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
-                    .indoorTemperatureConfig(indoorTemperatureConfig)
-                    .isRunning(true).recover(true).writer(response.getWriter())
-                    .timerService(timerService).build();
-        } catch (IOException e) {
-            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
-        }
+        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
+                .indoorTemperatureConfig(indoorTemperatureConfig)
+                .isRunning(true).recover(true).webSocketServer(webSocketServer)
+                .timerService(timerService).build();
         thread.start();
         threadMap.put(userId, thread);
+
 //        Long roomId = customerService.getById(userId).getRoom();
 //        Double temperature = roomService.getById(roomId).getTemperature();
 //        // todo 少参数
@@ -86,7 +77,7 @@ public class CoolServiceImpl implements CoolService {
 //        try {
 //            thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
 //                    .indoorTemperatureConfig(indoorTemperatureConfig)
-//                    .isRunning(true).recover(true).writer(response.getWriter())
+//                    .isRunning(true).recover(true).webSocketServer(webSocketServer)
 //                    .timerService(timerService).build();
 //        } catch (IOException e) {
 //            throw new RuntimeException("获取响应流失败, 无法监控房间温度");
