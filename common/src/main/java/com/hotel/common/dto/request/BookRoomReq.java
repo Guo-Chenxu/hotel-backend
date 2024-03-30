@@ -43,6 +43,6 @@ public class BookRoomReq implements Serializable {
     @NotNull
     private String price;
 
-    @ApiModelProperty("房间温度")
-    private String temperature;
+    @ApiModelProperty("押金")
+    private String deposit;
 }

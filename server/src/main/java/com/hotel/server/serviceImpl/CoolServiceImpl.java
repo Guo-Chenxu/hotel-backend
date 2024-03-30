@@ -1,7 +1,13 @@
 package com.hotel.server.serviceImpl;
 
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.ACStatus;
+import com.hotel.common.constants.HttpCode;
+import com.hotel.common.dto.R;
+import com.hotel.common.dto.response.ACStatusResp;
+import com.hotel.common.dto.response.PageRoomACResp;
+import com.hotel.common.entity.Customer;
 import com.hotel.server.ws.WebSocketServer;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.request.CustomerACReq;
@@ -11,20 +17,19 @@ import com.hotel.common.service.server.CoolService;
 import com.hotel.common.service.server.RoomService;
 import com.hotel.common.service.timer.TimerService;
 import com.hotel.server.config.IndoorTemperatureConfig;
-import com.hotel.server.entity.ACProperties;
+import com.hotel.common.entity.ACProperties;
 import com.hotel.server.thread.ACThread;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 空调服务实现类
@@ -82,10 +87,41 @@ public class CoolServiceImpl implements CoolService {
         threadMap.put(userId, thread);
     }
 
+    @Override
+    public Page<PageRoomACResp> pageRoomAC(Integer page, Integer pageSize) {
+        Page<Customer> customerPage = customerService.page(new Page<>(page, pageSize));
+        Page<PageRoomACResp> resp = new Page<>();
+        BeanUtils.copyProperties(customerPage, resp, "records");
+        resp.setRecords(customerPage.getRecords().stream().map((e) ->
+                        PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
+                                .acStatus(this.getACStatus(String.valueOf(e.getId())))
+                                .build())
+                .collect(Collectors.toList()));
+        return resp;
+    }
+
+    @Override
+    public ACStatusResp getACStatus(String userId) {
+        ACThread acThread = threadMap.get(userId);
+        if (acThread == null) {
+            return new ACStatusResp();
+        }
+
+        ACStatusResp resp = ACStatusResp.builder().temperature(acThread.getTemperature())
+                .status(acThread.getStatus()).build();
+        if (!ACStatus.OFF.equals(resp.getStatus())) {
+            resp.setPrice(acThread.getPrice());
+            resp.setChangeTemp(acThread.getChangeTemperature());
+            resp.setTargetTemp(acThread.getTargetTemperature());
+        }
+        return resp;
+    }
+
+
     /**
      * 校验请求数据是否合法
      */
-    private void checkRequest(CustomerACReq customerACReq) {
+    private CustomerACReq checkRequest(CustomerACReq customerACReq) {
         ACProperties acProperties = getACProperties();
         if (acProperties == null) {
             throw new IllegalArgumentException("参数异常, 未设置空调参数, 请联系酒店方开启空调");
@@ -103,12 +139,14 @@ public class CoolServiceImpl implements CoolService {
                 || target.compareTo(acProperties.getLowerBoundTemperature()) < 0) {
             throw new IllegalArgumentException("参数异常");
         }
+        return customerACReq;
     }
 
-    private ACProperties getACProperties() {
+    @Override
+    public ACProperties getACProperties() {
         String json = cacheService.get(RedisKeys.AC_PROPERTIES);
         if (StringUtils.isBlank(json)) {
-            return null;
+            throw new RuntimeException("未找到空调参数, 请先完成参数设置");
         }
         return JSON.parseObject(json, ACProperties.class);
     }

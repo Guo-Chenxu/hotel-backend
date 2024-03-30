@@ -6,6 +6,7 @@ import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.CustomerACReq;
+import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.service.server.CoolService;
 import com.hotel.customer.ws.ACWebsockt;
 import io.swagger.annotations.Api;
@@ -72,6 +73,13 @@ public class CoolController {
     @SaCheckLogin
     public R change(@RequestBody CustomerACReq customerACReq) {
         return R.error();
+    }
+
+    @GetMapping("/acStatus")
+    @ApiOperation("获取空调状态")
+    @SaCheckLogin
+    public R<ACStatusResp> getACStatus() {
+        return R.success(coolService.getACStatus(StpUtil.getLoginIdAsString()));
     }
 }
 

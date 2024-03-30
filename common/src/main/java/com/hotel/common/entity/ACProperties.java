@@ -1,4 +1,4 @@
-package com.hotel.server.entity;
+package com.hotel.common.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,6 +26,10 @@ import java.io.Serializable;
 @ApiModel("空调参数")
 public class ACProperties implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty("空调台数")
+    @NotNull
+    private Integer count;
 
     @ApiModelProperty("上限温度")
     @NotNull

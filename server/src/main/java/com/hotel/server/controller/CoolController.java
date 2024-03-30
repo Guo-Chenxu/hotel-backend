@@ -2,7 +2,6 @@ package com.hotel.server.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
-import cn.dev33.satoken.annotation.SaIgnore;
 import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.HttpCode;
 import com.hotel.common.constants.Permission;
@@ -10,19 +9,14 @@ import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.R;
 import com.hotel.common.service.server.CacheService;
 import com.hotel.common.service.server.CoolService;
-import com.hotel.common.service.server.PermissionService;
 import com.hotel.server.annotation.CheckPermission;
-import com.hotel.server.entity.ACProperties;
+import com.hotel.common.entity.ACProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 
 /**
@@ -57,11 +51,15 @@ public class CoolController {
     @SaCheckLogin
     @CheckPermission({Permission.COOL})
     public R<ACProperties> getProperties() {
-        String json = cacheService.get(RedisKeys.AC_PROPERTIES);
-        if (StringUtils.isBlank(json)) {
-            return R.error(HttpCode.PARAM_WRONG, "未找到空调参数, 请先完成参数设置");
-        }
-        return R.success(JSON.parseObject(json, ACProperties.class));
+        return R.success(coolService.getACProperties());
+    }
+
+    @GetMapping("/pageRoomCool")
+    @ApiOperation("分页查询各房间空调状态")
+    @SaCheckLogin
+    @CheckPermission({Permission.COOL})
+    public R pageRoomCool(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+        return R.success(coolService.pageRoomAC(page, pageSize));
     }
 
 //    @GetMapping("/watchAC/{userId}")

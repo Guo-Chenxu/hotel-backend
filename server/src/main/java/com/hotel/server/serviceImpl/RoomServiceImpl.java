@@ -9,12 +9,14 @@ import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Customer;
 import com.hotel.common.service.customer.CustomerService;
 import com.hotel.common.service.timer.TimerService;
+import com.hotel.server.config.IndoorTemperatureConfig;
 import com.hotel.server.mapper.RoomMapper;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.RoomService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.function.IntConsumer;
 
 /**
  * (Room)表服务实现类
@@ -43,6 +46,9 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @DubboReference(check = false)
     private TimerService timerService;
 
+    @Resource
+    private IndoorTemperatureConfig indoorTemperatureConfig;
+
     @Override
     public Page<Room> conditionPage(PageRoomReq pageRoomReq) {
         return roomMapper.selectPage(new Page<Room>(pageRoomReq.getPage(), pageRoomReq.getPageSize()),
@@ -58,10 +64,9 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
                 || bookRoomReq.getStartTime().compareTo(bookRoomReq.getLeaveTime()) >= 0) {
             throw new RuntimeException("时间不合法");
         }
-        Room room = Room.builder().price(bookRoomReq.getPrice()).build();
-        if (bookRoomReq.getTemperature() != null) {
-            room.setTemperature(Double.parseDouble(bookRoomReq.getTemperature()));
-        }
+        Room room = Room.builder().price(bookRoomReq.getPrice())
+                .temperature(indoorTemperatureConfig.getIndoorTemperature())
+                .deposit(bookRoomReq.getDeposit()).build();
         int insert = roomMapper.insert(room);
         if (insert < 1) {
             return false;
@@ -100,7 +105,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean leave(Long roomId, Long customerId) {
-        // todo 先退房, 成功后释放用户占用的所有资源 餐饮 保洁 纳凉
+        // todo 先退房, 成功后释放用户占用的所有资源 餐饮 保洁 纳凉 押金
         // 这些资源应该是放在redis里, 后续直接删除即可
         if (!this.removeById(roomId) || !customerService.removeById(customerId)) {
             throw new RuntimeException("退房失败, 请稍后重试");

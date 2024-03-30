@@ -38,7 +38,6 @@ public class Room implements Serializable {
     /**
      * 价格/晚
      */
-
     private String price;
 
     /**
@@ -46,6 +45,10 @@ public class Room implements Serializable {
      */
     private Double temperature;
 
+    /**
+     * 押金
+     */
+    private String deposit;
 
     /**
      * 软删除

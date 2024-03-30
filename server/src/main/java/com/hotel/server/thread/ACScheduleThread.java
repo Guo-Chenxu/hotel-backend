@@ -1,6 +1,6 @@
 package com.hotel.server.thread;
 
-import com.hotel.server.entity.ACRequest;
+import com.hotel.common.entity.ACRequest;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.hotel.server.entity;
+package com.hotel.common.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
