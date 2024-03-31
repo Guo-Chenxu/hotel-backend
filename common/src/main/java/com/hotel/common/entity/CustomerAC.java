@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 顾客空调关系类
@@ -23,5 +25,41 @@ import java.io.Serializable;
 public class CustomerAC implements Serializable {
     private static final long serialVersionUID = 78134902L;
 
-    // todo 详细内容
+    @Id
+    private String id;
+
+    /**
+     * 顾客id
+     */
+    private String customerId;
+
+    /**
+     * 单价
+     */
+    private String price;
+
+    /**
+     * 档位
+     */
+    private Integer status;
+
+    /**
+     * 改变温度
+     */
+    private Double changeTemperature;
+
+    /**
+     * 此次服务时长 分钟
+     */
+    private Integer duration;
+
+    /**
+     * 此次服务总价
+     */
+    private String totalPrice;
+
+    /**
+     * 创建时间
+     */
+    private Date createAt;
 }

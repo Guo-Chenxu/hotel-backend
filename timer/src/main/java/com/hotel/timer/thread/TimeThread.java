@@ -1,12 +1,22 @@
 package com.hotel.timer.thread;
 
+import com.hotel.common.service.server.RoomService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
  * 模拟时间的线程
  */
+@Slf4j
 public class TimeThread extends Thread {
     private static final TimeThread timeThread = new TimeThread();
+
+    public String channel; //频道channel
 
     boolean stopped = false;
 
@@ -15,11 +25,21 @@ public class TimeThread extends Thread {
     // 1秒对应speed秒
     long speed;
 
+    private StringRedisTemplate stringRedisTemplate;
+
     private TimeThread() {
     }
 
     public static TimeThread getInstance() {
         return timeThread;
+    }
+
+    public void setChannel(String _channel) {
+        this.channel = _channel;
+    }
+
+    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     public Date getNow() {
@@ -56,7 +76,13 @@ public class TimeThread extends Thread {
                 throw new RuntimeException(e);
             }
             now = new Date(now.getTime() + speed * 1000 / 10);
-            // todo 异步调用 每日12点定时清理离店的房屋
+
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
+            if (localDateTime.getMinute() == 0 && localDateTime.getSecond() == 0) {
+                // todo redis发布订阅模式 每小时同步房间温度到数据库中
+                log.info("此时是: {}, 发布房间温度同步消息", now);
+                stringRedisTemplate.convertAndSend(channel, now);
+            }
         }
     }
 }

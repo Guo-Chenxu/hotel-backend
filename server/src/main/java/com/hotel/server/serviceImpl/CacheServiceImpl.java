@@ -1,10 +1,10 @@
 package com.hotel.server.serviceImpl;
 
+import com.alibaba.fastjson.JSON;
 import com.hotel.common.service.server.CacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Random;
@@ -43,6 +43,12 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public String get(String key) {
         return stringRedisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public Object get(String key, Class<?> clazz) {
+        String json = stringRedisTemplate.opsForValue().get(key);
+        return JSON.parseObject(json, clazz);
     }
 
     @Override

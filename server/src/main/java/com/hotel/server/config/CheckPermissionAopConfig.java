@@ -2,8 +2,13 @@ package com.hotel.server.config;
 
 import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.stp.StpUtil;
+import com.hotel.common.constants.RedisKeys;
+import com.hotel.common.entity.Staff;
+import com.hotel.common.service.server.CacheService;
+import com.hotel.common.service.server.StaffService;
 import com.hotel.server.annotation.CheckPermission;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -29,11 +34,11 @@ import java.lang.reflect.Method;
 @Order(2)
 public class CheckPermissionAopConfig {
 
-    @Resource
-    private RedisTemplate redisTemplate;
+    @DubboReference
+    private CacheService cacheService;
 
-//    @Resource
-//   private UserService userService;
+    @DubboReference
+    private StaffService staffService;
 
     @Before("@annotation(com.hotel.server.annotation.CheckPermission)")
     public void checkBefore(JoinPoint jp) throws Throwable {
@@ -47,7 +52,11 @@ public class CheckPermissionAopConfig {
         }
 
         long id = StpUtil.getLoginIdAsLong();
-        String userPermission = "1,2,3,4,5,6"; // todo 先查缓存再查数据库
+        Staff staff = (Staff) cacheService.get(String.format(RedisKeys.STAFF_ID_INFO, id), Staff.class);
+        if (staff == null) {
+            staff = staffService.getById(id);
+        }
+        String userPermission = staff.getPermission();
         String[] hasPermissions = userPermission.split(",");
 
         for (String need : needPermissions) {

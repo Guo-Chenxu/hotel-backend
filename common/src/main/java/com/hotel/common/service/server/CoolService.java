@@ -6,6 +6,7 @@ import com.hotel.common.dto.response.PageRoomACResp;
 import com.hotel.common.entity.ACProperties;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 温度服务
@@ -16,6 +17,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 public interface CoolService {
+    /**
+     * 同步房间温度
+     */
+    void syncRoomTemp();
+
     /**
      * 增加一个房间的空调线程
      */

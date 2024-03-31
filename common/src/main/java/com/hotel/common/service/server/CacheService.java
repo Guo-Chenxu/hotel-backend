@@ -28,6 +28,11 @@ public interface CacheService {
     String get(String key);
 
     /**
+     * 读取缓存
+     */
+    Object get(String key, Class<?> clazz);
+
+    /**
      * 查看缓存值是否存在
      */
     boolean exist(String key);

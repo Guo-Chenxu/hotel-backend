@@ -1,13 +1,13 @@
 package com.hotel.server.serviceImpl;
 
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.ACStatus;
-import com.hotel.common.constants.HttpCode;
-import com.hotel.common.dto.R;
 import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.dto.response.PageRoomACResp;
 import com.hotel.common.entity.Customer;
+import com.hotel.common.entity.Room;
 import com.hotel.server.ws.WebSocketServer;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.request.CustomerACReq;
@@ -25,9 +25,12 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -62,6 +65,28 @@ public class CoolServiceImpl implements CoolService {
 
     @Resource
     private WebSocketServer webSocketServer;
+
+    @Override
+    @Async
+    @Transactional(rollbackFor = Exception.class)
+    public void syncRoomTemp() {
+        List<Room> rooms = roomService.list();
+        Map<Long, Long> room2customer = customerService.list(
+                        new LambdaQueryWrapper<Customer>()
+                                .select(Customer::getId, Customer::getRoom))
+                .stream().collect(Collectors.toMap(Customer::getRoom, Customer::getId));
+
+        rooms.forEach((e) -> {
+            Long customerId = room2customer.get(e.getId());
+            ACThread acThread = threadMap.get(String.valueOf(customerId));
+            if (acThread == null) {
+                return;
+            }
+            e.setTemperature(acThread.getTemperature());
+        });
+
+        roomService.saveBatch(rooms);
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)

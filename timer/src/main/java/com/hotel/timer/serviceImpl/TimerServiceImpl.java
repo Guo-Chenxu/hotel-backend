@@ -1,13 +1,16 @@
 package com.hotel.timer.serviceImpl;
 
 
+import com.hotel.common.service.server.RoomService;
 import com.hotel.common.service.timer.TimerService;
 import com.hotel.timer.thread.TimeThread;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.*;
 
 @DubboService
@@ -17,6 +20,12 @@ public class TimerServiceImpl implements TimerService {
 
     @Value("${timer.speed}")
     private long speed;
+
+    @Value("${spring.redis.channel}")
+    public String channel; //频道channel
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @PostConstruct
     private void init() {
@@ -29,6 +38,9 @@ public class TimerServiceImpl implements TimerService {
             startTime = new Date();
         }
 
+
+        timeThread.setStringRedisTemplate(stringRedisTemplate);
+        timeThread.setChannel(channel);
         timeThread.setNow(startTime);
         timeThread.setSpeed(speed);
         timeThread.start();
