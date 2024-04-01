@@ -106,7 +106,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public Boolean leave(Long roomId, Long customerId) {
         // todo 先退房, 成功后释放用户占用的所有资源 餐饮 保洁 纳凉 押金
-        // 这些资源应该是放在redis里, 后续直接删除即可
+        // 退房后生成账单并写入 mongo
         if (!this.removeById(roomId) || !customerService.removeById(customerId)) {
             throw new RuntimeException("退房失败, 请稍后重试");
         }

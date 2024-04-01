@@ -1,5 +1,8 @@
 package com.hotel.common.service.server;
 
+import com.hotel.common.dto.response.BillResp;
+import com.hotel.common.dto.response.BillStatementResp;
+
 /**
  * 财务服务
  *
@@ -9,4 +12,19 @@ package com.hotel.common.service.server;
  */
 
 public interface BillService {
+
+    /**
+     * 获取详单
+     */
+    BillStatementResp getBillStatement(String customerId);
+
+    /**
+     * 获取账单
+     */
+    BillResp getBill(String customerId);
+
+    /**
+     * 将客户的详单保存到数据库中
+     */
+    Boolean saveBillStatement(String customerId);
 }

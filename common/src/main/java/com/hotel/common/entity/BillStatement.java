@@ -1,5 +1,6 @@
 package com.hotel.common.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +37,11 @@ public class BillStatement implements Serializable {
     private String customerId;
 
     /**
+     * 房间id
+     */
+    private String roomId;
+
+    /**
      * 入住时间
      */
     private Date checkInTime;
@@ -43,12 +49,17 @@ public class BillStatement implements Serializable {
     /**
      * 退房时间
      */
-    private Date checkoutTime;
+    private Date checkOutTime;
 
     /**
-     * 房费
+     * 房间每晚价格
      */
     private String roomPrice;
+
+    /**
+     * 押金
+     */
+    private String deposit;
 
     /**
      * 餐饮详单
@@ -59,4 +70,9 @@ public class BillStatement implements Serializable {
      * 空调详单
      */
     private List<CustomerAC> acBillList;
+
+    /**
+     * 扣除押金后总价
+     */
+    private String totalPrice;
 }

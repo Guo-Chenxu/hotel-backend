@@ -41,7 +41,10 @@ public class BillStatementResp implements Serializable {
     @ApiModelProperty("入住时间")
     private Date checkInTime;
 
-    @ApiModelProperty("截至目前的房费")
+    @ApiModelProperty("退房时间")
+    private Date checkOutTime;
+
+    @ApiModelProperty("房间每晚价格")
     private String roomPrice;
 
     @ApiModelProperty("押金")

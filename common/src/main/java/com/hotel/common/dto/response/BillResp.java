@@ -38,8 +38,11 @@ public class BillResp implements Serializable {
     @ApiModelProperty("入住时间")
     private Date checkInTime;
 
-    @ApiModelProperty("截至目前的房费")
-    private String roomPrice;
+    @ApiModelProperty("退房时间")
+    private Date checkOutTime;
+
+    @ApiModelProperty("截至目前的总房费")
+    private String roomTotPrice;
 
     @ApiModelProperty("押金")
     private String deposit;
