@@ -41,6 +41,11 @@ public class BillStatement implements Serializable {
     private Date checkInTime;
 
     /**
+     * 退房时间
+     */
+    private Date checkoutTime;
+
+    /**
      * 房费
      */
     private String roomPrice;

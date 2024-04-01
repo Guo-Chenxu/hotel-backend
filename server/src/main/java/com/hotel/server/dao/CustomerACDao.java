@@ -2,6 +2,7 @@ package com.hotel.server.dao;
 
 
 
+import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.entity.CustomerFood;
 
 import java.util.List;
@@ -13,14 +14,14 @@ import java.util.List;
  * @create: 2023-11-16 12:58
  * @version: 1.0
  */
-public interface CustomerFoodDao {
+public interface CustomerACDao {
     /**
      * 保存
      */
-    CustomerFood save(CustomerFood customerFood);
+    CustomerAC save(CustomerAC customerAC);
 
     /**
      * 根据用户id查询
      */
-    List<CustomerFood> selectAll(String userId);
+    List<CustomerAC> selectAll(String userId);
 }

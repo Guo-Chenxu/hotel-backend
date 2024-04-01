@@ -1,11 +1,12 @@
 package com.hotel.server.dao.impl;
 
 
-import com.hotel.server.dao.CustomerFoodDao;
-import com.hotel.common.entity.CustomerFood;
+import com.hotel.common.entity.CustomerAC;
+import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.service.timer.TimerService;
+import com.hotel.server.dao.CustomerACDao;
+import com.hotel.server.dao.CustomerACDao;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -22,7 +23,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Component
-public class CustomerFoodDaoImpl implements CustomerFoodDao {
+public class CustomerACDaoImpl implements CustomerACDao {
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -31,14 +32,14 @@ public class CustomerFoodDaoImpl implements CustomerFoodDao {
     private TimerService timerService;
 
     @Override
-    public CustomerFood save(CustomerFood customerFood) {
-        customerFood.setCreateAt(timerService.getTime());
-        return mongoTemplate.save(customerFood);
+    public CustomerAC save(CustomerAC customerAC) {
+        customerAC.setCreateAt(timerService.getTime());
+        return mongoTemplate.save(customerAC);
     }
 
     @Override
-    public List<CustomerFood> selectAll(String userId) {
+    public List<CustomerAC> selectAll(String userId) {
         Query q = Query.query(Criteria.where("customerId").is(userId));
-        return mongoTemplate.find(q, CustomerFood.class);
+        return mongoTemplate.find(q, CustomerAC.class);
     }
 }
