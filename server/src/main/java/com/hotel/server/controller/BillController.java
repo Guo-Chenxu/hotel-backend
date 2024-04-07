@@ -50,4 +50,6 @@ public class BillController {
     public R<BillResp> bill(@PathVariable("customerId") String customerId) {
         return R.success(billService.getBill(customerId));
     }
+
+    // todo 各种报表
 }

@@ -23,7 +23,6 @@ public class PermissionServiceImpl implements PermissionService {
                 Permission.ADMIN,
                 Permission.RECEPTIONIST,
                 Permission.FOOD,
-                Permission.CLEANER,
                 Permission.COOL,
                 Permission.FINANCIAL
         );
