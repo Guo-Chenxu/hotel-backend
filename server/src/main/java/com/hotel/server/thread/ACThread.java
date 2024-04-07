@@ -59,15 +59,15 @@ public class ACThread extends Thread {
         recover = true;
         while (isRunning) {
             if (status == 0) {
-                if (temperature - indoorTemperatureConfig.getIndoorTemperature() > 0.0000001) {
+                if (temperature.compareTo(indoorTemperatureConfig.getIndoorTemperature()) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
-                } else if (indoorTemperatureConfig.getIndoorTemperature() - temperature > 0.0000001) {
+                } else if (temperature.compareTo(indoorTemperatureConfig.getIndoorTemperature()) < 0) {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 }
             } else {
-                if (temperature - targetTemperature > 0.0000001) {
+                if (temperature.compareTo(targetTemperature) > 0) {
                     temperature -= changeTemperature / 60.0;
-                } else if (targetTemperature - temperature > 0.0000001) {
+                } else if (temperature.compareTo(targetTemperature) < 0) {
                     targetTemperature += changeTemperature / 60.0;
                 } else {
                     this.turnOff();
