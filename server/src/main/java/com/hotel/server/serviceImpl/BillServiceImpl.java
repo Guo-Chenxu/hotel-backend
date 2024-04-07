@@ -111,8 +111,16 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Boolean saveBillStatement(String customerId) {
-        // todo
-        return false;
+        BillStatementResp billStatementResp = this.getBillStatement(customerId);
+        BillStatement billStatement = new BillStatement();
+        BeanUtils.copyProperties(billStatementResp, billStatement);
+        billStatementDao.save(billStatement);
+        return true;
+    }
+
+    @Override
+    public void saveACBill(CustomerAC customerAC) {
+        customerACDao.save(customerAC);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.hotel.customer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.stp.StpUtil;
 import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.response.BillResp;
@@ -35,13 +36,13 @@ public class BillController {
     @SaCheckLogin
     @ApiOperation("获取用户详单")
     public R<BillStatementResp> billStatement() {
-        return null;
+        return R.success(billService.getBillStatement(StpUtil.getLoginIdAsString()));
     }
 
     @PostMapping("/bill")
     @SaCheckLogin
     @ApiOperation("获取用户账单")
     public R<BillResp> bill() {
-        return null;
+        return R.success(billService.getBill(StpUtil.getLoginIdAsString()));
     }
 }

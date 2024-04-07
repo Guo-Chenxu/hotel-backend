@@ -1,13 +1,20 @@
 package com.hotel.server.thread;
 
+import com.hotel.common.constants.ACStatus;
+import com.hotel.common.entity.ACRequest;
+import com.hotel.common.entity.CustomerAC;
+import com.hotel.common.service.server.BillService;
 import com.hotel.common.service.timer.TimerService;
 import com.hotel.server.config.IndoorTemperatureConfig;
+import com.hotel.server.service.ACScheduleService;
+import com.hotel.server.service.impl.ACScheduleServiceImpl;
 import com.hotel.server.ws.WebSocketServer;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 空调线程
@@ -42,7 +49,8 @@ public class ACThread extends Thread {
     private String price; // 价格
 
     private TimerService timerService;
-//    todo 财务服务
+    private BillService billService;
+    private ACScheduleService acScheduleService;
 
     private WebSocketServer webSocketServer; //websocket 连接
 
@@ -60,8 +68,10 @@ public class ACThread extends Thread {
             } else {
                 if (temperature - targetTemperature > 0.0000001) {
                     temperature -= changeTemperature / 60.0;
-                } else if (targetTemperature - temperature < 0.0000001) {
+                } else if (targetTemperature - temperature > 0.0000001) {
                     targetTemperature += changeTemperature / 60.0;
+                } else {
+                    this.turnOff();
                 }
             }
             webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
@@ -78,19 +88,36 @@ public class ACThread extends Thread {
         }
     }
 
-    // todo 调温 调风 启动(时间片到达以后将自己弄一个新请求放入优先队列) 关机
-
-    public void turnOff() {
-        if (status == 0) {
-            return;
+    /**
+     * 关闭
+     */
+    public ACRequest turnOff() {
+        if (Objects.equals(status, ACStatus.OFF)) {
+            return null;
         }
-        status = 0;
-        ACScheduleThread.removeOne(userId);
-        // todo 写入账单
-        price = "0";
+        acScheduleService.removeOne(userId);
+
         endTime = timerService.getTime();
+        int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
+        String totalPrice = new BigDecimal(price).multiply(new BigDecimal(duration)).toString();
+
+        CustomerAC customerAC = CustomerAC.builder().customerId(userId).price(price).status(status)
+                .changeTemperature(changeTemperature).duration(duration).totalPrice(totalPrice).build();
+        billService.saveACBill(customerAC);
+
+        ACRequest acRequest = ACRequest.builder().userId(userId).startTime(startTime)
+                .targetTemperature(targetTemperature).changeTemperature(changeTemperature)
+                .status(status).price(price).build();
+
+        status = ACStatus.OFF;
+        price = "0";
+
+        return acRequest;
     }
 
+    /**
+     * 启动
+     */
     public void turnOn(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
         startTime = timerService.getTime();
         targetTemperature = _targetTemperature;
@@ -99,12 +126,21 @@ public class ACThread extends Thread {
         price = _price;
     }
 
+
+    /**
+     * 调温调风
+     * 结束之前的运行, 开启一个新的请求
+     */
     public void change(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
-        // todo 先关闭 再放入等待队列
+        // 先关闭 再放入等待队列
         if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
                 && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
             return;
         }
         turnOff();
+        ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
+                .targetTemperature(_targetTemperature).changeTemperature(_changeTemperature)
+                .status(_status).price(_price).build();
+        acScheduleService.addOne(acRequest);
     }
 }

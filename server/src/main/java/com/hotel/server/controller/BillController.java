@@ -40,7 +40,7 @@ public class BillController {
     @CheckPermission({Permission.FINANCIAL})
     @ApiOperation("获取用户详单")
     public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId) {
-        return null;
+        return R.success(billService.getBillStatement(customerId));
     }
 
     @PostMapping("/bill/{customerId}")
@@ -48,6 +48,6 @@ public class BillController {
     @CheckPermission({Permission.FINANCIAL})
     @ApiOperation("获取用户账单")
     public R<BillResp> bill(@PathVariable("customerId") String customerId) {
-        return null;
+        return R.success(billService.getBill(customerId));
     }
 }

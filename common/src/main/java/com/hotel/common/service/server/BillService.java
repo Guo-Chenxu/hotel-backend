@@ -1,7 +1,9 @@
 package com.hotel.common.service.server;
 
+import cn.hutool.cache.CacheUtil;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
+import com.hotel.common.entity.CustomerAC;
 
 /**
  * 财务服务
@@ -25,6 +27,12 @@ public interface BillService {
 
     /**
      * 将客户的详单保存到数据库中
+     * 退房时调用, 调用前必须保证放除房间外的所有资源
      */
     Boolean saveBillStatement(String customerId);
+
+    /**
+     * 保存空调账单
+     */
+    void saveACBill(CustomerAC customerAC);
 }

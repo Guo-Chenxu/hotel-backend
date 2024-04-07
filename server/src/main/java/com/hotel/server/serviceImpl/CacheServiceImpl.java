@@ -3,6 +3,7 @@ package com.hotel.server.serviceImpl;
 import com.alibaba.fastjson.JSON;
 import com.hotel.common.service.server.CacheService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -48,6 +49,9 @@ public class CacheServiceImpl implements CacheService {
     @Override
     public Object get(String key, Class<?> clazz) {
         String json = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isBlank(json)) {
+            return null;
+        }
         return JSON.parseObject(json, clazz);
     }
 

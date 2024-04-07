@@ -58,21 +58,24 @@ public class CoolController {
     @ApiOperation("开启空调")
     @SaCheckLogin
     public R turnOn(@RequestBody CustomerACReq customerACReq) {
-        return R.error();
+        coolService.turnOn(StpUtil.getLoginIdAsString(), customerACReq);
+        return R.success();
     }
 
     @PostMapping("/turnOff")
     @ApiOperation("关闭空调")
     @SaCheckLogin
     public R turnOff() {
-        return R.error();
+        coolService.turnOff(StpUtil.getLoginIdAsString());
+        return R.success();
     }
 
     @PostMapping("/change")
     @ApiOperation("调节目标温度或者风速档位")
     @SaCheckLogin
     public R change(@RequestBody CustomerACReq customerACReq) {
-        return R.error();
+        coolService.change(StpUtil.getLoginIdAsString(), customerACReq);
+        return R.success();
     }
 
     @GetMapping("/acStatus")

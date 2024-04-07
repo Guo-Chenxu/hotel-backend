@@ -7,8 +7,11 @@ import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
+import com.hotel.common.dto.response.BillResp;
+import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
+import com.hotel.common.service.server.BillService;
 import com.hotel.common.service.server.RoomService;
 import com.hotel.server.annotation.CheckPermission;
 import io.swagger.annotations.Api;
@@ -17,6 +20,8 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
+
+import javax.ws.rs.Path;
 
 
 /**
@@ -34,6 +39,9 @@ public class RoomController {
 
     @DubboReference
     private RoomService roomService;
+
+    @DubboReference
+    private BillService billService;
 
     @PostMapping("/page")
     @SaCheckLogin
@@ -68,15 +76,28 @@ public class RoomController {
     @PostMapping("/leave")
     @SaCheckLogin
     @CheckPermission({Permission.RECEPTIONIST})
-    @ApiOperation("离店, 返回账单")
+    @ApiOperation("确认离店")
     public R leave(@RequestParam("roomId") String roomId, @RequestParam("customerId") String customerId) {
         Boolean leave = roomService.leave(Long.parseLong(roomId), Long.parseLong(customerId));
-        if (!leave) {
-            return R.error();
-        }
+        return leave
+                ? R.success()
+                : R.error();
+    }
 
-        // todo 调用详单接口, 返回用户账单
-        return null;
+    @GetMapping("/bill/{customerId}")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("查看用户账单")
+    public R<BillResp> bill(@PathVariable("customerId") String customerId) {
+        return R.success(billService.getBill(customerId));
+    }
+
+    @GetMapping("/billStatement/{customerId}")
+    @SaCheckLogin
+    @CheckPermission({Permission.RECEPTIONIST})
+    @ApiOperation("查看用户详单")
+    public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId) {
+        return R.success(billService.getBillStatement(customerId));
     }
 }
 

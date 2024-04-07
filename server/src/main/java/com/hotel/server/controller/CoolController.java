@@ -62,15 +62,14 @@ public class CoolController {
         return R.success(coolService.pageRoomAC(page, pageSize));
     }
 
-//    @GetMapping("/watchAC/{userId}")
-//    @SaIgnore
-//    @ApiOperation("监控空调温度, 顾客端专用")
-//    public void watchAC(@PathVariable("userId") String userId, HttpServletRequest request, HttpServletResponse response) {
-//        if (!"Customer".equals(request.getHeaders("From").nextElement())) {
-//            throw new RuntimeException("请求来源不合法");
-//        }
-//        response.setContentType("text/event-stream;charset=UTF-8");
-//        coolService.watchAC(userId, response);
-//    }
+    @PostMapping("/turnOff")
+    @ApiOperation("关闭指定用户空调")
+    @SaCheckLogin
+    @CheckPermission({Permission.COOL})
+    public R turnOff(@RequestParam("customerId") String customerId) {
+        coolService.turnOff(customerId);
+        return R.success();
+    }
+
 }
 

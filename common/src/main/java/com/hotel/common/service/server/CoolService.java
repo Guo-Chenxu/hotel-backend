@@ -1,6 +1,7 @@
 package com.hotel.common.service.server;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hotel.common.dto.request.CustomerACReq;
 import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.dto.response.PageRoomACResp;
 import com.hotel.common.entity.ACProperties;
@@ -36,6 +37,26 @@ public interface CoolService {
      * 查看顾客房间空调状态
      */
     ACStatusResp getACStatus(String userId);
+
+    /**
+     * 开启空调
+     */
+    void turnOn(String userId, CustomerACReq customerACReq);
+
+    /**
+     * 变温变风
+     */
+    void change(String userId, CustomerACReq customerACReq);
+
+    /**
+     * 关闭用户空调
+     */
+    void turnOff(String userId);
+
+    /**
+     * 获取用户空调线程
+     */
+    Object getACThread(String customerId);
 
     /**
      * 获取空调参数

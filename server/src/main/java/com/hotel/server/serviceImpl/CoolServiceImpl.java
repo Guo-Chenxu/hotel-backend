@@ -6,8 +6,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.ACStatus;
 import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.dto.response.PageRoomACResp;
+import com.hotel.common.entity.ACRequest;
 import com.hotel.common.entity.Customer;
 import com.hotel.common.entity.Room;
+import com.hotel.common.service.server.BillService;
+import com.hotel.server.service.ACScheduleService;
 import com.hotel.server.ws.WebSocketServer;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.request.CustomerACReq;
@@ -45,7 +48,7 @@ import java.util.stream.Collectors;
 @DubboService
 @Slf4j
 public class CoolServiceImpl implements CoolService {
-    // todo init 线程map
+    // 用户id - 用户空调
     private static final ConcurrentHashMap<String, ACThread> threadMap = new ConcurrentHashMap<>();
 
     @DubboReference(check = false)
@@ -63,8 +66,15 @@ public class CoolServiceImpl implements CoolService {
     @DubboReference
     private CacheService cacheService;
 
+    @DubboReference
+    private BillService billService;
+
     @Resource
     private WebSocketServer webSocketServer;
+
+    @Resource
+    private ACScheduleService acScheduleService;
+
 
     @Override
     @Async
@@ -107,7 +117,8 @@ public class CoolServiceImpl implements CoolService {
         thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
                 .indoorTemperatureConfig(indoorTemperatureConfig)
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
-                .timerService(timerService).build();
+                .timerService(timerService).billService(billService).acScheduleService(acScheduleService)
+                .build();
         thread.start();
         threadMap.put(userId, thread);
     }
@@ -142,11 +153,37 @@ public class CoolServiceImpl implements CoolService {
         return resp;
     }
 
+    @Override
+    public void turnOn(String userId, CustomerACReq customerACReq) {
+        ACRequest acRequest = checkRequest(userId, customerACReq);
+        acScheduleService.addOne(acRequest);
+    }
+
+    @Override
+    public void change(String userId, CustomerACReq customerACReq) {
+        ACRequest acRequest = checkRequest(userId, customerACReq);
+        ACThread acThread = threadMap.get(userId);
+        acThread.change(acRequest.getTargetTemperature(), acRequest.getChangeTemperature(),
+                acRequest.getStatus(), acRequest.getPrice());
+    }
+
+
+    @Override
+    public void turnOff(String userId) {
+        ACThread acThread = threadMap.get(userId);
+        acThread.turnOff();
+    }
+
+    @Override
+    public Object getACThread(String customerId) {
+        return threadMap.get(customerId);
+    }
+
 
     /**
      * 校验请求数据是否合法
      */
-    private CustomerACReq checkRequest(CustomerACReq customerACReq) {
+    private ACRequest checkRequest(String userId, CustomerACReq customerACReq) {
         ACProperties acProperties = getACProperties();
         if (acProperties == null) {
             throw new IllegalArgumentException("参数异常, 未设置空调参数, 请联系酒店方开启空调");
@@ -155,7 +192,7 @@ public class CoolServiceImpl implements CoolService {
         if (customerACReq.getTargetTemperature() == null) {
             customerACReq.setTargetTemperature(acProperties.getDefaultTargetTemp());
         }
-        if (customerACReq.getStatus() == null || customerACReq.getStatus() == 0) {
+        if (customerACReq.getStatus() == null || ACStatus.OFF.equals(customerACReq.getStatus())) {
             customerACReq.setStatus(acProperties.getDefaultStatus());
         }
 
@@ -164,7 +201,25 @@ public class CoolServiceImpl implements CoolService {
                 || target.compareTo(acProperties.getLowerBoundTemperature()) < 0) {
             throw new IllegalArgumentException("参数异常");
         }
-        return customerACReq;
+
+        ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
+                .targetTemperature(customerACReq.getTargetTemperature())
+                .status(customerACReq.getStatus()).build();
+        if (ACStatus.LOW.equals(acRequest.getStatus())) {
+            acRequest.setPrice(acProperties.getLow().getPrice());
+            acRequest.setChangeTemperature(acProperties.getLow().getChangeTemperature());
+        } else if (ACStatus.MIDDLE.equals(acRequest.getStatus())) {
+            acRequest.setPrice(acProperties.getMiddle().getPrice());
+            acRequest.setChangeTemperature(acProperties.getMiddle().getChangeTemperature());
+        } else if (ACStatus.HIGH.equals(acRequest.getStatus())) {
+            acRequest.setPrice(acProperties.getHigh().getPrice());
+            acRequest.setChangeTemperature(acProperties.getHigh().getChangeTemperature());
+        } else {
+            log.error("acRequest: {}", acRequest);
+            throw new IllegalArgumentException("参数异常, 空调档位不合法");
+        }
+
+        return acRequest;
     }
 
     @Override
