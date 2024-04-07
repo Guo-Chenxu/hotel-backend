@@ -101,7 +101,7 @@ public class CoolServiceImpl implements CoolService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public synchronized void watchAC(String userId) {
-        // todo 测试代码, 测试后删除
+        //  测试代码, 测试后删除
 //        ACThread thread;
 //        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
 //                .indoorTemperatureConfig(indoorTemperatureConfig)
@@ -112,9 +112,7 @@ public class CoolServiceImpl implements CoolService {
 
         Long roomId = customerService.getById(userId).getRoom();
         Double temperature = roomService.getById(roomId).getTemperature();
-        // todo 少参数
-        ACThread thread = null;
-        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
+        ACThread thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
                 .indoorTemperatureConfig(indoorTemperatureConfig)
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
                 .timerService(timerService).billService(billService).acScheduleService(acScheduleService)

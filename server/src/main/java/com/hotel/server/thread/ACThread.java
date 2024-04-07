@@ -45,7 +45,6 @@ public class ACThread extends Thread {
     private Boolean isRunning; // 控制线程是否继续运行
     private Boolean recover; // 控制是否在回归室温
 
-    // todo 价格 空调档位 时间 要传给财务
     private String price; // 价格
 
     private TimerService timerService;
