@@ -5,6 +5,8 @@ import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.entity.CustomerAC;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -17,6 +19,8 @@ import java.util.Set;
  */
 
 public interface BillService {
+
+    String ping(String id);
 
     /**
      * 获取详单
@@ -38,4 +42,14 @@ public interface BillService {
      * 保存空调账单
      */
     void saveACBill(CustomerAC customerAC);
+
+    /**
+     * 输出详单pdf
+     */
+    void outputBillStatementPDF(BillStatementResp billStatement, Set<String> types, OutputStream output) throws IOException;
+
+    /**
+     * 输出账单pdf
+     */
+    void outputBillPDF(BillResp bill, OutputStream output) throws IOException;
 }

@@ -2,6 +2,7 @@ package com.hotel.server.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.BillType;
 import com.hotel.common.constants.Permission;
@@ -13,6 +14,7 @@ import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.BillService;
+import com.hotel.common.service.server.CoolService;
 import com.hotel.common.service.server.RoomService;
 import com.hotel.server.annotation.CheckPermission;
 import io.swagger.annotations.Api;
@@ -22,7 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +52,9 @@ public class RoomController {
 
     @DubboReference
     private BillService billService;
+
+    @DubboReference
+    private CoolService coolService;
 
     @PostMapping("/page")
     @SaCheckLogin
@@ -83,31 +91,19 @@ public class RoomController {
     @CheckPermission({Permission.RECEPTIONIST})
     @ApiOperation("确认离店")
     public R leave(@RequestParam("roomId") String roomId, @RequestParam("customerId") String customerId) {
+        // 先释放用户占用的所有资源 餐饮(这个逻辑改了应该不需要释放了) 纳凉
+        coolService.turnOff(String.valueOf(customerId));
+
+        // 然后将用户账单写入数据库
+        if (!billService.saveBillStatement(String.valueOf(customerId))) {
+            throw new RuntimeException("写入账单失败, 请稍后重试");
+        }
+
+        // 最后删除房间和用户
         Boolean leave = roomService.leave(Long.parseLong(roomId), Long.parseLong(customerId));
         return leave
                 ? R.success()
                 : R.error();
-    }
-
-    @GetMapping("/bill/{customerId}")
-    @SaCheckLogin
-    @CheckPermission({Permission.RECEPTIONIST})
-    @ApiOperation("查看用户账单")
-    public R<BillResp> bill(@PathVariable("customerId") String customerId, @RequestParam("type") String type) {
-        Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());
-        return R.success(billService.getBill(customerId, types));
-    }
-
-    @GetMapping("/billStatement/{customerId}")
-    @SaCheckLogin
-    @CheckPermission({Permission.RECEPTIONIST})
-    @ApiOperation("查看用户详单")
-    public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId) {
-        Set<String> types = new HashSet<>();
-        types.add(BillType.ROOM);
-        types.add(BillType.AC);
-        types.add(BillType.FOOD);
-        return R.success(billService.getBillStatement(customerId, types));
     }
 }
 

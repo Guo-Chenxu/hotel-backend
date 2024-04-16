@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,12 +48,6 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
 
     @DubboReference(check = false)
     private TimerService timerService;
-
-    @DubboReference(check = false)
-    private CoolService coolService;
-
-    @DubboReference(check = false)
-    private BillService billService;
 
     @Resource
     private IndoorTemperatureConfig indoorTemperatureConfig;
@@ -113,13 +108,6 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean leave(Long roomId, Long customerId) {
-        // 先释放用户占用的所有资源 餐饮(这个逻辑改了应该不需要释放了) 纳凉
-        // 然后将用户账单写入数据库
-        // 最后删除房间和用户
-        coolService.turnOff(String.valueOf(customerId));
-        if (!billService.saveBillStatement(String.valueOf(customerId))) {
-            throw new RuntimeException("写入账单失败, 请稍后重试");
-        }
         if (!this.removeById(roomId) || !customerService.removeById(customerId)) {
             throw new RuntimeException("退房失败, 请稍后重试");
         }

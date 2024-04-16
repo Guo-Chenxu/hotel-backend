@@ -11,6 +11,7 @@ import com.hotel.common.entity.Customer;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.BillService;
 import com.hotel.server.service.ACScheduleService;
+import com.hotel.server.service.impl.ACScheduleServiceImpl;
 import com.hotel.server.ws.WebSocketServer;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.request.CustomerACReq;
@@ -28,9 +29,12 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +49,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 
-@DubboService
+@DubboService(interfaceClass = CoolService.class)
 @Slf4j
 public class CoolServiceImpl implements CoolService {
     // 用户id - 用户空调
@@ -66,15 +70,13 @@ public class CoolServiceImpl implements CoolService {
     @DubboReference
     private CacheService cacheService;
 
-    @DubboReference
+    @DubboReference(check = false)
     private BillService billService;
 
     @Resource
     private WebSocketServer webSocketServer;
 
-    @Resource
-    private ACScheduleService acScheduleService;
-
+    private static final ACScheduleService acScheduleService = new ACScheduleServiceImpl();
 
     @Override
     @Async

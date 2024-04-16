@@ -6,8 +6,6 @@ import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.dto.response.PageRoomACResp;
 import com.hotel.common.entity.ACProperties;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 温度服务

@@ -1,5 +1,6 @@
 package com.hotel.timer.thread;
 
+import cn.hutool.core.date.DateUtil;
 import com.hotel.common.service.server.RoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -80,8 +81,9 @@ public class TimeThread extends Thread {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
             if (localDateTime.getMinute() == 0 && localDateTime.getSecond() == 0) {
                 //  redis发布订阅模式 每小时同步房间温度到数据库中
-                log.info("此时是: {}, 发布房间温度同步消息", now);
-                stringRedisTemplate.convertAndSend(channel, now);
+                String t = DateUtil.format(now, "yyyy-MM-dd HH:mm:ss");
+                log.info("此时是: {}, 发布房间温度同步消息", t);
+                stringRedisTemplate.convertAndSend(channel, t);
             }
         }
     }

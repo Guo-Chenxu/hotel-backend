@@ -16,3 +16,5 @@ dubbo:
     port: -1
   cloud:
     subscribed-services: timer,server
+  consumer:
+    check: false

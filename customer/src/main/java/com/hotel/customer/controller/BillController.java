@@ -1,6 +1,7 @@
 package com.hotel.customer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.hotel.common.constants.BillType;
 import com.hotel.common.constants.Permission;
@@ -14,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +37,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Api(tags = "财务控制接口")
 public class BillController {
-    @DubboReference
+    @DubboReference(check = false)
     private BillService billService;
+
+    @GetMapping("/ping/{id}")
+    public R ping(@PathVariable("id") String id) {
+        return R.success(billService.ping(id));
+    }
 
     @GetMapping("/billStatement")
     @SaCheckLogin
@@ -48,10 +57,40 @@ public class BillController {
     @SaCheckLogin
     @ApiOperation("获取用户账单")
     public R<BillResp> bill() {
-        Set<String> types = new HashSet<>();
-        types.add(BillType.ROOM);
-        types.add(BillType.AC);
-        types.add(BillType.FOOD);
-        return R.success(billService.getBill(StpUtil.getLoginIdAsString(), types));
+        return R.success(billService.getBill(StpUtil.getLoginIdAsString(), new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD))));
+    }
+
+    @GetMapping("/downloadBillStatement")
+    @SaCheckLogin
+    @ApiOperation("下载用户详单pdf")
+    @SaIgnore
+    public void downloadBillStatement(@RequestParam("type") String type,
+                                      HttpServletResponse response) throws IOException {
+        Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());
+        BillStatementResp resp = billService.getBillStatement(StpUtil.getLoginIdAsString(), types);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + StpUtil.getLoginIdAsString() + ".pdf\"");
+
+        ServletOutputStream out = response.getOutputStream();
+        billService.outputBillStatementPDF(resp, types, out);
+        out.flush();
+        out.close();
+    }
+
+    @GetMapping("/downloadBill")
+    @SaCheckLogin
+    @ApiOperation("下载用户账单pdf")
+    @SaIgnore
+    public void downloadBill(HttpServletResponse response) throws IOException {
+        BillResp bill = billService.getBill(StpUtil.getLoginIdAsString(),
+                new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD)));
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=\"" + StpUtil.getLoginIdAsString() + ".pdf\"");
+
+        ServletOutputStream out = response.getOutputStream();
+        billService.outputBillPDF(bill, out);
+        out.flush();
+        out.close();
     }
 }

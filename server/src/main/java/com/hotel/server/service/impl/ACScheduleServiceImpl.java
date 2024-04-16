@@ -10,9 +10,12 @@ import com.hotel.server.thread.ACThread;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -23,7 +26,7 @@ import java.util.*;
  * @create: 2024-03-28 11:46
  * @version: 1.0
  */
-@Service
+@Slf4j
 public class ACScheduleServiceImpl implements ACScheduleService {
     // 请求调度队列
     private static final PriorityQueue<ACRequest> requestQueue = new PriorityQueue<>((o1, o2) -> {

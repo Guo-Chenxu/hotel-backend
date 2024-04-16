@@ -33,8 +33,8 @@ public class BillStatementDaoImpl implements BillStatementDao {
 
     @Override
     public BillStatement save(BillStatement billStatement) {
-        if (billStatement.getCheckoutTime() == null) {
-            billStatement.setCheckoutTime(timerService.getTime());
+        if (billStatement.getCheckOutTime() == null) {
+            billStatement.setCheckOutTime(timerService.getTime());
         }
         return mongoTemplate.save(billStatement);
     }
