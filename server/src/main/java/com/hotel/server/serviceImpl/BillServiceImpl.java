@@ -1,5 +1,6 @@
 package com.hotel.server.serviceImpl;
 
+import com.hotel.common.constants.BillType;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.entity.*;
@@ -18,8 +19,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,36 +52,59 @@ public class BillServiceImpl implements BillService {
     private TimerService timerService;
 
     @Override
-    public BillStatementResp getBillStatement(String customerId) {
+    public BillStatementResp getBillStatement(String customerId, Set<String> types) {
         Customer customer = customerService.getById(customerId);
         if (customer == null) {
-            return getLeavedBillStatement(customerId);
+            return getLeavedBillStatement(customerId, types);
         }
 
         Room room = roomService.getById(customer.getRoom());
         BillStatementResp resp = BillStatementResp.builder().customerId(customerId)
-                .roomId(String.valueOf(room.getId())).checkInTime(customer.getStartTime())
-                .roomPrice(room.getPrice()).deposit(room.getDeposit()).build();
+                .roomId(String.valueOf(room.getId())).build();
 
-        List<CustomerFood> customerFoods = customerFoodDao.selectAll(customerId);
-        List<CustomerAC> customerACs = customerACDao.selectAll(customerId);
-        resp.setFoodBillList(customerFoods);
-        resp.setAcBillList(customerACs);
+        // 房间费用
+        if (types.contains(BillType.ROOM)) {
+            resp.setRoomPrice(room.getPrice());
+            resp.setDeposit(room.getDeposit());
+            resp.setCheckInTime(customer.getStartTime());
 
-        BigDecimal roomPrice = calRoomPrice(customer.getStartTime(), timerService.getTime(), room.getPrice());
-        BigDecimal foodPrice = calFoodPrice(customerFoods);
-        BigDecimal acPrice = calACPrice(customerACs);
+            BigDecimal roomPrice = calRoomPrice(customer.getStartTime(), timerService.getTime(), room.getPrice());
+            resp.setRoomTotPrice(String.valueOf(roomPrice));
+        }
 
-        BigDecimal totPrice = roomPrice.add(foodPrice.add(acPrice)).min(new BigDecimal(room.getDeposit()));
+        // 空调费用
+        if (types.contains(BillType.AC)) {
+            List<CustomerAC> customerACs = customerACDao.selectAll(customerId);
+            resp.setAcBillList(customerACs);
 
-        resp.setTotalPrice(totPrice.toString());
+            BigDecimal acPrice = calACPrice(customerACs);
+            resp.setAcPrice(String.valueOf(acPrice));
+        }
+
+        // 餐饮费用
+        if (types.contains(BillType.FOOD)) {
+            List<CustomerFood> customerFoods = customerFoodDao.selectAll(customerId);
+            resp.setFoodBillList(customerFoods);
+
+            BigDecimal foodPrice = calFoodPrice(customerFoods);
+            resp.setFoodPrice(String.valueOf(foodPrice));
+        }
+
+        if (types.contains(BillType.ROOM) && types.contains(BillType.AC) && types.contains(BillType.FOOD)) {
+            BigDecimal roomTot = new BigDecimal(resp.getRoomTotPrice());
+            BigDecimal acTot = new BigDecimal(resp.getAcPrice());
+            BigDecimal foodTot = new BigDecimal(resp.getFoodPrice());
+            BigDecimal totPrice = roomTot.add(foodTot.add(acTot)).min(new BigDecimal(room.getDeposit()));
+            resp.setTotalPrice(totPrice.toString());
+        }
+
         return resp;
     }
 
     /**
      * 查询已经退房用户的详单
      */
-    private BillStatementResp getLeavedBillStatement(String customerId) {
+    private BillStatementResp getLeavedBillStatement(String customerId, Set<String> types) {
         List<BillStatement> billStatements = billStatementDao.selectAll(customerId);
         if (CollectionUtils.isEmpty(billStatements)) {
             throw new IllegalArgumentException("顾客不存在");
@@ -94,8 +117,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public BillResp getBill(String customerId) {
-        BillStatementResp billStatement = this.getBillStatement(customerId);
+    public BillResp getBill(String customerId, Set<String> types) {
+        BillStatementResp billStatement = this.getBillStatement(customerId, types);
         BillResp resp = BillResp.builder().customerId(customerId).roomId(billStatement.getRoomId())
                 .checkInTime(billStatement.getCheckInTime()).checkOutTime(billStatement.getCheckOutTime())
                 .deposit(billStatement.getDeposit()).totalPrice(billStatement.getTotalPrice()).build();
@@ -111,7 +134,12 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Boolean saveBillStatement(String customerId) {
-        BillStatementResp billStatementResp = this.getBillStatement(customerId);
+        Set<String> types = new HashSet<>();
+        types.add(BillType.ROOM);
+        types.add(BillType.AC);
+        types.add(BillType.FOOD);
+
+        BillStatementResp billStatementResp = this.getBillStatement(customerId, types);
         BillStatement billStatement = new BillStatement();
         BeanUtils.copyProperties(billStatementResp, billStatement);
         billStatementDao.save(billStatement);

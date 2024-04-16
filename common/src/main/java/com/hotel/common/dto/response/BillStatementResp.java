@@ -47,14 +47,23 @@ public class BillStatementResp implements Serializable {
     @ApiModelProperty("房间每晚价格")
     private String roomPrice;
 
+    @ApiModelProperty("截至目前的房费总价")
+    private String roomTotPrice;
+
     @ApiModelProperty("押金")
     private String deposit;
 
     @ApiModelProperty("餐饮详单")
     private List<CustomerFood> foodBillList;
 
+    @ApiModelProperty("餐饮总价")
+    private String foodPrice;
+
     @ApiModelProperty("空调详单")
     private List<CustomerAC> acBillList;
+
+    @ApiModelProperty("空调总价")
+    private String acPrice;
 
     @ApiModelProperty("扣除押金后总价")
     private String totalPrice;

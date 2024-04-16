@@ -1,6 +1,7 @@
 package com.hotel.server.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import com.hotel.common.constants.BillType;
 import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.response.BillResp;
@@ -12,12 +13,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 财务接口
@@ -35,20 +38,25 @@ public class BillController {
     @DubboReference
     private BillService billService;
 
-    @PostMapping("/billStatement/{customerId}")
+    @GetMapping("/billStatement/{customerId}")
     @SaCheckLogin
     @CheckPermission({Permission.FINANCIAL})
     @ApiOperation("获取用户详单")
-    public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId) {
-        return R.success(billService.getBillStatement(customerId));
+    public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId, @RequestParam("type") String type) {
+        Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());
+        return R.success(billService.getBillStatement(customerId, types));
     }
 
-    @PostMapping("/bill/{customerId}")
+    @GetMapping("/bill/{customerId}")
     @SaCheckLogin
     @CheckPermission({Permission.FINANCIAL})
     @ApiOperation("获取用户账单")
     public R<BillResp> bill(@PathVariable("customerId") String customerId) {
-        return R.success(billService.getBill(customerId));
+        Set<String> types = new HashSet<>();
+        types.add(BillType.ROOM);
+        types.add(BillType.AC);
+        types.add(BillType.FOOD);
+        return R.success(billService.getBill(customerId, types));
     }
 
     // todo 各种报表

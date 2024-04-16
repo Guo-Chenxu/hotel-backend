@@ -57,6 +57,11 @@ public class BillStatement implements Serializable {
     private String roomPrice;
 
     /**
+     * 房间总价格
+     */
+    private String roomTotPrice;
+
+    /**
      * 押金
      */
     private String deposit;
@@ -67,9 +72,19 @@ public class BillStatement implements Serializable {
     private List<CustomerFood> foodBillList;
 
     /**
+     * 餐饮总价
+     */
+    private String foodPrice;
+
+    /**
      * 空调详单
      */
     private List<CustomerAC> acBillList;
+
+    /**
+     * 空调总价
+     */
+    private String acPrice;
 
     /**
      * 扣除押金后总价

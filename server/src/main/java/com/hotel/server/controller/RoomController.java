@@ -3,6 +3,7 @@ package com.hotel.server.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.hotel.common.constants.BillType;
 import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.BookRoomReq;
@@ -22,6 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.ws.rs.Path;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -88,8 +93,9 @@ public class RoomController {
     @SaCheckLogin
     @CheckPermission({Permission.RECEPTIONIST})
     @ApiOperation("查看用户账单")
-    public R<BillResp> bill(@PathVariable("customerId") String customerId) {
-        return R.success(billService.getBill(customerId));
+    public R<BillResp> bill(@PathVariable("customerId") String customerId, @RequestParam("type") String type) {
+        Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());
+        return R.success(billService.getBill(customerId, types));
     }
 
     @GetMapping("/billStatement/{customerId}")
@@ -97,7 +103,11 @@ public class RoomController {
     @CheckPermission({Permission.RECEPTIONIST})
     @ApiOperation("查看用户详单")
     public R<BillStatementResp> billStatement(@PathVariable("customerId") String customerId) {
-        return R.success(billService.getBillStatement(customerId));
+        Set<String> types = new HashSet<>();
+        types.add(BillType.ROOM);
+        types.add(BillType.AC);
+        types.add(BillType.FOOD);
+        return R.success(billService.getBillStatement(customerId, types));
     }
 }
 

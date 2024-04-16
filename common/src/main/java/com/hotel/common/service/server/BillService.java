@@ -5,6 +5,9 @@ import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.entity.CustomerAC;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * 财务服务
  *
@@ -18,12 +21,12 @@ public interface BillService {
     /**
      * 获取详单
      */
-    BillStatementResp getBillStatement(String customerId);
+    BillStatementResp getBillStatement(String customerId, Set<String> types);
 
     /**
      * 获取账单
      */
-    BillResp getBill(String customerId);
+    BillResp getBill(String customerId, Set<String> types);
 
     /**
      * 将客户的详单保存到数据库中
