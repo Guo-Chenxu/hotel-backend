@@ -3,10 +3,12 @@ package com.hotel.server.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.HttpCode;
 import com.hotel.common.constants.Permission;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.dto.R;
+import com.hotel.common.dto.response.PageRoomACResp;
 import com.hotel.common.service.server.CacheService;
 import com.hotel.common.service.server.CoolService;
 import com.hotel.server.annotation.CheckPermission;
@@ -58,7 +60,7 @@ public class CoolController {
     @ApiOperation("分页查询各房间空调状态")
     @SaCheckLogin
     @CheckPermission({Permission.COOL})
-    public R pageRoomCool(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageRoomACResp>> pageRoomCool(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
         return R.success(coolService.pageRoomAC(page, pageSize));
     }
 
