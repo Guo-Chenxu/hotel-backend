@@ -27,6 +27,7 @@ import java.util.*;
  * @version: 1.0
  */
 @Slf4j
+@Lazy
 public class ACScheduleServiceImpl implements ACScheduleService {
     // 请求调度队列
     private static final PriorityQueue<ACRequest> requestQueue = new PriorityQueue<>((o1, o2) -> {

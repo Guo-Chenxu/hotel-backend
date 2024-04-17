@@ -76,7 +76,10 @@ public class CoolServiceImpl implements CoolService {
     @Resource
     private WebSocketServer webSocketServer;
 
-    private static final ACScheduleService acScheduleService = new ACScheduleServiceImpl();
+    //    private static final ACScheduleService acScheduleService = new ACScheduleServiceImpl();
+    @Resource
+    @Lazy
+    private ACScheduleService acScheduleService;
 
     @Override
     @Async
