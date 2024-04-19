@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.List;
 
@@ -76,7 +78,8 @@ public class StaffController {
     @ApiOperation("分页查询")
     @SaCheckLogin
     @CheckPermission({Permission.ADMIN})
-    public R<Page<PageStaffResp>> pageStaff(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageStaffResp>> pageStaff(@RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
+                                            @RequestParam(value = "pageSize", defaultValue = "20") @Min(1) @Max(100) Integer pageSize) {
         return R.success(staffService.pageStaff(page, pageSize));
     }
 

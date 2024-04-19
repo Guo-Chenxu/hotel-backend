@@ -62,6 +62,12 @@ public class RoomController {
     @CheckPermission({Permission.RECEPTIONIST})
     @ApiOperation("条件分页查询")
     public R<Page<Room>> page(@RequestBody PageRoomReq pageRoomReq) {
+        if (pageRoomReq.getPage() == null || pageRoomReq.getPage() < 1) {
+            pageRoomReq.setPage(1);
+        }
+        if (pageRoomReq.getPageSize() == null || pageRoomReq.getPageSize() < 1 || pageRoomReq.getPageSize() > 100) {
+            pageRoomReq.setPageSize(20);
+        }
         Page<Room> roomPage = roomService.conditionPage(pageRoomReq);
         return R.success(roomPage);
     }

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +48,8 @@ public class FoodController {
     @GetMapping("/page")
     @ApiOperation("分页查询")
     @SaCheckLogin
-    public R<Page<PageFoodResp>> pageStaff(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageFoodResp>> pageStaff(@RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
+                                           @RequestParam(value = "pageSize", defaultValue = "20")  @Min(1) @Max(100) Integer pageSize) {
         return R.success(foodService.pageFood(page, pageSize));
     }
 

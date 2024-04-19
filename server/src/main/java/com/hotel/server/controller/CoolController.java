@@ -20,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 
 /**
  * 空调控制层
@@ -61,7 +64,8 @@ public class CoolController {
     @ApiOperation("分页查询各房间空调状态")
     @SaCheckLogin
     @CheckPermission({Permission.COOL})
-    public R<Page<PageRoomACResp>> pageRoomCool(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageRoomACResp>> pageRoomCool(@RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
+                                           @RequestParam(value = "pageSize", defaultValue = "20")  @Min(1) @Max(100) Integer pageSize) {
         return R.success(coolService.pageRoomAC(page, pageSize));
     }
 

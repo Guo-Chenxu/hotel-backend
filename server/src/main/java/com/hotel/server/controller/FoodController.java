@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -66,7 +68,8 @@ public class FoodController {
     @ApiOperation("分页查询")
     @SaCheckLogin
     @CheckPermission({Permission.FOOD})
-    public R<Page<PageFoodResp>> pageFood(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
+    public R<Page<PageFoodResp>> pageFood(@RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
+                                           @RequestParam(value = "pageSize", defaultValue = "20")  @Min(1) @Max(100) Integer pageSize) {
         return R.success(foodService.pageFood(page, pageSize));
     }
 
