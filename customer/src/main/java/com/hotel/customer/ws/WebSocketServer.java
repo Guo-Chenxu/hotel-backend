@@ -1,11 +1,8 @@
 package com.hotel.customer.ws;
 
-import com.hotel.common.service.server.CoolService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -52,7 +49,7 @@ public class WebSocketServer {
                     .replace("http://", "ws://").replace("https://", "wss://");
             Request request = new Request.Builder().url(url).build();
 
-            client.newWebSocket(request, new ACWebsockt(userId, null, this));
+            client.newWebSocket(request, new ACWebsocket(userId, null, this));
         } catch (Exception e) {
             log.error("【websocket消息】链接异常, ", e);
         }

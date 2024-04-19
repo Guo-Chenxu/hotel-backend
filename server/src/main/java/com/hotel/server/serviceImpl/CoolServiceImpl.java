@@ -86,21 +86,19 @@ public class CoolServiceImpl implements CoolService {
     @Transactional(rollbackFor = Exception.class)
     public void syncRoomTemp() {
         List<Room> rooms = roomService.list();
-        Map<Long, Long> room2customer = customerService.list(
-                        new LambdaQueryWrapper<Customer>()
-                                .select(Customer::getId, Customer::getRoom))
+        Map<Long, Long> room2customer = customerService.listCustomers(null)
                 .stream().collect(Collectors.toMap(Customer::getRoom, Customer::getId));
 
         rooms.forEach((e) -> {
             Long customerId = room2customer.get(e.getId());
             ACThread acThread = threadMap.get(String.valueOf(customerId));
-            if (acThread == null) {
-                return;
+            if (acThread != null) {
+                e.setTemperature(acThread.getTemperature());
             }
-            e.setTemperature(acThread.getTemperature());
         });
 
-        roomService.saveBatch(rooms);
+        log.info("同步房间温度, room: {}", rooms);
+        roomService.saveOrUpdateBatch(rooms);
     }
 
     @Override
@@ -115,6 +113,9 @@ public class CoolServiceImpl implements CoolService {
 //        thread.start();
 //        threadMap.put(userId, thread);
 
+        if (threadMap.get(userId) != null) {
+            return;
+        }
         Long roomId = customerService.getById(userId).getRoom();
         Double temperature = roomService.getById(roomId).getTemperature();
         ACThread thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
@@ -127,14 +128,21 @@ public class CoolServiceImpl implements CoolService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Page<PageRoomACResp> pageRoomAC(Integer page, Integer pageSize) {
         Page<Customer> customerPage = customerService.page(new Page<>(page, pageSize));
         Page<PageRoomACResp> resp = new Page<>();
         BeanUtils.copyProperties(customerPage, resp, "records");
-        resp.setRecords(customerPage.getRecords().stream().map((e) ->
-                        PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
-                                .acStatus(this.getACStatus(String.valueOf(e.getId())))
-                                .build())
+        resp.setRecords(customerPage.getRecords().stream().map((e) -> {
+                    ACStatusResp acStatus = this.getACStatus(String.valueOf(e.getId()));
+                    if (acStatus.getTemperature() == null) {
+                        Room room = roomService.getById(e.getRoom());
+                        acStatus.setTemperature(room.getTemperature());
+                    }
+                    return PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
+                            .acStatus(acStatus)
+                            .build();
+                })
                 .collect(Collectors.toList()));
         return resp;
     }
@@ -143,7 +151,7 @@ public class CoolServiceImpl implements CoolService {
     public ACStatusResp getACStatus(String userId) {
         ACThread acThread = threadMap.get(userId);
         if (acThread == null) {
-            return new ACStatusResp();
+            return ACStatusResp.builder().price("0").status(ACStatus.OFF).changeTemp(0.0).build();
         }
 
         ACStatusResp resp = ACStatusResp.builder().temperature(acThread.getTemperature())

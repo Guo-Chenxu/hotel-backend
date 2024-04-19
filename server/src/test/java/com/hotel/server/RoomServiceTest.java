@@ -22,7 +22,7 @@ public class RoomServiceTest {
     private RoomService roomService;
 
     @Test
-    public void testInsert() {
+    public void saveBatch() {
 
     }
 }

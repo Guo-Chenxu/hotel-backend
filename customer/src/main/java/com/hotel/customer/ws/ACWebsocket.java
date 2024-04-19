@@ -1,8 +1,5 @@
 package com.hotel.customer.ws;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -12,8 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * 星火websocket通信
@@ -23,7 +18,8 @@ import java.util.UUID;
  * @version: 1.0
  */
 @Slf4j
-public class ACWebsockt extends WebSocketListener {
+public class ACWebsocket extends WebSocketListener {
+// todo 空调有些问题（但又好像不是问题），ws没有断连，当用户退出登录后房间依旧还是会扣费，但是登录的时候做了判断，避免多个线程
 
     private String userId;
 
@@ -34,7 +30,7 @@ public class ACWebsockt extends WebSocketListener {
     private WebSocketServer webSocketServer;
 
     // 构造函数
-    public ACWebsockt(String userId, HttpServletResponse response, WebSocketServer webSocketServer) {
+    public ACWebsocket(String userId, HttpServletResponse response, WebSocketServer webSocketServer) {
         this.userId = userId;
         this.wsCloseFlag = false;
         this.webSocketServer = webSocketServer;

@@ -63,7 +63,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public List<Customer> listCustomers(Long roomId) {
-        return this.list(new LambdaQueryWrapper<Customer>().eq(Customer::getRoom, roomId));
+        return this.list(new LambdaQueryWrapper<Customer>().eq(roomId != null, Customer::getRoom, roomId));
     }
 }
 
