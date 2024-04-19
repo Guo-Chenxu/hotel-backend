@@ -16,6 +16,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 顾客表(Customer)表服务实现类
@@ -53,6 +54,16 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
         return CustomerLoginResp.builder().customerId(String.valueOf(customer.getId()))
                 .name(customer.getName()).leaveTime(customer.getLeaveTime())
                 .token(token).room(String.valueOf(roomId)).temperature(room.getTemperature()).build();
+    }
+
+    @Override
+    public boolean saveCustomer(Customer customer) {
+        return this.save(customer);
+    }
+
+    @Override
+    public List<Customer> listCustomers(Long roomId) {
+        return this.list(new LambdaQueryWrapper<Customer>().eq(Customer::getRoom, roomId));
     }
 }
 

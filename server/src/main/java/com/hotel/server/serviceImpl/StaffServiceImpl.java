@@ -46,8 +46,8 @@ public class StaffServiceImpl extends ServiceImpl<StaffMapper, Staff> implements
     @Transactional(rollbackFor = Exception.class)
     public StaffLoginResp login(String username, String password) {
         Staff staff = staffMapper.selectOne(new LambdaQueryWrapper<Staff>().eq(Staff::getUsername, username));
-        if (!staff.checkPassword(password)) {
-            throw new RuntimeException("密码错误");
+        if (staff == null || !staff.checkPassword(password)) {
+            throw new RuntimeException("用户不存在或密码错误");
         }
 
         cacheService.addWithExpireTime(String.format(RedisKeys.STAFF_ID_INFO, staff.getId()),

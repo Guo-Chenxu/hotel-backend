@@ -1,5 +1,6 @@
 package com.hotel.common.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -29,9 +30,11 @@ public class RoomInfoResp implements Serializable {
     private String customerName;
 
     @ApiModelProperty("入住时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
     @ApiModelProperty("退房时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date leaveTime;
 
     @ApiModelProperty("房间号")

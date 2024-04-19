@@ -56,6 +56,7 @@ public class CheckPermissionAopConfig {
         if (staff == null) {
             staff = staffService.getById(id);
         }
+        log.info("staff: {}", staff);
         String userPermission = staff.getPermission();
         String[] hasPermissions = userPermission.split(",");
 

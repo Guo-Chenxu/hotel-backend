@@ -3,6 +3,8 @@ package com.hotel.server.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.constants.Permission;
@@ -36,12 +38,22 @@ import java.util.List;
 @RequestMapping("staff")
 @Slf4j
 @Api(tags = "酒店服务人员接口")
+@CrossOrigin
 public class StaffController {
     /**
      * 服务对象
      */
     @DubboReference
     private StaffService staffService;
+
+    @GetMapping("/token")
+    @SaIgnore
+    @ApiOperation("获取token, 后端测试用")
+    public R getToken() {
+        Staff staff = staffService.getOne(new LambdaQueryWrapper<Staff>().eq(Staff::getUsername, "admin"));
+        StpUtil.login(staff.getId());
+        return R.success(StpUtil.getTokenValue());
+    }
 
     @PostMapping("/login")
     @ApiOperation("登录")

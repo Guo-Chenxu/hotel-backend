@@ -1,5 +1,6 @@
 package com.hotel.common.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.entity.CustomerFood;
 import io.swagger.annotations.ApiModel;
@@ -39,9 +40,11 @@ public class BillStatementResp implements Serializable {
     private String roomId;
 
     @ApiModelProperty("入住时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
 
     @ApiModelProperty("退房时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date checkOutTime;
 
     @ApiModelProperty("房间每晚价格")

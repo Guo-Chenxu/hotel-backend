@@ -1,5 +1,6 @@
 package com.hotel.common.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class CustomerLoginResp implements Serializable {
     private String name;
 
     @ApiModelProperty("顾客离店时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date leaveTime;
 
     @ApiModelProperty("token, 后续放在请求头里鉴权")

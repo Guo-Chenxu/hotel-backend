@@ -77,7 +77,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
 
         Customer customer = Customer.builder().room(room.getId()).name(bookRoomReq.getCustomerName())
                 .startTime(bookRoomReq.getStartTime()).leaveTime(bookRoomReq.getLeaveTime()).build();
-        return customerService.save(customer);
+        return customerService.saveCustomer(customer);
     }
 
     @Override
@@ -90,8 +90,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         RoomInfoResp resp = RoomInfoResp.builder().roomId(String.valueOf(roomId))
                 .price(room.getPrice()).temperature(String.valueOf(room.getTemperature())).build();
 
-        List<Customer> customers = customerService.list(new LambdaQueryWrapper<Customer>()
-                .eq(Customer::getRoom, roomId));
+        List<Customer> customers = customerService.listCustomers(roomId);
         Date now = timerService.getTime();
         for (Customer customer : customers) {
             if (now.compareTo(customer.getStartTime()) >= 0

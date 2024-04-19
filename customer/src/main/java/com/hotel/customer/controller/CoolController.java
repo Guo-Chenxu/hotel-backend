@@ -39,6 +39,7 @@ import java.net.URL;
 @RequestMapping("cool")
 @Slf4j
 @Api(tags = "纳凉接口")
+@CrossOrigin
 public class CoolController {
     @DubboReference
     private CoolService coolService;

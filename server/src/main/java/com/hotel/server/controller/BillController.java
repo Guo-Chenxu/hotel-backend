@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 @RequestMapping("bill")
 @Slf4j
 @Api(tags = "财务控制接口")
+@CrossOrigin
 public class BillController {
     @DubboReference
     private BillService billService;
