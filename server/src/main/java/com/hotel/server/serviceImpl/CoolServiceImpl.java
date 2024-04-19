@@ -113,7 +113,7 @@ public class CoolServiceImpl implements CoolService {
 //        thread.start();
 //        threadMap.put(userId, thread);
 
-        if (threadMap.get(userId) != null) {
+        if (threadMap.containsKey(userId)) {
             return;
         }
         Long roomId = customerService.getById(userId).getRoom();
@@ -182,7 +182,9 @@ public class CoolServiceImpl implements CoolService {
     @Override
     public void turnOff(String userId) {
         ACThread acThread = threadMap.get(userId);
-        acThread.turnOff();
+        if (acThread != null) {
+            acThread.turnOff();
+        }
     }
 
     @Override
