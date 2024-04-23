@@ -76,7 +76,7 @@ public class TimeThread extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            now = new Date(now.getTime() + speed * 1000 / 10);
+            now = new Date(now.getTime() + speed * 100);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
             if (localDateTime.getMinute() == 0 && localDateTime.getSecond() == 0) {
