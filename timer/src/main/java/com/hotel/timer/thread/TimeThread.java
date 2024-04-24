@@ -72,11 +72,11 @@ public class TimeThread extends Thread {
         while (!stopped) {
             //每过100ms跳动一下时间
             try {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            now = new Date(now.getTime() + speed * 100);
+            now = new Date(now.getTime() + speed * 1000);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
             if (localDateTime.getMinute() == 0 && localDateTime.getSecond() == 0) {

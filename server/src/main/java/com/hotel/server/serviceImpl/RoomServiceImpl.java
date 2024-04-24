@@ -95,8 +95,8 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         List<Customer> customers = customerService.listCustomers(roomId);
         Date now = timerService.getTime();
         for (Customer customer : customers) {
-            if (now.compareTo(customer.getStartTime()) >= 0
-                    && now.compareTo(customer.getLeaveTime()) <= 0) {
+            if (DateUtil.compareHour(now, customer.getStartTime()) >= 0
+                    && DateUtil.compareHour(now, customer.getLeaveTime()) <= 0) {
                 resp.setCustomerName(customer.getName());
                 resp.setStartTime(customer.getStartTime());
                 resp.setLeaveTime(customer.getLeaveTime());
