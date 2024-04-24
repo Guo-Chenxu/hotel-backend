@@ -8,11 +8,13 @@ import com.hotel.common.entity.Customer;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.RoomService;
 import com.hotel.common.service.timer.TimerService;
+import com.hotel.common.utils.DateUtil;
 import com.hotel.customer.mapper.CustomerMapper;
 import com.hotel.common.service.customer.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -45,7 +47,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
                 .eq(Customer::getRoom, roomId));
         Room room = roomService.getById(roomId);
         Date now = timerService.getTime();
-        if (customer == null || room == null || now.compareTo(customer.getStartTime()) < 0 && now.compareTo(customer.getLeaveTime()) > 0) {
+        // 只判定用户此时已经订房, 不判定退房时间
+        if (customer == null || room == null || DateUtil.compareHour(now, customer.getStartTime()) < 0) {
             throw new RuntimeException("该顾客在该时间段内没有预定房间");
         }
 
@@ -57,8 +60,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveCustomer(Customer customer) {
-        return this.save(customer);
+        return this.saveOrUpdate(customer);
     }
 
     @Override

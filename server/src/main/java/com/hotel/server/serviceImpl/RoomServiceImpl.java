@@ -11,6 +11,7 @@ import com.hotel.common.service.customer.CustomerService;
 import com.hotel.common.service.server.BillService;
 import com.hotel.common.service.server.CoolService;
 import com.hotel.common.service.timer.TimerService;
+import com.hotel.common.utils.DateUtil;
 import com.hotel.server.config.IndoorTemperatureConfig;
 import com.hotel.server.mapper.RoomMapper;
 import com.hotel.common.entity.Room;
@@ -63,9 +64,10 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Transactional(rollbackFor = Exception.class)
     public Boolean bookRoom(BookRoomReq bookRoomReq) {
         Date now = timerService.getTime();
-        if (now.compareTo(bookRoomReq.getStartTime()) > 0 || now.compareTo(bookRoomReq.getLeaveTime()) >= 0
-                || bookRoomReq.getStartTime().compareTo(bookRoomReq.getLeaveTime()) >= 0) {
-            throw new RuntimeException("时间不合法");
+        // 房间相关时间均只判定到小时
+        if (DateUtil.compareHour(now, bookRoomReq.getStartTime()) > 0
+                || DateUtil.compareHour(bookRoomReq.getStartTime(), bookRoomReq.getLeaveTime()) >= 0) {
+            throw new RuntimeException("时间不合法, 入住时间应当大于等于当前时间, 离店时间应当大于入住时间");
         }
         Room room = Room.builder().price(bookRoomReq.getPrice())
                 .temperature(indoorTemperatureConfig.getIndoorTemperature())
@@ -107,6 +109,9 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean leave(Long roomId, Long customerId) {
+        Customer customer = customerService.getById(customerId);
+        customer.setLeaveTime(timerService.getTime());
+        customerService.saveCustomer(customer);
         if (!this.removeById(roomId) || !customerService.removeById(customerId)) {
             throw new RuntimeException("退房失败, 请稍后重试");
         }
