@@ -39,6 +39,7 @@ public class RoomController {
     @SaCheckLogin
     @ApiOperation("房间详情")
     public R<RoomInfoResp> info(@PathVariable("roomId") String roomId) {
+        // todo 这个地方会发生水平越权, 用户查看到其他房间信息
         RoomInfoResp info = roomService.info(Long.parseLong(roomId));
         return info != null
                 ? R.success(info)
