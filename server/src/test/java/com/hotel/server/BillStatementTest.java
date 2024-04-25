@@ -1,6 +1,7 @@
 package com.hotel.server;
 
 import com.hotel.common.constants.BillType;
+import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.entity.CustomerFood;
@@ -13,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,7 @@ public class BillStatementTest {
     private BillService billService;
 
     @Test
-    public void testOutputPDF() {
+    public void testOutputPDF() throws IOException {
         BillStatementResp resp = new BillStatementResp();
         resp.setCustomerId("123");
         resp.setRoomId("222");
@@ -60,5 +63,19 @@ public class BillStatementTest {
         resp.getAcBillList().add(customerAC);
 
 //        billService.outputPDF(resp, new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD)));
+        byte[] bytes = billService.generateBillStatementPDF(resp, new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD)));
+
+        try (FileOutputStream outputStream = new FileOutputStream("d:/pdf.pdf")) {
+            outputStream.write(bytes);
+        }
+    }
+
+    @Test
+    public void testGenerateBillPDF() throws IOException {
+        BillResp resp = BillResp.builder().customerId("123").build();
+        byte[] bytes = billService.generateBillPDF(resp);
+        try (FileOutputStream outputStream = new FileOutputStream("d:/pdf.pdf")) {
+            outputStream.write(bytes);
+        }
     }
 }

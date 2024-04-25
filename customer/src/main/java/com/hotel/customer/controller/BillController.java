@@ -74,7 +74,8 @@ public class BillController {
         response.setHeader("Content-Disposition", "inline; filename=\"" + StpUtil.getLoginIdAsString() + ".pdf\"");
 
         ServletOutputStream out = response.getOutputStream();
-        billService.outputBillStatementPDF(resp, types, out);
+        byte[] bytes = billService.generateBillStatementPDF(resp, types);
+        out.write(bytes);
         out.flush();
         out.close();
     }
@@ -90,7 +91,8 @@ public class BillController {
         response.setHeader("Content-Disposition", "inline; filename=\"" + StpUtil.getLoginIdAsString() + ".pdf\"");
 
         ServletOutputStream out = response.getOutputStream();
-        billService.outputBillPDF(bill, out);
+        byte[] bytes = billService.generateBillPDF(bill);
+        out.write(bytes);
         out.flush();
         out.close();
     }

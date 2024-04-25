@@ -46,10 +46,20 @@ public interface BillService {
     /**
      * 输出详单pdf
      */
-    void outputBillStatementPDF(BillStatementResp billStatement, Set<String> types, OutputStream output) throws IOException;
+//    void outputBillStatementPDF(BillStatementResp billStatement, Set<String> types, OutputStream output) throws IOException;
 
     /**
      * 输出账单pdf
      */
-    void outputBillPDF(BillResp bill, OutputStream output) throws IOException;
+//    void outputBillPDF(BillResp bill, OutputStream output) throws IOException;
+
+    /**
+     * 导出详单pdf
+     */
+    byte[] generateBillStatementPDF(BillStatementResp billStatement, Set<String> types) throws IOException;
+
+    /**
+     * 输出账单pdf
+     */
+    byte[] generateBillPDF(BillResp bill) throws IOException;
 }

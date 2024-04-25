@@ -191,12 +191,12 @@ public class BillServiceImpl implements BillService {
         return res;
     }
 
-
     @Override
-    public void outputBillStatementPDF(BillStatementResp billStatement, Set<String> types, OutputStream output) throws IOException {
+    public byte[] generateBillStatementPDF(BillStatementResp billStatement, Set<String> types) throws IOException {
         Document document = new Document();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(document, output);
+            PdfWriter.getInstance(document, outputStream);
             document.open();
 
             Customer customer = customerService.getById(billStatement.getCustomerId());
@@ -269,13 +269,133 @@ public class BillServiceImpl implements BillService {
             log.info("生成pdf结束, 关闭文件流");
             document.close();
         }
+
+        return outputStream.toByteArray();
     }
 
+//    @Override
+//    public void outputBillStatementPDF(BillStatementResp billStatement, Set<String> types, OutputStream output) throws IOException {
+//        Document document = new Document();
+//        try {
+//            PdfWriter.getInstance(document, output);
+//            document.open();
+//
+//            Customer customer = customerService.getById(billStatement.getCustomerId());
+//
+//            PdfPTable table = new PdfPTable(2);
+//
+//            PDFUtil.addRow(table, "房间ID", billStatement.getRoomId());
+//            PDFUtil.addRow(table, "顾客ID", billStatement.getCustomerId());
+//            PDFUtil.addRow(table, "顾客姓名", customer.getName());
+//
+//            if (types.contains(BillType.ROOM)) {
+//                PDFUtil.addRow(table, "  ", "");
+//                PDFUtil.addRow(table, "房间费用: ", "");
+//                PDFUtil.addRow(table, "入住时间", formatDate(billStatement.getCheckInTime()));
+//                if (billStatement.getCheckOutTime() != null) {
+//                    PDFUtil.addRow(table, "退房时间", formatDate(billStatement.getCheckOutTime()));
+//                }
+//                PDFUtil.addRow(table, "房间每晚价格", billStatement.getRoomPrice());
+//                PDFUtil.addRow(table, "房间押金", billStatement.getDeposit());
+//                PDFUtil.addRow(table, "截至目前的房费总价", billStatement.getRoomTotPrice());
+//            }
+//
+//            if (types.contains(BillType.FOOD)) {
+//                PDFUtil.addRow(table, "  ", "");
+//                PDFUtil.addRow(table, "餐饮费用: ", "");
+//                int cnt = 1;
+//                for (CustomerFood food : billStatement.getFoodBillList()) {
+//                    PDFUtil.addRow(table, String.valueOf(cnt), "");
+//                    PDFUtil.addRow(table, "  点餐列表", "");
+//                    food.getFoods().forEach((k, v) -> {
+//                        PDFUtil.addRow(table, "    名字", k.getName());
+//                        PDFUtil.addRow(table, "    价格", k.getPrice());
+//                        PDFUtil.addRow(table, "    数量", v.toString());
+//                    });
+//                    PDFUtil.addRow(table, "  备注", food.getRemarks());
+//                    PDFUtil.addRow(table, "  此次点餐总价", food.getTotalPrice());
+//                    PDFUtil.addRow(table, "  点餐时间", formatDate(food.getCreateAt()));
+//                    cnt++;
+//                }
+//                PDFUtil.addRow(table, "餐饮总价", billStatement.getFoodPrice());
+//            }
+//
+//            if (types.contains(BillType.AC)) {
+//                PDFUtil.addRow(table, "  ", "");
+//                PDFUtil.addRow(table, "空调费用: ", "");
+//                int cnt = 1;
+//                for (CustomerAC ac : billStatement.getAcBillList()) {
+//                    PDFUtil.addRow(table, String.valueOf(cnt), "");
+//                    PDFUtil.addRow(table, "  空调价格", ac.getPrice());
+//                    PDFUtil.addRow(table, "  空调状态", ac.getStatus().toString());
+//                    PDFUtil.addRow(table, "  空调风速 (度/分钟)", ac.getChangeTemperature().toString());
+//                    PDFUtil.addRow(table, "  空调使用时长", ac.getDuration().toString());
+//                    PDFUtil.addRow(table, "  此次服务总价", ac.getTotalPrice());
+//                    PDFUtil.addRow(table, "  使用开始时间", formatDate(ac.getCreateAt()));
+//                    cnt++;
+//                }
+//                PDFUtil.addRow(table, "空调总价", billStatement.getAcPrice());
+//            }
+//
+//            if (types.contains(BillType.ROOM) && types.contains(BillType.AC) && types.contains(BillType.FOOD)) {
+//                PDFUtil.addRow(table, "  ", "");
+//                PDFUtil.addRow(table, "扣除押金后总价", billStatement.getTotalPrice());
+//            }
+//
+//            document.add(table);
+//        } catch (Exception e) {
+//            log.error("生成PDF文件失败", e);
+//            throw new RuntimeException("生成PDF文件失败");
+//        } finally {
+//            log.info("生成pdf结束, 关闭文件流");
+//            document.close();
+//        }
+//    }
+
+//    @Override
+//    public void outputBillPDF(BillResp bill, OutputStream output) throws IOException {
+//        Document document = new Document();
+//        try {
+//            PdfWriter.getInstance(document, output);
+//            document.open();
+//
+//            Customer customer = customerService.getById(bill.getCustomerId());
+//
+//            PdfPTable table = new PdfPTable(2);
+//
+//            PDFUtil.addRow(table, "房间ID", bill.getRoomId());
+//            PDFUtil.addRow(table, "顾客ID", bill.getCustomerId());
+//            PDFUtil.addRow(table, "顾客姓名", customer.getName());
+//
+//            PDFUtil.addRow(table, "入住时间", formatDate(bill.getCheckInTime()));
+//            if (bill.getCheckOutTime() != null) {
+//                PDFUtil.addRow(table, "退房时间", formatDate(bill.getCheckOutTime()));
+//            }
+//            PDFUtil.addRow(table, "房间押金", bill.getDeposit());
+//            PDFUtil.addRow(table, "截至目前的房费总价", bill.getRoomTotPrice());
+//
+//            PDFUtil.addRow(table, "餐饮费用", bill.getFoodBill());
+//            PDFUtil.addRow(table, "空调费用", bill.getAcBill());
+//
+//            PDFUtil.addRow(table, "扣除押金后总价", bill.getTotalPrice());
+//
+//            document.add(table);
+//        } catch (Exception e) {
+//            log.error("生成PDF文件失败", e);
+//            throw new RuntimeException("生成PDF文件失败");
+//        } finally {
+//            log.info("生成pdf结束, 关闭文件流");
+//            document.close();
+//        }
+//
+//    }
+
     @Override
-    public void outputBillPDF(BillResp bill, OutputStream output) throws IOException {
+    public byte[] generateBillPDF(BillResp bill) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Document document = new Document();
         try {
-            PdfWriter.getInstance(document, output);
+            PdfWriter.getInstance(document, outputStream);
             document.open();
 
             Customer customer = customerService.getById(bill.getCustomerId());
@@ -299,8 +419,7 @@ public class BillServiceImpl implements BillService {
             PDFUtil.addRow(table, "扣除押金后总价", bill.getTotalPrice());
 
             document.add(table);
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             log.error("生成PDF文件失败", e);
             throw new RuntimeException("生成PDF文件失败");
         } finally {
@@ -308,6 +427,7 @@ public class BillServiceImpl implements BillService {
             document.close();
         }
 
+        return outputStream.toByteArray();
     }
 
 

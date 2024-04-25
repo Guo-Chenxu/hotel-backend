@@ -59,7 +59,7 @@ public class BillController {
     @CheckPermission({Permission.FINANCIAL, Permission.RECEPTIONIST})
     @ApiOperation("获取用户账单")
     public R<BillResp> bill(@PathVariable("customerId") String customerId) {
-        return R.success(billService.getBill(customerId,  new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD))));
+        return R.success(billService.getBill(customerId, new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD))));
     }
 
     @GetMapping("/downloadBillStatement/{customerId}")
@@ -76,7 +76,8 @@ public class BillController {
         response.setHeader("Content-Disposition", "inline; filename=\"" + customerId + ".pdf\"");
 
         ServletOutputStream out = response.getOutputStream();
-        billService.outputBillStatementPDF(resp, types, out);
+        byte[] bytes = billService.generateBillStatementPDF(resp, types);
+        out.write(bytes);
         out.flush();
         out.close();
     }
@@ -92,7 +93,8 @@ public class BillController {
         response.setHeader("Content-Disposition", "inline; filename=\"" + customerId + ".pdf\"");
 
         ServletOutputStream out = response.getOutputStream();
-        billService.outputBillPDF(bill, out);
+        byte[] bytes = billService.generateBillPDF(bill);
+        out.write(bytes);
         out.flush();
         out.close();
     }
