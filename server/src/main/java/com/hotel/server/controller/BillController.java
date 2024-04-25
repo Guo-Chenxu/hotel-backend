@@ -11,6 +11,7 @@ import com.hotel.common.entity.BillStatement;
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.entity.CustomerFood;
 import com.hotel.common.entity.Food;
+import com.hotel.common.service.customer.CustomerService;
 import com.hotel.common.service.server.BillService;
 import com.hotel.server.annotation.CheckPermission;
 import io.swagger.annotations.Api;
@@ -44,6 +45,14 @@ import java.util.stream.Collectors;
 public class BillController {
     @DubboReference
     private BillService billService;
+
+    @DubboReference(check = false)
+    private CustomerService customerService;
+
+    @GetMapping("/ping/{id}")
+    public R ping(@PathVariable("id") String id) {
+        return R.success(customerService.ping(id));
+    }
 
     @GetMapping("/billStatement/{customerId}")
     @SaCheckLogin

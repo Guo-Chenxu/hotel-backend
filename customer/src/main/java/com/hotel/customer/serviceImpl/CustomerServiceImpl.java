@@ -41,6 +41,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     private RoomService roomService;
 
     @Override
+    public String ping(String id) {
+        return "pong " + id;
+    }
+
+    @Override
     public CustomerLoginResp login(String name, long roomId) {
         Customer customer = customerMapper.selectOne(new LambdaQueryWrapper<Customer>()
                 .eq(Customer::getName, name)

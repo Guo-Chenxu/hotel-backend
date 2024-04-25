@@ -201,6 +201,7 @@ public class CoolServiceImpl implements CoolService {
         if (acProperties == null) {
             throw new IllegalArgumentException("参数异常, 未设置空调参数, 请联系酒店方开启空调");
         }
+        log.info("空调相关参数: {}", acProperties);
 
         if (customerACReq.getTargetTemperature() == null) {
             customerACReq.setTargetTemperature(acProperties.getDefaultTargetTemp());
@@ -212,7 +213,7 @@ public class CoolServiceImpl implements CoolService {
         Double target = customerACReq.getTargetTemperature();
         if (target.compareTo(acProperties.getUpperBoundTemperature()) > 0
                 || target.compareTo(acProperties.getLowerBoundTemperature()) < 0) {
-            throw new IllegalArgumentException("参数异常");
+            throw new IllegalArgumentException("参数异常, 目标温度不在指定范围内");
         }
 
         ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
@@ -232,6 +233,7 @@ public class CoolServiceImpl implements CoolService {
             throw new IllegalArgumentException("参数异常, 空调档位不合法");
         }
 
+        log.info("空调请求参数: {}", acRequest);
         return acRequest;
     }
 

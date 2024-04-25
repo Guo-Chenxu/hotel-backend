@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @Slf4j
 public class BillStatementTest {
 

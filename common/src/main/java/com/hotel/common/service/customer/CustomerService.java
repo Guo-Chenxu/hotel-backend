@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface CustomerService extends IService<Customer> {
 
+    String ping(String id);
+
     /**
      * 顾客登录
      */
