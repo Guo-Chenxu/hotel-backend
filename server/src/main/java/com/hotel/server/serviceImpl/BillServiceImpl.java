@@ -113,7 +113,7 @@ public class BillServiceImpl implements BillService {
             BigDecimal roomTot = new BigDecimal(resp.getRoomTotPrice());
             BigDecimal acTot = new BigDecimal(resp.getAcPrice());
             BigDecimal foodTot = new BigDecimal(resp.getFoodPrice());
-            BigDecimal totPrice = roomTot.add(foodTot.add(acTot)).min(new BigDecimal(room.getDeposit()));
+            BigDecimal totPrice = roomTot.add(foodTot.add(acTot)).subtract(new BigDecimal(room.getDeposit()));
             resp.setTotalPrice(totPrice.toString());
         }
 

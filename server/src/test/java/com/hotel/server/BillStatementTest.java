@@ -87,11 +87,11 @@ public class BillStatementTest {
         BigDecimal divide = new BigDecimal("200").divide(u, 0, RoundingMode.FLOOR);
         log.info("200: {}", Integer.parseInt(String.valueOf(divide)));
         BigDecimal divide1 = new BigDecimal("201").divide(u, 0, RoundingMode.FLOOR);
-        log.info("201: {}", String.valueOf(divide1));
+        log.info("201: {}", divide1);
         BigDecimal divide2 = new BigDecimal("299").divide(u, 0, RoundingMode.FLOOR);
-        log.info("299: {}", String.valueOf(divide2));
+        log.info("299: {}", divide2);
         BigDecimal divide3 = new BigDecimal("300").divide(u, 0, RoundingMode.FLOOR);
-        log.info("300: {}", String.valueOf(divide3));
+        log.info("300: {}", divide3);
         List<String> prices = Arrays.asList("100", "200", "201", "299", "299.99", "999", "150", "80");
 
         Map<Integer, Integer> map = new HashMap<>();
@@ -100,5 +100,10 @@ public class BillStatementTest {
             map.put(d.intValue() * 100, map.getOrDefault(d.intValue() * 100, 0) + 1);
         });
         log.info("{}", map);
+    }
+
+    @Test
+    public void testGenBill() {
+        billService.getBill("1781186036103704578", new HashSet<>(Arrays.asList(BillType.AC, BillType.ROOM, BillType.FOOD)));
     }
 }
