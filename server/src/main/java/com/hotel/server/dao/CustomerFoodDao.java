@@ -1,9 +1,9 @@
 package com.hotel.server.dao;
 
 
-
 import com.hotel.common.entity.CustomerFood;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,4 +23,9 @@ public interface CustomerFoodDao {
      * 根据用户id查询
      */
     List<CustomerFood> selectAll(String userId);
+
+    /**
+     * 选取所有时间范围内的订单
+     */
+    List<CustomerFood> selectInTime(Date startTime, Date endTime);
 }

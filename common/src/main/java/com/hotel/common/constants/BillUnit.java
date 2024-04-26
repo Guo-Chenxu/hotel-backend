@@ -9,6 +9,6 @@ package com.hotel.common.constants;
  */
 public interface BillUnit {
     Integer ROOM = 100;
-    Integer Food = 10;
+    Integer FOOD = 10;
     Integer AC = 1;
 }

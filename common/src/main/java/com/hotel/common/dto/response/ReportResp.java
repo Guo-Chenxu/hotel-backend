@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 报表返回值
@@ -38,6 +39,6 @@ public class ReportResp implements Serializable {
     @ApiModelProperty("报表数据类型, 1/2/3只能选一个")
     private String type;
 
-    @ApiModelProperty("销量, 计量单位为k, 下标为i, 则表示价格[i*k, (i+1)*k)区间的销量, 房间/餐饮/空调的k分别为100/10/1")
-    private List<Integer> count;
+    @ApiModelProperty("销量, 计量单位为u, 键值对为k-v, 表示价格[k, k+u)区间的销量为v, 房间/餐饮/空调的u分别为100/10/1")
+    private Map<Integer, Integer> count;
 }

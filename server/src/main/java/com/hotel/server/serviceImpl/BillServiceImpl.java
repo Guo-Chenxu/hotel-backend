@@ -8,6 +8,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.*;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 
 import com.hotel.common.constants.BillType;
@@ -336,40 +337,66 @@ public class BillServiceImpl implements BillService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ReportResp RoomReport(Date startTime, Date endTime) {
+        ReportResp.ReportRespBuilder respBuilder = ReportResp.builder().startTime(startTime)
+                .endTime(endTime).type(BillType.ROOM);
+
         List<Long> roomIds = customerService.listCustomerRoomInTime(startTime, endTime);
+        if (CollectionUtils.isEmpty(roomIds)) {
+            return respBuilder.count(new HashMap<>()).build();
+        }
+
         List<String> prices = roomService.selectAllRoomPrice(roomIds);
-        return ReportResp.builder().startTime(startTime).endTime(endTime).type(BillType.ROOM)
-                .count(this.parseList(prices, BillUnit.ROOM)).build();
+        return respBuilder.count(this.parseMap(prices, BillUnit.ROOM)).build();
     }
 
     /**
-     * todo
      * 空调相关报表
      */
     private ReportResp ACReport(Date startTime, Date endTime) {
-        return null;
+        ReportResp.ReportRespBuilder respBuilder = ReportResp.builder().startTime(startTime)
+                .endTime(endTime).type(BillType.AC);
+
+        List<CustomerAC> customerACS = customerACDao.selectInTime(startTime, endTime);
+        if (CollectionUtils.isEmpty(customerACS)) {
+            return respBuilder.count(new HashMap<>()).build();
+        }
+
+        List<String> prices = customerACS.stream().map(CustomerAC::getPrice).collect(Collectors.toList());
+        return respBuilder.count(this.parseMap(prices, BillUnit.AC)).build();
     }
 
     /**
-     * todo
      * 餐饮相关报表
      */
     private ReportResp FoodReport(Date startTime, Date endTime) {
-        return null;
+        ReportResp.ReportRespBuilder respBuilder = ReportResp.builder().startTime(startTime)
+                .endTime(endTime).type(BillType.FOOD);
+
+        List<CustomerFood> customerFoods = customerFoodDao.selectInTime(startTime, endTime);
+        if (CollectionUtils.isEmpty(customerFoods)) {
+            return respBuilder.count(new HashMap<>()).build();
+        }
+
+        List<String> prices = new ArrayList<>();
+        customerFoods.forEach((e) -> {
+            e.getFoods().forEach((k, v) -> {
+                prices.addAll(Collections.nCopies(v, k.getPrice()));
+            });
+        });
+        return respBuilder.count(this.parseMap(prices, BillUnit.FOOD)).build();
     }
 
     /**
-     * todo
      * 将销量转换成列表
      */
-    private List<Integer> parseList(List<String> prices, Integer unit) {
+    private Map<Integer, Integer> parseMap(List<String> prices, Integer unit) {
         BigDecimal u = new BigDecimal(unit);
         Map<Integer, Integer> map = new HashMap<>();
         prices.forEach((e) -> {
-            BigDecimal d = new BigDecimal(e).divide(u);
-
+            BigDecimal d = new BigDecimal(e).divide(u, 0, RoundingMode.FLOOR);
+            map.put(d.intValue() * unit, map.getOrDefault(d.intValue() * unit, 0) + 1);
         });
-        return new ArrayList<>();
+        return map;
     }
 
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

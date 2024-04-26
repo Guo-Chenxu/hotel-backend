@@ -1,10 +1,10 @@
 package com.hotel.server.dao;
 
 
-
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.entity.CustomerFood;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,4 +24,9 @@ public interface CustomerACDao {
      * 根据用户id查询
      */
     List<CustomerAC> selectAll(String userId);
+
+    /**
+     * 查询所有在范围时间内的数据
+     */
+    List<CustomerAC> selectInTime(Date startTime, Date endTime);
 }

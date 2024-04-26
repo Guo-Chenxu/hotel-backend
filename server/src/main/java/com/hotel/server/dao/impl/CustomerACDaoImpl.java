@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,12 @@ public class CustomerACDaoImpl implements CustomerACDao {
     @Override
     public List<CustomerAC> selectAll(String userId) {
         Query q = Query.query(Criteria.where("customerId").is(userId));
+        return mongoTemplate.find(q, CustomerAC.class);
+    }
+
+    @Override
+    public List<CustomerAC> selectInTime(Date startTime, Date endTime) {
+        Query q = Query.query(Criteria.where("createAt").gte(startTime).lte(endTime));
         return mongoTemplate.find(q, CustomerAC.class);
     }
 }

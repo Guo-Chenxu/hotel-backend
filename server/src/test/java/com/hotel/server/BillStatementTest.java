@@ -92,5 +92,13 @@ public class BillStatementTest {
         log.info("299: {}", String.valueOf(divide2));
         BigDecimal divide3 = new BigDecimal("300").divide(u, 0, RoundingMode.FLOOR);
         log.info("300: {}", String.valueOf(divide3));
+        List<String> prices = Arrays.asList("100", "200", "201", "299", "299.99", "999", "150", "80");
+
+        Map<Integer, Integer> map = new HashMap<>();
+        prices.forEach((e) -> {
+            BigDecimal d = new BigDecimal(e).divide(u, 0, RoundingMode.FLOOR);
+            map.put(d.intValue() * 100, map.getOrDefault(d.intValue() * 100, 0) + 1);
+        });
+        log.info("{}", map);
     }
 }
