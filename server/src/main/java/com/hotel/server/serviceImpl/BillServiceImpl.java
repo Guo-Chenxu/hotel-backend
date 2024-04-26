@@ -1,5 +1,6 @@
 package com.hotel.server.serviceImpl;
 
+import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.BillUnit;
 import com.hotel.common.dto.response.ReportResp;
 import com.hotel.common.utils.PDFUtil;
@@ -232,8 +233,9 @@ public class BillServiceImpl implements BillService {
                     PDFUtil.addRow(table, String.valueOf(cnt), "");
                     PDFUtil.addRow(table, "  点餐列表", "");
                     food.getFoods().forEach((k, v) -> {
-                        PDFUtil.addRow(table, "    名字", k.getName());
-                        PDFUtil.addRow(table, "    价格", k.getPrice());
+                        Food f = JSON.parseObject(k, Food.class);
+                        PDFUtil.addRow(table, "    名字", f.getName());
+                        PDFUtil.addRow(table, "    价格", f.getPrice());
                         PDFUtil.addRow(table, "    数量", v.toString());
                     });
                     PDFUtil.addRow(table, "  备注", food.getRemarks());
@@ -380,7 +382,8 @@ public class BillServiceImpl implements BillService {
         List<String> prices = new ArrayList<>();
         customerFoods.forEach((e) -> {
             e.getFoods().forEach((k, v) -> {
-                prices.addAll(Collections.nCopies(v, k.getPrice()));
+                Food f = JSON.parseObject(k, Food.class);
+                prices.addAll(Collections.nCopies(v, f.getPrice()));
             });
         });
         return respBuilder.count(this.parseMap(prices, BillUnit.FOOD)).build();

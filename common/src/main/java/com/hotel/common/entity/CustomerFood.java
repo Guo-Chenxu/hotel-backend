@@ -38,7 +38,7 @@ public class CustomerFood implements Serializable {
     /**
      * 点餐列表
      */
-    private Map<Food, Integer> foods;
+    private Map<String, Integer> foods;
 
     /**
      * 总价

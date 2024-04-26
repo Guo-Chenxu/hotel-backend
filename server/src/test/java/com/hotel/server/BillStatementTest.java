@@ -1,5 +1,6 @@
 package com.hotel.server;
 
+import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.BillType;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
@@ -50,10 +51,10 @@ public class BillStatementTest {
         resp.setTotalPrice("71908324");
 
         Food food = Food.builder().name("food").price("31").build();
-        Map<Food, Integer> map = new HashMap<>();
-        map.put(food, 1);
+        Map<String, Integer> map = new HashMap<>();
+        map.put(JSON.toJSONString(food), 1);
         food.setPrice("111");
-        map.put(food, 2);
+        map.put(JSON.toJSONString(food), 2);
         CustomerFood cf = CustomerFood.builder().foods(map).totalPrice("1378924").remarks("123").createAt(new Date()).build();
         resp.setFoodBillList(new ArrayList<>());
         resp.getFoodBillList().add(cf);

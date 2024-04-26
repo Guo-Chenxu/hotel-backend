@@ -1,5 +1,6 @@
 package com.hotel.server.serviceImpl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -98,7 +99,10 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
         }
 
         customerFood.setTotalPrice(String.valueOf(totalPrice));
-        customerFood.setFoods(map);
+
+        Map<String, Integer> order = new HashMap<>(map.size());
+        map.forEach((k, v) -> order.put(JSON.toJSONString(k), v));
+        customerFood.setFoods(order);
         customerFood = customerFoodDao.save(customerFood);
         return customerFood != null && customerFood.getId() != null;
     }
