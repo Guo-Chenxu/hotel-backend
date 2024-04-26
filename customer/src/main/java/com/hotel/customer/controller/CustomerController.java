@@ -2,6 +2,7 @@ package com.hotel.customer.controller;
 
 
 import cn.dev33.satoken.annotation.SaIgnore;
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hotel.common.dto.R;
@@ -44,6 +45,15 @@ public class CustomerController {
     @SaIgnore
     public R<CustomerLoginResp> login(@RequestParam("name") String name, @RequestParam("room") String room) {
         return R.success(customerService.login(name, Long.parseLong(room)));
+    }
+
+    @GetMapping("/getToken")
+    @ApiOperation("后端测试用")
+    @SaIgnore
+    public R getToken() {
+        StpUtil.login(1781186036103704578L);
+        String token = StpUtil.getTokenValue();
+        return R.success(token);
     }
 
 }

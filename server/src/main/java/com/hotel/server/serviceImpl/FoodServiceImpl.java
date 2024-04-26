@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hotel.common.dto.request.OrderFoodReq;
 import com.hotel.common.dto.request.SaveFoodReq;
+import com.hotel.common.dto.response.HistoryFoodResp;
 import com.hotel.common.dto.response.PageFoodResp;
 import com.hotel.common.dto.response.PageStaffResp;
 import com.hotel.common.entity.CustomerFood;
@@ -75,8 +76,25 @@ public class FoodServiceImpl extends ServiceImpl<FoodMapper, Food> implements Fo
     }
 
     @Override
-    public List<CustomerFood> history(String userId) {
-        return customerFoodDao.selectAll(userId);
+    public List<HistoryFoodResp> history(String userId) {
+        List<CustomerFood> customerFoods = customerFoodDao.selectAll(userId);
+        List<HistoryFoodResp> resp = new ArrayList<>();
+        if (customerFoods == null) {
+            return resp;
+        }
+
+        customerFoods.forEach((e) -> {
+            HistoryFoodResp h = HistoryFoodResp.builder().id(e.getId()).customerId(e.getCustomerId())
+                    .totalPrice(e.getTotalPrice()).remarks(e.getRemarks())
+                    .createAt(e.getCreateAt()).build();
+            Map<Food, Integer> map = new HashMap<>();
+            e.getFoods().forEach((k, v) -> {
+                map.put(JSON.parseObject(k, Food.class), v);
+            });
+            h.setFoods(map);
+            resp.add(h);
+        });
+        return resp;
     }
 
     @Override

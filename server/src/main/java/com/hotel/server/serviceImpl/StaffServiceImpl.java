@@ -63,11 +63,14 @@ public class StaffServiceImpl extends ServiceImpl<StaffMapper, Staff> implements
     public Boolean save(SaveStaffReq saveStaffReq) {
         Staff staff = Staff.builder().username(saveStaffReq.getUsername()).password(saveStaffReq.getPassword()).build();
         staff.encryptPassword();
-        if (saveStaffReq.getId() != null) {
+        if (saveStaffReq.getId() != null && staffMapper.selectById(saveStaffReq.getId()) != null) {
             staff.setId(Long.parseLong(saveStaffReq.getId()));
         }
         StringBuilder sb = new StringBuilder();
-        saveStaffReq.getPermission().forEach(sb::append);
+        for (String s : saveStaffReq.getPermission()) {
+            sb.append(s).append(",");
+        }
+//        saveStaffReq.getPermission().forEach(sb::append);
         staff.setPermission(sb.toString());
 
         return this.saveOrUpdate(staff);

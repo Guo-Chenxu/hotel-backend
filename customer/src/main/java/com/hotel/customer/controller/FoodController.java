@@ -9,6 +9,7 @@ import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.OrderFoodReq;
 import com.hotel.common.dto.request.SaveFoodReq;
+import com.hotel.common.dto.response.HistoryFoodResp;
 import com.hotel.common.dto.response.PageFoodResp;
 import com.hotel.common.entity.CustomerFood;
 import com.hotel.common.service.server.FoodService;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,14 +51,14 @@ public class FoodController {
     @ApiOperation("分页查询")
     @SaCheckLogin
     public R<Page<PageFoodResp>> pageStaff(@RequestParam(value = "page", defaultValue = "1") @Min(1) Integer page,
-                                           @RequestParam(value = "pageSize", defaultValue = "20")  @Min(1) @Max(100) Integer pageSize) {
+                                           @RequestParam(value = "pageSize", defaultValue = "20") @Min(1) @Max(100) Integer pageSize) {
         return R.success(foodService.pageFood(page, pageSize));
     }
 
     @GetMapping("/history")
     @ApiOperation("查询历史订单")
     @SaCheckLogin
-    public R<List<CustomerFood>> history() {
+    public R<List<HistoryFoodResp>> history() {
         return R.success(foodService.history(StpUtil.getLoginIdAsString()));
     }
 
@@ -64,6 +66,9 @@ public class FoodController {
     @ApiOperation("下单")
     @SaCheckLogin
     public R orderFood(@RequestBody OrderFoodReq orderFoodReq) {
+        if (CollectionUtils.isEmpty(orderFoodReq.getOrder())) {
+            return R.error("订单不能为空");
+        }
         return foodService.saveOrder(StpUtil.getLoginIdAsString(), orderFoodReq)
                 ? R.success("下单成功")
                 : R.error();
