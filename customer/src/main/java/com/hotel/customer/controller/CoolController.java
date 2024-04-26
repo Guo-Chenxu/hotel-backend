@@ -3,9 +3,11 @@ package com.hotel.customer.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.hotel.common.constants.Permission;
 import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.CustomerACReq;
 import com.hotel.common.dto.response.ACStatusResp;
+import com.hotel.common.entity.ACProperties;
 import com.hotel.common.service.server.CoolService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -71,6 +73,13 @@ public class CoolController {
     @SaCheckLogin
     public R<ACStatusResp> getACStatus() {
         return R.success(coolService.getACStatus(StpUtil.getLoginIdAsString()));
+    }
+
+    @GetMapping("/properties")
+    @ApiOperation("查看空调参数")
+    @SaCheckLogin
+    public R<ACProperties> getProperties() {
+        return R.success(coolService.getACProperties());
     }
 }
 

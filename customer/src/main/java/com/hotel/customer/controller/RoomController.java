@@ -8,12 +8,15 @@ import com.hotel.common.dto.R;
 import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
 import com.hotel.common.dto.response.RoomInfoResp;
+import com.hotel.common.entity.Customer;
 import com.hotel.common.entity.Room;
+import com.hotel.common.service.customer.CustomerService;
 import com.hotel.common.service.server.RoomService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -34,12 +37,14 @@ public class RoomController {
     @DubboReference(check = false)
     private RoomService roomService;
 
+    @DubboReference(check = false)
+    private CustomerService customerService;
+
 
     @GetMapping("/info/{roomId}")
     @SaCheckLogin
     @ApiOperation("房间详情")
     public R<RoomInfoResp> info(@PathVariable("roomId") String roomId) {
-        // todo 这个地方会发生水平越权, 用户查看到其他房间信息
         RoomInfoResp info = roomService.info(Long.parseLong(roomId));
         return info != null
                 ? R.success(info)

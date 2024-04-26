@@ -41,6 +41,9 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     // 已有调度的map
     private static final Map<String, ACThread> runningMap = new HashMap<>();
 
+    // todo 缺少时间片轮转调度, 目前两个想法
+    // 1. 像定时更新一样, 每隔5分钟发送一条消息, 接受到消息后开始清理超过5分钟的工作的空调
+
     @DubboReference
     private CacheService cacheService;
 
@@ -63,10 +66,8 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     }
 
     /**
-     * 这是个假的异步
      * 调度
      */
-    @Async
     public synchronized void schedule() {
         ACProperties acProperties = (ACProperties) cacheService.get(RedisKeys.AC_PROPERTIES, ACProperties.class);
         // 先满足让运行空调达到最大值

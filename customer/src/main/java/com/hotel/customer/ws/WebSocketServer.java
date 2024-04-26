@@ -43,7 +43,7 @@ public class WebSocketServer {
             this.userId = userId;
             webSockets.add(this);
             sessionPool.put(userId, session);
-            log.info("【websocket消息】有新的连接，总数为:" + webSockets.size());
+            log.info("【websocket消息】有新的连接, 连接用户id为: {}, 连接总数为: {}", userId, webSockets.size());
             OkHttpClient client = new OkHttpClient.Builder().build();
             String url = String.format(acUrl, "123")
                     .replace("http://", "ws://").replace("https://", "wss://");

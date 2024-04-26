@@ -167,6 +167,8 @@ public class CoolServiceImpl implements CoolService {
     @Override
     public void turnOn(String userId, CustomerACReq customerACReq) {
         ACRequest acRequest = checkRequest(userId, customerACReq);
+        ACThread acThread = threadMap.get(userId);
+        acThread.setStatus(ACStatus.WAITING);
         acScheduleService.addOne(acRequest);
     }
 
@@ -243,6 +245,8 @@ public class CoolServiceImpl implements CoolService {
         if (StringUtils.isBlank(json)) {
             throw new RuntimeException("未找到空调参数, 请先完成参数设置");
         }
-        return JSON.parseObject(json, ACProperties.class);
+        ACProperties acProperties = JSON.parseObject(json, ACProperties.class);
+        acProperties.setIndoorTemperature(indoorTemperatureConfig.getIndoorTemperature());
+        return acProperties;
     }
 }

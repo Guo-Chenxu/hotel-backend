@@ -58,17 +58,17 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
-            if (status == 0) {
-                if (temperature.compareTo(indoorTemperatureConfig.getIndoorTemperature()) > 0) {
+            if (ACStatus.OFF.equals(status)) {
+                if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
-                } else if (temperature.compareTo(indoorTemperatureConfig.getIndoorTemperature()) < 0) {
+                } else if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) < 0) {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 }
             } else {
-                if (temperature.compareTo(targetTemperature) > 0) {
+                if (compareTemperature(temperature, targetTemperature) > 0) {
                     temperature -= changeTemperature / 60.0;
-                } else if (temperature.compareTo(targetTemperature) < 0) {
-                    targetTemperature += changeTemperature / 60.0;
+                } else if (compareTemperature(temperature, targetTemperature) < 0) {
+                    temperature += changeTemperature / 60.0;
                 } else {
                     this.turnOff();
                 }
@@ -85,6 +85,18 @@ public class ACThread extends Thread {
         long start = timerService.getTime().getTime();
         while (timerService.getTime().getTime() - start < millis) {
         }
+    }
+
+    /**
+     * 比较温度
+     */
+    private int compareTemperature(double a, double b) {
+        if (a - b > 0.001) {
+            return 1;
+        } else if (b - a > 0.001) {
+            return -1;
+        }
+        return 0;
     }
 
     /**
