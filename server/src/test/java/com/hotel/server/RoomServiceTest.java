@@ -7,6 +7,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 房间服务测试类
  *
@@ -14,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @create: 2024-03-20 10:37
  * @version: 1.0
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class RoomServiceTest {
 
@@ -22,7 +25,8 @@ public class RoomServiceTest {
     private RoomService roomService;
 
     @Test
-    public void saveBatch() {
-
+    public void testSelectList() {
+        List<String> strings = roomService.selectAllRoomPrice(Arrays.asList(1L, 3L));
+        strings.forEach(log::info);
     }
 }

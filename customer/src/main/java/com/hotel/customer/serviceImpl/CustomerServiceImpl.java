@@ -74,5 +74,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     public List<Customer> listCustomers(Long roomId) {
         return this.list(new LambdaQueryWrapper<Customer>().eq(roomId != null, Customer::getRoom, roomId));
     }
+
+    @Override
+    public List<Long> listCustomerRoomInTime(Date startTime, Date endTime) {
+        return customerMapper.selectCustomerRoomInTime(startTime, endTime);
+    }
 }
 

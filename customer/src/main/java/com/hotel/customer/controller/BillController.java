@@ -10,6 +10,8 @@ import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.service.server.BillService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -49,6 +51,9 @@ public class BillController {
     @GetMapping("/billStatement")
     @SaCheckLogin
     @ApiOperation("获取用户详单")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "type", value = "以逗号分隔的详单类型, 如\"1,2\", 1=房费, 2=空调, 3=餐饮")
+    })
     public R<BillStatementResp> billStatement(@RequestParam("type") String type) {
         Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());
         return R.success(billService.getBillStatement(StpUtil.getLoginIdAsString(), types));
@@ -64,7 +69,9 @@ public class BillController {
     @GetMapping("/downloadBillStatement")
     @SaCheckLogin
     @ApiOperation("下载用户详单pdf")
-    @SaIgnore
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "type", value = "以逗号分隔的详单类型, 如\"1,2\", 1=房费, 2=空调, 3=餐饮")
+    })
     public void downloadBillStatement(@RequestParam("type") String type,
                                       HttpServletResponse response) throws IOException {
         Set<String> types = Arrays.stream(type.split(",")).collect(Collectors.toSet());

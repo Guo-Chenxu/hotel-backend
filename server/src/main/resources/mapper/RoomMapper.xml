@@ -4,12 +4,18 @@
 
     <resultMap type="com.hotel.common.entity.Room" id="RoomMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="type" column="type" jdbcType="VARCHAR"/>
         <result property="price" column="price" jdbcType="VARCHAR"/>
-        <result property="status" column="status" jdbcType="BOOLEAN"/>
         <result property="temperature" column="temperature" jdbcType="DOUBLE"/>
+        <result property="deposit" column="deposit" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>
 
+    <select id="selectAllRoomsPrices" resultType="java.lang.String">
+        SELECT price FROM room WHERE id IN
+        <foreach item="id" index="index" collection="roomIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 </mapper>
 

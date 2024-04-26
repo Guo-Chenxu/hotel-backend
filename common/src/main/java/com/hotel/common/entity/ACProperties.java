@@ -43,9 +43,6 @@ public class ACProperties implements Serializable {
     @NotNull
     private Double defaultTargetTemp;
 
-    @ApiModelProperty("室内温度, 只供展示, 不允许配置")
-    private Double indoorTemperature;
-
     @ApiModelProperty("默认空调档位, 1: 低档, 2: 中档, 3: 高档")
     @NotNull
     @Max(3)

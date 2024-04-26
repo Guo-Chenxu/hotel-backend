@@ -1,5 +1,7 @@
 package com.hotel.server.serviceImpl;
 
+import com.hotel.common.constants.BillUnit;
+import com.hotel.common.dto.response.ReportResp;
 import com.hotel.common.utils.PDFUtil;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -23,12 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 财务服务实现类
@@ -313,9 +317,64 @@ public class BillServiceImpl implements BillService {
         return outputStream.toByteArray();
     }
 
+    @Override
+    public ReportResp report(Date startTime, Date endTime, String type) {
+        if (BillType.ROOM.equals(type)) {
+            return this.RoomReport(startTime, endTime);
+        } else if (BillType.AC.equals(type)) {
+            return this.ACReport(startTime, endTime);
+        } else if (BillType.FOOD.equals(type)) {
+            return this.FoodReport(startTime, endTime);
+        } else {
+            log.error("报表类型错误: type={}", type);
+            throw new RuntimeException("报表类型错误");
+        }
+    }
+
+    /**
+     * 获取房间相关报表
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ReportResp RoomReport(Date startTime, Date endTime) {
+        List<Long> roomIds = customerService.listCustomerRoomInTime(startTime, endTime);
+        List<String> prices = roomService.selectAllRoomPrice(roomIds);
+        return ReportResp.builder().startTime(startTime).endTime(endTime).type(BillType.ROOM)
+                .count(this.parseList(prices, BillUnit.ROOM)).build();
+    }
+
+    /**
+     * todo
+     * 空调相关报表
+     */
+    private ReportResp ACReport(Date startTime, Date endTime) {
+        return null;
+    }
+
+    /**
+     * todo
+     * 餐饮相关报表
+     */
+    private ReportResp FoodReport(Date startTime, Date endTime) {
+        return null;
+    }
+
+    /**
+     * todo
+     * 将销量转换成列表
+     */
+    private List<Integer> parseList(List<String> prices, Integer unit) {
+        BigDecimal u = new BigDecimal(unit);
+        Map<Integer, Integer> map = new HashMap<>();
+        prices.forEach((e) -> {
+            BigDecimal d = new BigDecimal(e).divide(u);
+
+        });
+        return new ArrayList<>();
+    }
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private static String formatDate(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }
 }

@@ -66,4 +66,46 @@ public class DateUtil {
             throw new RuntimeException("日期转换不合法");
         }
     }
+
+    /**
+     * 获取七天前的时间
+     */
+    public static Date get7DaysAgo(Date time) {
+        calendar.setTime(time);
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取1天前的时间
+     */
+    public static Date getDayAgo(Date time) {
+        calendar.setTime(time);
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取一天的零时时间
+     */
+    public static Date getDayZeroTime(Date time) {
+        calendar.setTime(time);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取一天的最终时间
+     */
+    public static Date getDayEndTime(Date time) {
+        calendar.setTime(time);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
 }

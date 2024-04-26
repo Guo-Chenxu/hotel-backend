@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hotel.common.dto.response.CustomerLoginResp;
 import com.hotel.common.entity.Customer;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,5 +32,10 @@ public interface CustomerService extends IService<Customer> {
      * 根据房间号列出所有用户
      */
     List<Customer> listCustomers(Long roomId);
+
+    /**
+     * 获取指定时间范围内用户的房间号
+     */
+    List<Long> listCustomerRoomInTime(Date startTime, Date endTime);
 }
 

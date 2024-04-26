@@ -7,6 +7,8 @@ import com.hotel.common.dto.request.PageRoomReq;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 
+import java.util.List;
+
 /**
  * (Room)表服务接口
  *
@@ -35,5 +37,10 @@ public interface RoomService extends IService<Room> {
      * 离店
      */
     Boolean leave(Long roomId, Long customerId);
+
+    /**
+     * 查询所有房间
+     */
+    List<String> selectAllRoomPrice(List<Long> roomIds);
 }
 

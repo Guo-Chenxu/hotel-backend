@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.hotel.common.entity.Room;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * (Room)表数据库访问层
@@ -16,5 +17,7 @@ import com.hotel.common.entity.Room;
  */
 @Mapper
 public interface RoomMapper extends BaseMapper<Room> {
+
+    List<String> selectAllRoomsPrices(@Param("roomIds") List<Long> roomIds);
 }
 

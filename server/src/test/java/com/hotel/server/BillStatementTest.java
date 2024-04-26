@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,5 +79,18 @@ public class BillStatementTest {
         try (FileOutputStream outputStream = new FileOutputStream("d:/pdf.pdf")) {
             outputStream.write(bytes);
         }
+    }
+
+    @Test
+    public void testBigDecimal() {
+        BigDecimal u = new BigDecimal("100");
+        BigDecimal divide = new BigDecimal("200").divide(u, 0, RoundingMode.FLOOR);
+        log.info("200: {}", Integer.parseInt(String.valueOf(divide)));
+        BigDecimal divide1 = new BigDecimal("201").divide(u, 0, RoundingMode.FLOOR);
+        log.info("201: {}", String.valueOf(divide1));
+        BigDecimal divide2 = new BigDecimal("299").divide(u, 0, RoundingMode.FLOOR);
+        log.info("299: {}", String.valueOf(divide2));
+        BigDecimal divide3 = new BigDecimal("300").divide(u, 0, RoundingMode.FLOOR);
+        log.info("300: {}", String.valueOf(divide3));
     }
 }

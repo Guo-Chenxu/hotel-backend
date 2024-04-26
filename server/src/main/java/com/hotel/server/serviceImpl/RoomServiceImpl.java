@@ -24,8 +24,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -116,6 +118,14 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
             throw new RuntimeException("退房失败, 请稍后重试");
         }
         return true;
+    }
+
+    @Override
+    public List<String> selectAllRoomPrice(List<Long> roomIds) {
+        if (CollectionUtils.isEmpty(roomIds)) {
+            return new ArrayList<>();
+        }
+        return roomMapper.selectAllRoomsPrices(roomIds);
     }
 }
 

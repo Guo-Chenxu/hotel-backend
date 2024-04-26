@@ -3,10 +3,12 @@ package com.hotel.common.service.server;
 import cn.hutool.cache.CacheUtil;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
+import com.hotel.common.dto.response.ReportResp;
 import com.hotel.common.entity.CustomerAC;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -52,4 +54,9 @@ public interface BillService {
      * 输出账单pdf
      */
     byte[] generateBillPDF(BillResp bill) throws IOException;
+
+    /**
+     * 生成报表
+     */
+    ReportResp report(Date startTime, Date endTime, String type);
 }

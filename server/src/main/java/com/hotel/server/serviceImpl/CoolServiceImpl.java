@@ -245,8 +245,6 @@ public class CoolServiceImpl implements CoolService {
         if (StringUtils.isBlank(json)) {
             throw new RuntimeException("未找到空调参数, 请先完成参数设置");
         }
-        ACProperties acProperties = JSON.parseObject(json, ACProperties.class);
-        acProperties.setIndoorTemperature(indoorTemperatureConfig.getIndoorTemperature());
-        return acProperties;
+        return JSON.parseObject(json, ACProperties.class);
     }
 }
