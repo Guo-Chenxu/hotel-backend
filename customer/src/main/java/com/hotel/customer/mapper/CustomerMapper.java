@@ -21,5 +21,7 @@ public interface CustomerMapper extends BaseMapper<Customer> {
 
     @Select("select room from customer where deleted = 1 and start_time >= #{startTime} and  leave_time<= #{endTime}")
     List<Long> selectCustomerRoomInTime(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    List<Customer> selectCustomerRoomInRoom(@Param("roomIds") List<Long> roomIds);
 }
 

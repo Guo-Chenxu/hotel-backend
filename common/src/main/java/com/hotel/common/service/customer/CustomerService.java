@@ -37,5 +37,10 @@ public interface CustomerService extends IService<Customer> {
      * 获取指定时间范围内用户的房间号
      */
     List<Long> listCustomerRoomInTime(Date startTime, Date endTime);
+
+    /**
+     * 列出指定房间号的用户
+     */
+    List<Customer> listCustomerInRoom(List<Long> rooms);
 }
 

@@ -109,16 +109,22 @@ public class ACThread extends Thread {
         acScheduleService.removeOne(userId);
 
         endTime = timerService.getTime();
+        // todo duration不对, 大量duration为0/太大的记录
         int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
-        String totalPrice = new BigDecimal(price).multiply(new BigDecimal(duration)).toString();
+        log.info("空调关闭, 此时持续时间: {}", duration);
+        if (duration > 0) {
+            String totalPrice = new BigDecimal(price).multiply(new BigDecimal(duration)).toString();
 
-        CustomerAC customerAC = CustomerAC.builder().customerId(userId).price(price).status(status)
-                .changeTemperature(changeTemperature).duration(duration).totalPrice(totalPrice).build();
-        billService.saveACBill(customerAC);
+            CustomerAC customerAC = CustomerAC.builder().customerId(userId).price(price).status(status)
+                    .changeTemperature(changeTemperature).duration(duration).totalPrice(totalPrice).build();
+            billService.saveACBill(customerAC);
+            log.info("空调关闭且持续时间大于0, 服务信息入库: {}", customerAC);
+        }
 
         ACRequest acRequest = ACRequest.builder().userId(userId).startTime(startTime)
                 .targetTemperature(targetTemperature).changeTemperature(changeTemperature)
                 .status(status).price(price).build();
+        log.info("空调关闭, 此次请求信息: {}", acRequest);
 
         status = ACStatus.OFF;
         price = "0";

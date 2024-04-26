@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
+import com.hotel.common.dto.response.PageRoomResp;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Customer;
 import com.hotel.common.service.customer.CustomerService;
@@ -19,6 +20,7 @@ import com.hotel.common.service.server.RoomService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,9 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.function.IntConsumer;
+import java.util.stream.Collectors;
 
 /**
  * (Room)表服务实现类
@@ -56,10 +60,26 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
     private IndoorTemperatureConfig indoorTemperatureConfig;
 
     @Override
-    public Page<Room> conditionPage(PageRoomReq pageRoomReq) {
-        return roomMapper.selectPage(new Page<>(pageRoomReq.getPage(), pageRoomReq.getPageSize()),
+    @Transactional(rollbackFor = Exception.class)
+    // todo 注意测试
+    public Page<PageRoomResp> conditionPage(PageRoomReq pageRoomReq) {
+        Page<Room> roomPage = roomMapper.selectPage(new Page<>(pageRoomReq.getPage(), pageRoomReq.getPageSize()),
                 new LambdaQueryWrapper<Room>()
                         .eq(pageRoomReq.getRoomNo() != null, Room::getId, pageRoomReq.getRoomNo()));
+        Page<PageRoomResp> resp = new Page<>();
+        BeanUtils.copyProperties(roomPage, resp, "records");
+
+        Map<Long, String> room2Name = customerService
+                .listCustomerInRoom(roomPage.getRecords().stream().map(Room::getId).collect(Collectors.toList()))
+                .stream().collect(Collectors.toMap(Customer::getRoom, Customer::getName));
+
+        List<PageRoomResp> pageRoomResps = roomPage.getRecords().stream().map((r) ->
+                PageRoomResp.builder().roomNo(String.valueOf(r.getId()))
+                        .price(r.getPrice()).temperature(r.getTemperature()).deposit(r.getDeposit())
+                        .username(room2Name.get(r.getId())).build()).collect(Collectors.toList());
+
+        resp.setRecords(pageRoomResps);
+        return resp;
     }
 
     @Override

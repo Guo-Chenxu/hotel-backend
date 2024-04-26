@@ -3,12 +3,19 @@
 <mapper namespace="com.hotel.customer.mapper.CustomerMapper">
 
     <resultMap type="com.hotel.common.entity.Customer" id="CustomerMap">
-        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="id" column="id" jdbcType="BIGINT"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="room" column="room" jdbcType="INTEGER"/>
         <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
         <result property="leaveTime" column="leave_time" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
     </resultMap>
+    <select id="selectCustomerRoomInRoom" resultType="com.hotel.common.entity.Customer">
+        SELECT name, room FROM customer WHERE customer.room IN
+        <foreach item="id" index="index" collection="roomIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 
 </mapper>

@@ -79,5 +79,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     public List<Long> listCustomerRoomInTime(Date startTime, Date endTime) {
         return customerMapper.selectCustomerRoomInTime(startTime, endTime);
     }
+
+    @Override
+    public List<Customer> listCustomerInRoom(List<Long> rooms) {
+        return customerMapper.selectCustomerRoomInRoom(rooms);
+    }
 }
 

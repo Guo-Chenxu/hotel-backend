@@ -11,6 +11,7 @@ import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
+import com.hotel.common.dto.response.PageRoomResp;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 import com.hotel.common.service.server.BillService;
@@ -61,14 +62,14 @@ public class RoomController {
     @SaCheckLogin
     @CheckPermission({Permission.RECEPTIONIST})
     @ApiOperation("条件分页查询")
-    public R<Page<Room>> page(@RequestBody PageRoomReq pageRoomReq) {
+    public R<Page<PageRoomResp>> page(@RequestBody PageRoomReq pageRoomReq) {
         if (pageRoomReq.getPage() == null || pageRoomReq.getPage() < 1) {
             pageRoomReq.setPage(1);
         }
         if (pageRoomReq.getPageSize() == null || pageRoomReq.getPageSize() < 1 || pageRoomReq.getPageSize() > 100) {
             pageRoomReq.setPageSize(20);
         }
-        Page<Room> roomPage = roomService.conditionPage(pageRoomReq);
+        Page<PageRoomResp> roomPage = roomService.conditionPage(pageRoomReq);
         return R.success(roomPage);
     }
 

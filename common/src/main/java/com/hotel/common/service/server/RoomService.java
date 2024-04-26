@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hotel.common.dto.request.BookRoomReq;
 import com.hotel.common.dto.request.PageRoomReq;
+import com.hotel.common.dto.response.PageRoomResp;
 import com.hotel.common.dto.response.RoomInfoResp;
 import com.hotel.common.entity.Room;
 
@@ -21,7 +22,7 @@ public interface RoomService extends IService<Room> {
     /**
      * 分页查询
      */
-    Page<Room> conditionPage(PageRoomReq pageRoomReq);
+    Page<PageRoomResp> conditionPage(PageRoomReq pageRoomReq);
 
     /**
      * 订房
