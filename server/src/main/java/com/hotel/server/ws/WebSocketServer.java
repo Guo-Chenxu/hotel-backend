@@ -45,7 +45,7 @@ public class WebSocketServer {
             this.userId = userId;
             webSockets.add(this);
             sessionPool.put(userId, session);
-            log.info("【websocket消息】有新的连接, 连接用户id为: {}, 连接总数为: {}", userId,  webSockets.size());
+            log.info("【websocket消息】有新的连接, 连接用户id为: {}, 连接总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
             log.error("【websocket消息】链接异常, ", e);
         }
@@ -59,7 +59,7 @@ public class WebSocketServer {
         try {
             webSockets.remove(this);
             sessionPool.remove(this.userId);
-            log.info("【websocket消息】连接断开，总数为:" + webSockets.size());
+            log.info("【websocket消息】连接断开, 用户id: {}, 现在连接总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
             log.error("【websocket消息】链接关闭异常, ", e);
         }
@@ -102,10 +102,10 @@ public class WebSocketServer {
         Session session = sessionPool.get(userId);
         if (session != null && session.isOpen()) {
             try {
-                log.info("【websocket消息】 单点消息:" + message);
+                log.info("【websocket消息】userId: {} 单点消息:{}", userId, message);
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
-                log.error("【websocket消息】 单点消息异常:", e);
+                log.info("【websocket消息】userId: {} 单点消息异常:{}", userId, message);
             }
         }
     }

@@ -45,13 +45,13 @@ public class WebSocketServer {
             sessionPool.put(userId, session);
             log.info("【websocket消息】有新的连接, 连接用户id为: {}, 连接总数为: {}", userId, webSockets.size());
             OkHttpClient client = new OkHttpClient.Builder().build();
-            String url = String.format(acUrl, "123")
+            String url = String.format(acUrl, userId)
                     .replace("http://", "ws://").replace("https://", "wss://");
             Request request = new Request.Builder().url(url).build();
 
             client.newWebSocket(request, new ACWebsocket(userId, null, this));
         } catch (Exception e) {
-            log.error("【websocket消息】链接异常, ", e);
+            log.error("【websocket消息】userId: {}, 链接异常, ", userId, e);
         }
     }
 
@@ -63,9 +63,9 @@ public class WebSocketServer {
         try {
             webSockets.remove(this);
             sessionPool.remove(this.userId);
-            log.info("【websocket消息】连接断开，总数为:" + webSockets.size());
+            log.info("【websocket消息】连接断开, userId: {}, 总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
-            log.error("【websocket消息】链接关闭异常, ", e);
+            log.info("【websocket消息】连接断开异常, userId: {}, 总数为: {}", userId, webSockets.size());
         }
     }
 
@@ -106,10 +106,10 @@ public class WebSocketServer {
         Session session = sessionPool.get(userId);
         if (session != null && session.isOpen()) {
             try {
-                log.info("【websocket消息】 单点消息:" + message);
+                log.info("【websocket消息】 userId: {}, 单点消息: {}", userId, message);
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
-                log.error("【websocket消息】 单点消息异常:", e);
+                log.error("【websocket消息】 userId: {}, 单点消息异常: {}", userId, e);
             }
         }
     }
