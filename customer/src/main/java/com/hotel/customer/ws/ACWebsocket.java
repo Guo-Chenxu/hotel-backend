@@ -41,7 +41,7 @@ public class ACWebsocket extends WebSocketListener {
 //        }
     }
 
-    // 线程来发送音频与参数
+    // 线程来发送参数
     class MyThread extends Thread {
         private WebSocket webSocket;
 
