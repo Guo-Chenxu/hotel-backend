@@ -58,6 +58,7 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
+            log.info("此时空调的状态为: {}", status);
             if (ACStatus.OFF.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
@@ -91,9 +92,9 @@ public class ACThread extends Thread {
      * 比较温度
      */
     private int compareTemperature(double a, double b) {
-        if (a - b > 0.001) {
+        if (a - b > 0.1) {
             return 1;
-        } else if (b - a > 0.001) {
+        } else if (b - a > 0.1) {
             return -1;
         }
         return 0;

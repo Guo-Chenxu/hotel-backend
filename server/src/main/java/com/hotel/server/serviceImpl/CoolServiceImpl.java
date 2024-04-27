@@ -184,9 +184,13 @@ public class CoolServiceImpl implements CoolService {
 
     @Override
     public void turnOff(String userId) {
+        // todo 这里关不上, 关闭无效
         ACThread acThread = threadMap.get(userId);
         if (acThread != null) {
+            log.info("用户 {} 关闭空调, 此时空调状态: {}", userId, acThread.getStatus());
             acThread.turnOff();
+        } else {
+            log.error("用户 {} 希望关闭空调但是无法找到对应线程", userId);
         }
     }
 
