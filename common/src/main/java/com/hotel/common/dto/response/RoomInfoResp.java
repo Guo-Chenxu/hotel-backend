@@ -29,6 +29,9 @@ public class RoomInfoResp implements Serializable {
     @ApiModelProperty("顾客姓名")
     private String customerName;
 
+    @ApiModelProperty("顾客id")
+    private String customerId;
+
     @ApiModelProperty("入住时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;

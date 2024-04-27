@@ -122,6 +122,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
                 resp.setCustomerName(customer.getName());
                 resp.setStartTime(customer.getStartTime());
                 resp.setLeaveTime(customer.getLeaveTime());
+                resp.setCustomerId(String.valueOf(customer.getId()));
                 return resp;
             }
         }
