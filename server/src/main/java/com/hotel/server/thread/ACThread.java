@@ -150,8 +150,8 @@ public class ACThread extends Thread {
      */
     public void change(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
         // 先关闭 再放入等待队列
-        log.info("空调改变参数: target={}, change={}, status={}, price={}",
-                _targetTemperature, _changeTemperature, _status, _price);
+        log.info("用户 {} 空调改变参数: target={}, change={}, status={}, price={}",
+                userId, _targetTemperature, _changeTemperature, _status, _price);
         if (targetTemperature != null && status != null && changeTemperature != null && price != null) {
             if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
                     && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {

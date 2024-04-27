@@ -1,5 +1,6 @@
 package com.hotel.server.service.impl;
 
+import com.hotel.common.constants.ACStatus;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.entity.ACProperties;
 import com.hotel.common.entity.ACRequest;
@@ -99,6 +100,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     // 剥夺
                     runningMap.remove(userId);
                     ACRequest oldRequest = acThread.turnOff();
+                    acThread.setStatus(ACStatus.WAITING);
                     requestQueue.add(oldRequest);
 
                     // 占用
