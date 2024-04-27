@@ -140,6 +140,7 @@ public class CoolServiceImpl implements CoolService {
                         acStatus.setTemperature(room.getTemperature());
                     }
                     return PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
+                            .customerId(String.valueOf(e.getId()))
                             .acStatus(acStatus)
                             .build();
                 })

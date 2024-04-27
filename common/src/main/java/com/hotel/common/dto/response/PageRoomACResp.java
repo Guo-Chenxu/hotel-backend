@@ -28,6 +28,9 @@ public class PageRoomACResp implements Serializable {
     @ApiModelProperty("房间id")
     private String roomId;
 
+    @ApiModelProperty("顾客id")
+    private String customerId;
+
     @ApiModelProperty("空调状态")
     private ACStatusResp acStatus;
 }
