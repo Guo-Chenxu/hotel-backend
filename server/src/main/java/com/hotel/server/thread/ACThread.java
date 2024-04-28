@@ -1,6 +1,7 @@
 package com.hotel.server.thread;
 
 import com.hotel.common.constants.ACStatus;
+import com.hotel.common.constants.ACTemp;
 import com.hotel.common.entity.ACRequest;
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.service.server.BillService;
@@ -92,9 +93,9 @@ public class ACThread extends Thread {
      * 比较温度
      */
     private int compareTemperature(double a, double b) {
-        if (a - b > 0.1) {
+        if (a - b > ACTemp.BOUND) {
             return 1;
-        } else if (b - a > 0.1) {
+        } else if (b - a > ACTemp.BOUND) {
             return -1;
         }
         return 0;
