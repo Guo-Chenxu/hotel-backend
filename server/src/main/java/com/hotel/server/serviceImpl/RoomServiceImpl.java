@@ -61,7 +61,6 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    // todo 注意测试
     public Page<PageRoomResp> conditionPage(PageRoomReq pageRoomReq) {
         Page<Room> roomPage = roomMapper.selectPage(new Page<>(pageRoomReq.getPage(), pageRoomReq.getPageSize()),
                 new LambdaQueryWrapper<Room>()
@@ -117,8 +116,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         List<Customer> customers = customerService.listCustomers(roomId);
         Date now = timerService.getTime();
         for (Customer customer : customers) {
-            if (DateUtil.compareHour(now, customer.getStartTime()) >= 0
-                    && DateUtil.compareHour(now, customer.getLeaveTime()) <= 0) {
+            if (DateUtil.compareHour(now, customer.getStartTime()) >= 0) {
                 resp.setCustomerName(customer.getName());
                 resp.setStartTime(customer.getStartTime());
                 resp.setLeaveTime(customer.getLeaveTime());

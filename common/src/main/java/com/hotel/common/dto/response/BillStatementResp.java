@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -40,11 +41,13 @@ public class BillStatementResp implements Serializable {
     private String roomId;
 
     @ApiModelProperty("入住时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date checkInTime;
 
     @ApiModelProperty("退房时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date checkOutTime;
 
     @ApiModelProperty("房间每晚价格")
