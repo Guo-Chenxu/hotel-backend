@@ -79,7 +79,7 @@ public class TimeThread extends Thread {
             now = new Date(now.getTime() + speed * 1000);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
-            if (localDateTime.getMinute() == 0 && localDateTime.getSecond() == 0) {
+            if (localDateTime.getMinute() % 5 == 0 && localDateTime.getSecond() == 0) {
                 //  redis发布订阅模式 每小时同步房间温度到数据库中
                 String t = DateUtil.format(now, "yyyy-MM-dd HH:mm:ss");
                 log.info("此时是: {}, 发布房间温度同步消息", t);

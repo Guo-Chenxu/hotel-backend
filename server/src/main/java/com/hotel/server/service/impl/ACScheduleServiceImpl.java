@@ -71,6 +71,9 @@ public class ACScheduleServiceImpl implements ACScheduleService {
      * 调度
      */
     public synchronized void schedule() {
+        log.info("=======================调度前========================");
+        log.info("运行map: {}", runningMap);
+        log.info("调度队列: {}", requestQueue);
         ACProperties acProperties = (ACProperties) cacheService.get(RedisKeys.AC_PROPERTIES, ACProperties.class);
         // 先满足让运行空调达到最大值
         while (runningMap.size() < acProperties.getCount() && !requestQueue.isEmpty()) {
@@ -93,7 +96,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
             for (String userId : keys) {
                 ACThread acThread = runningMap.get(userId);
                 if (new BigDecimal(acThread.getPrice())
-                        .compareTo(new BigDecimal(acThread.getPrice())) < 0) {
+                        .compareTo(new BigDecimal(acRequest.getPrice())) < 0) {
                     flag = true;
                     requestQueue.poll();
 
@@ -112,5 +115,8 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                 }
             }
         }
+        log.info("=======================调度后========================");
+        log.info("运行map: {}", runningMap);
+        log.info("调度队列: {}", requestQueue);
     }
 }

@@ -157,7 +157,7 @@ public class CoolServiceImpl implements CoolService {
 
         ACStatusResp resp = ACStatusResp.builder().temperature(acThread.getTemperature())
                 .status(acThread.getStatus()).build();
-        if (!ACStatus.OFF.equals(resp.getStatus())) {
+        if (!ACStatus.OFF.equals(resp.getStatus()) && !ACStatus.WAITING.equals(resp.getStatus())) {
             resp.setPrice(acThread.getPrice());
             resp.setChangeTemp(acThread.getChangeTemperature());
             resp.setTargetTemp(acThread.getTargetTemperature());
@@ -208,17 +208,17 @@ public class CoolServiceImpl implements CoolService {
         if (acProperties == null) {
             throw new IllegalArgumentException("参数异常, 未设置空调参数, 请联系酒店方开启空调");
         }
-        log.info("空调相关参数: {}", acProperties);
 
         if (customerACReq.getTargetTemperature() == null) {
             customerACReq.setTargetTemperature(acProperties.getDefaultTargetTemp());
         }
-        if (customerACReq.getStatus() == null || ACStatus.OFF.equals(customerACReq.getStatus())) {
+        if (customerACReq.getStatus() == null || ACStatus.OFF.equals(customerACReq.getStatus())
+                || ACStatus.WAITING.equals(customerACReq.getStatus())) {
             customerACReq.setStatus(acProperties.getDefaultStatus());
         }
 
         Double target = customerACReq.getTargetTemperature();
-        if (target.compareTo(acProperties.getUpperBoundTemperature()) > 0
+        if (target == null || target.compareTo(acProperties.getUpperBoundTemperature()) > 0
                 || target.compareTo(acProperties.getLowerBoundTemperature()) < 0) {
             throw new IllegalArgumentException("参数异常, 目标温度不在指定范围内");
         }

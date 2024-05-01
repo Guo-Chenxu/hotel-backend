@@ -1,7 +1,9 @@
 package com.hotel.server.thread;
 
+import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.ACStatus;
 import com.hotel.common.constants.ACTemp;
+import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.entity.ACRequest;
 import com.hotel.common.entity.CustomerAC;
 import com.hotel.common.service.server.BillService;
@@ -59,8 +61,8 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
-            log.info("此时空调的状态为: {}", status);
-            if (ACStatus.OFF.equals(status)) {
+            log.info("用户: {}, 此时空调的状态为: {}, temperature: {}, targetTemperature: {}", userId, status, temperature, targetTemperature);
+            if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 } else if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) < 0) {
@@ -75,9 +77,25 @@ public class ACThread extends Thread {
                     this.turnOff();
                 }
             }
+            // todo 传输整个状态信息
+//            webSocketServer.sendOneMessage(userId, JSON.toJSONString(this.getACStatus()));
             webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
             mySleep(1000);
         }
+    }
+
+    /**
+     * 获取空调的当前状态
+     */
+    private ACStatusResp getACStatus() {
+        ACStatusResp resp = ACStatusResp.builder().temperature(this.getTemperature())
+                .status(this.getStatus()).build();
+        if (!ACStatus.OFF.equals(resp.getStatus()) && !ACStatus.WAITING.equals(resp.getStatus())) {
+            resp.setPrice(this.getPrice());
+            resp.setChangeTemp(this.getChangeTemperature());
+            resp.setTargetTemp(this.getTargetTemperature());
+        }
+        return resp;
     }
 
     /**

@@ -172,7 +172,7 @@ public class BillServiceImpl implements BillService {
         long diffInMilliseconds = endTime.getTime() - startTime.getTime();
         long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMilliseconds);
         long nights = diffInDays - 1;
-        return new BigDecimal(price).multiply(new BigDecimal(nights));
+        return new BigDecimal(price).multiply(new BigDecimal(nights > 1 ? nights : 1));
     }
 
     /**
