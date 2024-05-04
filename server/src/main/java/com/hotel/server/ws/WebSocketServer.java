@@ -61,7 +61,7 @@ public class WebSocketServer {
             sessionPool.remove(this.userId);
             log.info("【websocket消息】连接断开, 用户id: {}, 现在连接总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
-            log.error("【websocket消息】链接关闭异常, ", e);
+            log.error("【websocket消息】连接断开异常, userId: {}, 总数为: {}, 异常原因: ", userId, webSockets.size(), e);
         }
     }
 

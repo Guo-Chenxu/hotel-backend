@@ -71,10 +71,12 @@ public class WebSocketServer {
             sessionPool.remove(this.userId);
             WebSocket webSocket = webSocketMap.get(this.userId);
             webSocketMap.remove(this.userId);
-            webSocket.close(HttpCode.SUCCESS, "websocket由顾客端主动关闭");
+            if (webSocket != null) {
+                webSocket.close(HttpCode.SUCCESS, "websocket由顾客端主动关闭");
+            }
             log.info("【websocket消息】连接断开, userId: {}, 总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
-            log.info("【websocket消息】连接断开异常, userId: {}, 总数为: {}", userId, webSockets.size());
+            log.error("【websocket消息】连接断开异常, userId: {}, 总数为: {}, 异常原因: ", userId, webSockets.size(), e);
         }
     }
 
@@ -117,7 +119,7 @@ public class WebSocketServer {
                 log.info("【websocket消息】 userId: {}, 单点消息: {}", userId, message);
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
-                log.error("【websocket消息】 userId: {}, 单点消息异常: {}", userId, e);
+                log.error("【websocket消息】 userId: {}, 单点消息异常: ", userId, e);
             }
         }
     }

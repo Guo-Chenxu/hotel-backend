@@ -29,4 +29,14 @@ public class CustomerServiceTest {
         List<Customer> customers = customerService.listCustomerInRoom(Arrays.asList(2306L, 2307L, 2308L));
         customers.forEach(System.out::println);
     }
+
+    @Test
+    public void testLog() {
+        String user = "123";
+        try {
+            int i = 1 / 0;
+        } catch (Exception e) {
+            log.error("userId: {}, 错误, ", user, e);
+        }
+    }
 }
