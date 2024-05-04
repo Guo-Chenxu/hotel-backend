@@ -29,7 +29,7 @@ public class WebSocketServer {
     //  注：底下WebSocket是当前类名
     private static CopyOnWriteArraySet<WebSocketServer> webSockets = new CopyOnWriteArraySet<>();
     // 用来存在线连接用户信息
-    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<String, Session>();
+    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
 
     private static final String acUrl = "http://10.29.23.17:29011/api/server/cool/watchAC/%s";
 
@@ -123,11 +123,11 @@ public class WebSocketServer {
             return false;
         }
         WebSocketServer that = (WebSocketServer) o;
-        return Objects.equals(session, that.session) && Objects.equals(userId, that.userId);
+        return Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(session, userId);
+        return Objects.hash(userId);
     }
 }

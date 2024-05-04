@@ -39,6 +39,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -80,6 +81,8 @@ public class CoolServiceImpl implements CoolService {
     @Resource
     @Lazy
     private ACScheduleService acScheduleService;
+
+    private static final long REQUEST_EXPIRE_TIME = 7;
 
     @Override
     @Async
@@ -209,12 +212,17 @@ public class CoolServiceImpl implements CoolService {
             throw new IllegalArgumentException("参数异常, 未设置空调参数, 请联系酒店方开启空调");
         }
 
+        ACRequest oldRequest = (ACRequest) cacheService.get(String.format(RedisKeys.AC_REQUEST_USERID, userId),
+                ACRequest.class);
+
         if (customerACReq.getTargetTemperature() == null) {
-            customerACReq.setTargetTemperature(acProperties.getDefaultTargetTemp());
+            customerACReq.setTargetTemperature((oldRequest != null && oldRequest.getTargetTemperature() != null)
+                    ? oldRequest.getTargetTemperature() : acProperties.getDefaultTargetTemp());
         }
         if (customerACReq.getStatus() == null || ACStatus.OFF.equals(customerACReq.getStatus())
                 || ACStatus.WAITING.equals(customerACReq.getStatus())) {
-            customerACReq.setStatus(acProperties.getDefaultStatus());
+            customerACReq.setStatus((oldRequest != null && oldRequest.getStatus() != null)
+                    ? oldRequest.getStatus() : acProperties.getDefaultStatus());
         }
 
         Double target = customerACReq.getTargetTemperature();
@@ -241,6 +249,8 @@ public class CoolServiceImpl implements CoolService {
         }
 
         log.info("空调请求参数: {}", acRequest);
+        cacheService.addWithExpireTime(String.format(RedisKeys.AC_REQUEST_USERID, userId), JSON.toJSONString(acRequest),
+                REQUEST_EXPIRE_TIME, TimeUnit.DAYS);
         return acRequest;
     }
 

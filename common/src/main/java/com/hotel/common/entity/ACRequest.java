@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 空调请求类
@@ -33,5 +34,17 @@ public class ACRequest implements Serializable {
     @Override
     public int hashCode() {
         return userId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ACRequest acRequest = (ACRequest) o;
+        return Objects.equals(userId, acRequest.userId);
     }
 }

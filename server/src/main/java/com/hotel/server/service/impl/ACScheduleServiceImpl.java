@@ -83,11 +83,15 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     acRequest.getStatus(), acRequest.getPrice());
             runningMap.put(acRequest.getUserId(), acThread);
         }
-        if (requestQueue.isEmpty()) {
-            return;
-        }
+//        if (requestQueue.isEmpty()) {
+//            log.info("=======================调度后========================");
+//            log.info("运行map: {}", runningMap);
+//            log.info("调度队列: {}", requestQueue);
+//            return;
+//        }
 
         // 然后满足运行空调档位最高
+        // 令人深思的调度方式, 使我的大脑旋转
         boolean flag = true;
         while (runningMap.size() <= acProperties.getCount() && !requestQueue.isEmpty() && flag) {
             flag = false;
@@ -104,6 +108,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     runningMap.remove(userId);
                     ACRequest oldRequest = acThread.turnOff();
                     acThread.setStatus(ACStatus.WAITING);
+                    log.info("old request: {}", oldRequest); // todo 这里会出现npe
                     requestQueue.add(oldRequest);
 
                     // 占用
