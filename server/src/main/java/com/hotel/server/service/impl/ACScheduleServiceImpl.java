@@ -110,7 +110,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     runningMap.remove(userId);
                     ACRequest oldRequest = acThread.turnOff();
                     acThread.setStatus(ACStatus.WAITING);
-                    log.info("old request: {}", oldRequest); // todo 这里会出现npe
+//                    log.info("old request: {}", oldRequest);
 //                    requestQueue.add(oldRequest);
                     addUniqueQueue(oldRequest);
 
@@ -129,6 +129,9 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     }
 
     private static void addUniqueQueue(ACRequest acRequest) {
+        if (acRequest == null) {
+            return;
+        }
         requestQueue.removeIf((e) -> Objects.equals(e.getUserId(), acRequest.getUserId()));
         requestQueue.add(acRequest);
     }

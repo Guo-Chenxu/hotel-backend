@@ -123,13 +123,12 @@ public class ACThread extends Thread {
      * 关闭
      */
     public ACRequest turnOff() {
-        if (Objects.equals(status, ACStatus.OFF)) {
+        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
             return null;
         }
         acScheduleService.removeOne(userId);
 
         endTime = timerService.getTime();
-        // todo duration不对, 大量duration为0/太大的记录
         int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
         log.info("空调关闭, 此时持续时间: {}", duration);
         if (duration > 0) {
@@ -179,6 +178,7 @@ public class ACThread extends Thread {
             }
         }
         turnOff();
+        this.status = ACStatus.WAITING;
         ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
                 .targetTemperature(_targetTemperature).changeTemperature(_changeTemperature)
                 .status(_status).price(_price).build();

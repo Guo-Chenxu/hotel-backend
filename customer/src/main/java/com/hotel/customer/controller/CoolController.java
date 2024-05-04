@@ -44,13 +44,13 @@ public class CoolController {
         return R.success();
     }
 
-    @PostMapping("/turnOn")
-    @ApiOperation("开启空调")
-    @SaCheckLogin
-    public R turnOn(@RequestBody CustomerACReq customerACReq) {
-        coolService.turnOn(StpUtil.getLoginIdAsString(), customerACReq);
-        return R.success();
-    }
+//    @PostMapping("/turnOn")
+//    @ApiOperation("开启空调")
+//    @SaCheckLogin
+//    public R turnOn(@RequestBody CustomerACReq customerACReq) {
+//        coolService.turnOn(StpUtil.getLoginIdAsString(), customerACReq);
+//        return R.success();
+//    }
 
     @PostMapping("/turnOff")
     @ApiOperation("关闭空调")
