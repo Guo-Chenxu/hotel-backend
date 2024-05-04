@@ -1,4 +1,4 @@
-create table if not exists hotel.customer
+create table hotel.customer
 (
     id         bigint                               not null comment '主键id'
         primary key,
@@ -18,7 +18,7 @@ create index name_room_idx
     on hotel.customer (name, room)
     comment '名字房间号索引';
 
-create table if not exists hotel.food
+create table hotel.food
 (
     id      bigint               not null comment '主键id'
         primary key,
@@ -32,13 +32,14 @@ create table if not exists hotel.food
 create index deleted_idx
     on hotel.food (deleted);
 
-create table if not exists hotel.room
+create table hotel.room
 (
     id          bigint auto_increment comment '主键id'
         primary key,
     price       decimal               not null comment '价格/晚',
     temperature float      default 27 not null comment '房间当前温度',
-    deleted     tinyint(1) default 0  not null comment '软删除'
+    deleted     tinyint(1) default 0  not null comment '软删除',
+    deposit     decimal    default 0  not null comment '押金'
 )
     comment '房间';
 
@@ -46,7 +47,7 @@ create index deleted_idx
     on hotel.room (deleted)
     comment '软删除';
 
-create table if not exists hotel.staff
+create table hotel.staff
 (
     id         bigint                               not null comment '主键id'
         primary key,
