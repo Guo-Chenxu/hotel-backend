@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 空调调度线程
@@ -40,7 +41,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     });
 
     // 已有调度的map
-    private static final Map<String, ACThread> runningMap = new HashMap<>();
+    private static final ConcurrentHashMap<String, ACThread> runningMap = new ConcurrentHashMap<>();
 
     // todo 缺少时间片轮转调度, 目前两个想法
     // 1. 像定时更新一样, 每隔5分钟发送一条消息, 接受到消息后开始清理超过5分钟的工作的空调
@@ -63,7 +64,8 @@ public class ACScheduleServiceImpl implements ACScheduleService {
 
     @Override
     public void addOne(ACRequest acRequest) {
-        requestQueue.add(acRequest);
+//        requestQueue.add(acRequest);
+        addUniqueQueue(acRequest);
         this.schedule();
     }
 
@@ -109,7 +111,8 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     ACRequest oldRequest = acThread.turnOff();
                     acThread.setStatus(ACStatus.WAITING);
                     log.info("old request: {}", oldRequest); // todo 这里会出现npe
-                    requestQueue.add(oldRequest);
+//                    requestQueue.add(oldRequest);
+                    addUniqueQueue(oldRequest);
 
                     // 占用
                     ACThread ready = (ACThread) coolService.getACThread(acRequest.getUserId());
@@ -123,5 +126,10 @@ public class ACScheduleServiceImpl implements ACScheduleService {
         log.info("=======================调度后========================");
         log.info("运行map: {}", runningMap);
         log.info("调度队列: {}", requestQueue);
+    }
+
+    private static void addUniqueQueue(ACRequest acRequest) {
+        requestQueue.removeIf((e) -> Objects.equals(e.getUserId(), acRequest.getUserId()));
+        requestQueue.add(acRequest);
     }
 }
