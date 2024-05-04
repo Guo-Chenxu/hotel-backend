@@ -25,8 +25,6 @@ public class ACWebsocket extends WebSocketListener {
 
     private Boolean wsCloseFlag; // 控制ws连接是否关闭
 
-    private PrintWriter writer; // http返回流，用于sse返回
-
     private WebSocketServer webSocketServer;
 
     // 构造函数
@@ -34,11 +32,6 @@ public class ACWebsocket extends WebSocketListener {
         this.userId = userId;
         this.wsCloseFlag = false;
         this.webSocketServer = webSocketServer;
-//        try {
-//            this.writer = response.getWriter();
-//        } catch (IOException e) {
-//            log.error("获取http返回流失败: ", e);
-//        }
     }
 
     // 线程来发送参数
@@ -49,13 +42,14 @@ public class ACWebsocket extends WebSocketListener {
             this.webSocket = webSocket;
         }
 
+        @Override
         public void run() {
             try {
                 // 等待服务端返回完毕后关闭
                 while (!wsCloseFlag) {
                     Thread.sleep(200);
                 }
-                webSocket.close(1000, "");
+                webSocket.close(1000, "websocket连接关闭");
             } catch (Exception e) {
                 log.error("MyThread异常, ", e);
             }
@@ -72,9 +66,6 @@ public class ACWebsocket extends WebSocketListener {
     @Override
     public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
         webSocketServer.sendOneMessage(userId, text);
-//        String temperature = JSON.parseObject(text, String.class);
-//        writer.write("data: " + temperature + "\n\n");
-//        writer.flush();
     }
 
     @Override

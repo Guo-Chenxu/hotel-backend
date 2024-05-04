@@ -1,8 +1,10 @@
 package com.hotel.customer.ws;
 
+import com.hotel.common.constants.HttpCode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.WebSocket;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -27,9 +29,12 @@ public class WebSocketServer {
     //concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
     //虽然@Component默认是单例模式的，但springboot还是会为每个websocket连接初始化一个bean，所以可以用一个静态set保存起来。
     //  注：底下WebSocket是当前类名
-    private static CopyOnWriteArraySet<WebSocketServer> webSockets = new CopyOnWriteArraySet<>();
+    private static final CopyOnWriteArraySet<WebSocketServer> webSockets = new CopyOnWriteArraySet<>();
     // 用来存在线连接用户信息
-    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
+
+    // 顾客端和服务端连接的websocket
+    private static final ConcurrentHashMap<String, WebSocket> webSocketMap = new ConcurrentHashMap<>();
 
     private static final String acUrl = "http://10.29.23.17:29011/api/server/cool/watchAC/%s";
 
@@ -49,7 +54,8 @@ public class WebSocketServer {
                     .replace("http://", "ws://").replace("https://", "wss://");
             Request request = new Request.Builder().url(url).build();
 
-            client.newWebSocket(request, new ACWebsocket(userId, null, this));
+            WebSocket webSocket = client.newWebSocket(request, new ACWebsocket(userId, null, this));
+            webSocketMap.put(this.userId, webSocket);
         } catch (Exception e) {
             log.error("【websocket消息】userId: {}, 链接异常, ", userId, e);
         }
@@ -63,6 +69,9 @@ public class WebSocketServer {
         try {
             webSockets.remove(this);
             sessionPool.remove(this.userId);
+            WebSocket webSocket = webSocketMap.get(this.userId);
+            webSocketMap.remove(this.userId);
+            webSocket.close(HttpCode.SUCCESS, "websocket由顾客端主动关闭");
             log.info("【websocket消息】连接断开, userId: {}, 总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
             log.info("【websocket消息】连接断开异常, userId: {}, 总数为: {}", userId, webSockets.size());
@@ -82,7 +91,6 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-
         log.error("用户错误,原因: ", error);
     }
 
