@@ -78,7 +78,6 @@ public class WebSocketServer {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-
         log.error("用户错误,原因: ", error);
     }
 
