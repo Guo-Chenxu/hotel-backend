@@ -65,7 +65,7 @@ public class StaffController {
     }
 
     @PostMapping("/saveStaff")
-    @ApiOperation("新增员工")
+    @ApiOperation("新增或修改员工")
     @SaCheckLogin
     @CheckPermission({Permission.ADMIN})
     public R saveStaff(@RequestBody SaveStaffReq saveStaffReq) {

@@ -1,5 +1,6 @@
 package com.hotel.customer.ws;
 
+import com.hotel.common.constants.HttpCode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import okhttp3.WebSocket;
@@ -49,7 +50,7 @@ public class ACWebsocket extends WebSocketListener {
                 while (!wsCloseFlag) {
                     Thread.sleep(200);
                 }
-                webSocket.close(1000, "websocket连接关闭");
+                webSocket.close(HttpCode.WS_SUCCESS, "websocket连接关闭");
             } catch (Exception e) {
                 log.error("MyThread异常, ", e);
             }

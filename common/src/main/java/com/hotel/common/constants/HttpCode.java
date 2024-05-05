@@ -19,4 +19,5 @@ public interface HttpCode {
     Integer NO_USER = 1001; // 用户不存在
     Integer VISIT_LIMIT = 1002; // 访问频繁
     Integer ILLEGAL_OPERATION = 1003; // 用户非法操作
+    Integer WS_SUCCESS = 2000; // ws正常关闭
 }

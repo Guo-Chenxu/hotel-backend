@@ -72,7 +72,7 @@ public class WebSocketServer {
             WebSocket webSocket = webSocketMap.get(this.userId);
             webSocketMap.remove(this.userId);
             if (webSocket != null) {
-                webSocket.close(HttpCode.SUCCESS, "websocket由顾客端主动关闭");
+                webSocket.close(HttpCode.WS_SUCCESS, "websocket由顾客端主动关闭");
             }
             log.info("【websocket消息】连接断开, userId: {}, 总数为: {}", userId, webSockets.size());
         } catch (Exception e) {
