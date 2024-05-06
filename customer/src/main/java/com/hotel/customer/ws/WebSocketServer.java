@@ -34,7 +34,7 @@ public class WebSocketServer {
     private static final ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
 
     // 顾客端和服务端连接的websocket
-    private static final ConcurrentHashMap<String, WebSocket> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, WebSocket> webSocket2ServerMap = new ConcurrentHashMap<>();
 
     private static final String acUrl = "http://10.29.23.17:29011/api/server/cool/watchAC/%s";
 
@@ -55,7 +55,7 @@ public class WebSocketServer {
             Request request = new Request.Builder().url(url).build();
 
             WebSocket webSocket = client.newWebSocket(request, new ACWebsocket(userId, null, this));
-            webSocketMap.put(this.userId, webSocket);
+            webSocket2ServerMap.put(this.userId, webSocket);
         } catch (Exception e) {
             log.error("【websocket消息】userId: {}, 链接异常, ", userId, e);
         }
@@ -69,8 +69,8 @@ public class WebSocketServer {
         try {
             webSockets.remove(this);
             sessionPool.remove(this.userId);
-            WebSocket webSocket = webSocketMap.get(this.userId);
-            webSocketMap.remove(this.userId);
+            WebSocket webSocket = webSocket2ServerMap.get(this.userId);
+            webSocket2ServerMap.remove(this.userId);
             if (webSocket != null) {
                 webSocket.close(HttpCode.WS_SUCCESS, "websocket由顾客端主动关闭");
             }

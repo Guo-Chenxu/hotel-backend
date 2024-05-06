@@ -61,7 +61,7 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
-            log.info("用户: {}, 此时空调的状态为: {}, temperature: {}, targetTemperature: {}", userId, status, temperature, targetTemperature);
+//            log.info("用户: {}, 此时空调的状态为: {}, temperature: {}, targetTemperature: {}", userId, status, temperature, targetTemperature);
             if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperatureConfig.getIndoorTemperature()) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
