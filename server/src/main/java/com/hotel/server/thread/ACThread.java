@@ -77,9 +77,7 @@ public class ACThread extends Thread {
                     this.turnOff();
                 }
             }
-            // todo 传输整个状态信息
             webSocketServer.sendOneMessage(userId, JSON.toJSONString(this.getACStatus()));
-//            webSocketServer.sendOneMessage(userId, String.valueOf(temperature));
             mySleep(1000);
         }
     }

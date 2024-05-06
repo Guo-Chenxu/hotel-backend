@@ -107,15 +107,6 @@ public class CoolServiceImpl implements CoolService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public synchronized void watchAC(String userId) {
-        //  测试代码, 测试后删除
-//        ACThread thread;
-//        thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(27.0)
-//                .indoorTemperatureConfig(indoorTemperatureConfig)
-//                .isRunning(true).recover(true).webSocketServer(webSocketServer)
-//                .timerService(timerService).build();
-//        thread.start();
-//        threadMap.put(userId, thread);
-
         if (threadMap.containsKey(userId)) {
             return;
         }
@@ -126,6 +117,7 @@ public class CoolServiceImpl implements CoolService {
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
                 .timerService(timerService).billService(billService).acScheduleService(acScheduleService)
                 .build();
+        thread.setName("ACThread-" + userId);
         thread.start();
         threadMap.put(userId, thread);
     }
