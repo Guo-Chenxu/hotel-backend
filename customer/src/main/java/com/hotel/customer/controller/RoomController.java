@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("room")
 @Slf4j
 @Api(tags = "房间接口")
-@CrossOrigin
+// @CrossOrigin
 public class RoomController {
 
     @DubboReference(check = false)

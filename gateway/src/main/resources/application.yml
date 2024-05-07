@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        corsConfigurations:
+          '[/**]':
+            allowedHeaders: "*"
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTION
+      routes:
+        # 平台管理
+        - id: customer
+          uri: lb://customer
+          predicates:
+            - Path=/api/customer/**
+          filters:
+            - StripPrefix=0
+        - id: server
+          uri: lb://server
+          predicates:
+            - Path=/api/server/**
+          filters:
+            - StripPrefix=0
+        - id: timer
+          uri: lb://timer
+          predicates:
+            - Path=/api/timer/**
+          filters:
+            - StripPrefix=0

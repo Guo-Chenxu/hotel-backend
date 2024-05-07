@@ -31,7 +31,7 @@ import java.util.List;
 @RequestMapping("permission")
 @Slf4j
 @Api(tags = "权限控制接口")
-@CrossOrigin
+// @CrossOrigin
 public class PermissionController {
     /**
      * 服务对象

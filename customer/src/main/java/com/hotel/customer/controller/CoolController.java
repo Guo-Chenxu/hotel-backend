@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("cool")
 @Slf4j
 @Api(tags = "纳凉接口")
-@CrossOrigin
+// @CrossOrigin
 public class CoolController {
     @DubboReference
     private CoolService coolService;

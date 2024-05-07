@@ -1,0 +1,10 @@
+server:
+  port: 29050
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+

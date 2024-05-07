@@ -46,7 +46,7 @@ import java.util.UUID;
 @RequestMapping("food")
 @Slf4j
 @Api(tags = "食物控制接口")
-@CrossOrigin
+// @CrossOrigin
 public class FoodController {
     @DubboReference
     private FoodService foodService;

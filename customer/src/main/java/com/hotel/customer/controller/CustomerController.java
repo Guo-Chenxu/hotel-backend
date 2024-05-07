@@ -31,7 +31,7 @@ import java.util.List;
 @RequestMapping("customer")
 @Api(tags = "顾客接口")
 @Slf4j
-@CrossOrigin
+// @CrossOrigin
 public class CustomerController {
     /**
      * 服务对象

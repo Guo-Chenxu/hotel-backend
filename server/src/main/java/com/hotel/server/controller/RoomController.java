@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @RequestMapping("room")
 @Slf4j
 @Api(tags = "房间接口")
-@CrossOrigin
+// @CrossOrigin
 public class RoomController {
 
     @DubboReference
