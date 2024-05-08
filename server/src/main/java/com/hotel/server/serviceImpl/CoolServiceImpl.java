@@ -111,12 +111,13 @@ public class CoolServiceImpl implements CoolService {
             return;
         }
         Long roomId = customerService.getById(userId).getRoom();
+        Room room = roomService.getById(roomId);
         Double temperature = roomService.getById(roomId).getTemperature();
         ACThread thread = ACThread.builder().userId(userId).status(ACStatus.OFF).temperature(temperature)
                 .indoorTemperatureConfig(indoorTemperatureConfig)
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
                 .timerService(timerService).billService(billService).acScheduleService(acScheduleService)
-                .build();
+                .indoorTemperature(Double.valueOf(room.getIndoorTemperature())).build();
         thread.setName("ACThread-" + userId);
         thread.start();
         threadMap.put(userId, thread);
@@ -179,7 +180,6 @@ public class CoolServiceImpl implements CoolService {
 
     @Override
     public void turnOff(String userId) {
-        // todo 这里关不上, 关闭无效
         ACThread acThread = threadMap.get(userId);
         if (acThread != null) {
             log.info("用户 {} 关闭空调, 此时空调状态: {}", userId, acThread.getStatus());

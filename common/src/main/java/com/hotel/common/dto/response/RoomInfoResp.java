@@ -38,7 +38,7 @@ public class RoomInfoResp implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
-    @ApiModelProperty("退房时间")
+    @ApiModelProperty("预计退房时间, 实际退房时间以详单为准")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date leaveTime;
@@ -51,4 +51,7 @@ public class RoomInfoResp implements Serializable {
 
     @ApiModelProperty("房间温度")
     private String temperature;
+
+    @ApiModelProperty("房间默认温度")
+    private String indoorTemperature;
 }

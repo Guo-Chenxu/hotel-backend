@@ -101,7 +101,7 @@ public class WebSocketServer {
         Session session = sessionPool.get(userId);
         if (session != null && session.isOpen()) {
             try {
-                log.info("【websocket消息】userId: {} 单点消息:{}", userId, message);
+//                log.info("【websocket消息】userId: {} 单点消息:{}", userId, message);
                 session.getAsyncRemote().sendText(message);
             } catch (Exception e) {
                 log.info("【websocket消息】userId: {} 单点消息异常:{}", userId, message);

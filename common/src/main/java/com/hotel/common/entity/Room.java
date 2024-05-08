@@ -46,6 +46,11 @@ public class Room implements Serializable {
     private Double temperature;
 
     /**
+     * 房间默认温度
+     */
+    private String indoorTemperature;
+
+    /**
      * 押金
      */
     private String deposit;

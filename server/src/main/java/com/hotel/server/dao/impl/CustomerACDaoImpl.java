@@ -34,7 +34,7 @@ public class CustomerACDaoImpl implements CustomerACDao {
 
     @Override
     public CustomerAC save(CustomerAC customerAC) {
-        customerAC.setCreateAt(timerService.getTime());
+//        customerAC.setCreateAt(timerService.getTime());
         return mongoTemplate.save(customerAC);
     }
 

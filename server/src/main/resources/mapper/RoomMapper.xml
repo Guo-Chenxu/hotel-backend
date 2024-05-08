@@ -6,6 +6,7 @@
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="price" column="price" jdbcType="VARCHAR"/>
         <result property="temperature" column="temperature" jdbcType="DOUBLE"/>
+        <result property="indoorTemperature" column="indoor_temperature" jdbcType="VARCHAR"/>
         <result property="deposit" column="deposit" jdbcType="VARCHAR"/>
         <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>

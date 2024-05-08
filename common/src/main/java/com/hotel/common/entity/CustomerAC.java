@@ -59,7 +59,17 @@ public class CustomerAC implements Serializable {
     private String totalPrice;
 
     /**
-     * 创建时间
+     * 请求时间
+     */
+    private Date requestTime;
+
+    /**
+     * 服务开始时间
      */
     private Date createAt;
+
+    /**
+     * 服务结束时间
+     */
+    private Date endTime;
 }

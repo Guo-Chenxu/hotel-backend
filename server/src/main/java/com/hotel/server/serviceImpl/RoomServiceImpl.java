@@ -92,7 +92,8 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         }
         Room room = Room.builder().price(bookRoomReq.getPrice())
                 .temperature(indoorTemperatureConfig.getIndoorTemperature())
-                .deposit(bookRoomReq.getDeposit()).build();
+                .deposit(bookRoomReq.getDeposit())
+                .indoorTemperature(bookRoomReq.getIndoorTemperature()).build();
         int insert = roomMapper.insert(room);
         if (insert < 1) {
             return false;
@@ -111,7 +112,8 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
             return null;
         }
         RoomInfoResp resp = RoomInfoResp.builder().roomId(String.valueOf(roomId))
-                .price(room.getPrice()).temperature(String.valueOf(room.getTemperature())).build();
+                .price(room.getPrice()).temperature(String.valueOf(room.getTemperature()))
+                .indoorTemperature(room.getIndoorTemperature()).build();
 
         List<Customer> customers = customerService.listCustomers(roomId);
         Date now = timerService.getTime();
