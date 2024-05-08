@@ -70,7 +70,7 @@ public class TimeThread extends Thread {
     @Override
     public void run() {
         while (!stopped) {
-            //每过100ms跳动一下时间
+            //每过1s跳动一下时间
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

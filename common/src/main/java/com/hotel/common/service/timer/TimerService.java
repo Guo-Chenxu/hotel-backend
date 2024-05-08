@@ -15,4 +15,9 @@ public interface TimerService {
      * 获取该用户当前模拟到的时间
      */
     Date getTime();
+
+    /**
+     * 设置时间流速
+     */
+    void setSpeed(long speed);
 }

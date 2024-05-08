@@ -14,6 +14,7 @@ import com.hotel.common.dto.response.PageStaffResp;
 import com.hotel.common.dto.response.StaffLoginResp;
 import com.hotel.common.entity.Staff;
 import com.hotel.common.service.server.StaffService;
+import com.hotel.common.service.timer.TimerService;
 import com.hotel.server.annotation.CheckPermission;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +48,9 @@ public class StaffController {
      */
     @DubboReference
     private StaffService staffService;
+
+    @DubboReference
+    private TimerService timerService;
 
     @GetMapping("/token")
     @SaIgnore
@@ -91,6 +95,16 @@ public class StaffController {
         return staffService.delete(ids)
                 ? R.success()
                 : R.error();
+    }
+
+
+    @PostMapping("/time/speed")
+    @ApiOperation("设置时间流速, 系统1秒等于实际speed秒")
+    @SaCheckLogin
+    @CheckPermission({Permission.ADMIN})
+    public R setSpeed(@RequestParam("speed") String speed) {
+        timerService.setSpeed(Long.parseLong(speed));
+        return R.success();
     }
 }
 

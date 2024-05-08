@@ -52,4 +52,9 @@ public class TimerServiceImpl implements TimerService {
 //        log.info("当前模拟时间，为：{}", timeThread.getNow());
         return timeThread.getNow();
     }
+
+    @Override
+    public void setSpeed(long speed) {
+        timeThread.setSpeed(speed);
+    }
 }

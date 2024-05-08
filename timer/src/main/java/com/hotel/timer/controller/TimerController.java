@@ -1,15 +1,13 @@
 package com.hotel.timer.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.hotel.common.dto.R;
 import com.hotel.common.service.timer.TimerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -32,7 +30,7 @@ public class TimerController {
     @DubboReference
     private TimerService timerService;
 
-    @ApiOperation("获取时间, 建立连接后不断, 使用sse每100ms向前端推一次当前时间")
+    @ApiOperation("获取时间, 建立连接后不断, 使用sse每1s向前端推一次当前时间")
     @GetMapping("/now")
     public void getTime(HttpServletResponse response) throws IOException, InterruptedException {
         response.setContentType("text/event-stream;charset=UTF-8");
