@@ -19,7 +19,7 @@ public interface TimerService {
     /**
      * 设置时间流速
      */
-    void setSpeed(long speed);
+    void setSpeed(double speed);
 
     /**
      * 查看时间流速

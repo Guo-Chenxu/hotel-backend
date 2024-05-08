@@ -103,7 +103,11 @@ public class StaffController {
     @SaCheckLogin
     @CheckPermission({Permission.ADMIN})
     public R setSpeed(@RequestParam("speed") String speed) {
-        timerService.setSpeed(Long.parseLong(speed));
+        Double s = Double.parseDouble(speed);
+        if (s.compareTo(0.001) < 0) {
+            return R.error("速度不合法, 必须大于0.001");
+        }
+        timerService.setSpeed(s);
         return R.success();
     }
 

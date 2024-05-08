@@ -54,7 +54,7 @@ public class TimerServiceImpl implements TimerService {
     }
 
     @Override
-    public void setSpeed(long speed) {
+    public void setSpeed(double speed) {
         timeThread.setSpeed(speed);
     }
 

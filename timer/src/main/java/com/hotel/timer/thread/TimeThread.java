@@ -24,7 +24,7 @@ public class TimeThread extends Thread {
     Date now;
 
     // 1秒对应speed秒
-    long speed;
+    double speed;
 
     private StringRedisTemplate stringRedisTemplate;
 
@@ -47,7 +47,7 @@ public class TimeThread extends Thread {
         return now;
     }
 
-    public long getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -55,7 +55,7 @@ public class TimeThread extends Thread {
         this.now = now;
     }
 
-    public void setSpeed(long speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 
@@ -76,7 +76,7 @@ public class TimeThread extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            now = new Date(now.getTime() + speed * 1000);
+            now = new Date(now.getTime() + (long) speed * 1000);
 
             LocalDateTime localDateTime = LocalDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
             if (localDateTime.getMinute() % 5 == 0 && localDateTime.getSecond() == 0) {

@@ -64,22 +64,24 @@ public class ACThread extends Thread {
     public void run() {
         isRunning = true;
         recover = true;
+        lastTime = timerService.getTime().getTime();
         while (isRunning) {
             long now = timerService.getTime().getTime();
-            long dur = (now - lastTime) / 1000;
-//            log.info("用户: {}, 此时空调的状态为: {}, temperature: {}, targetTemperature: {}", userId, status, temperature, targetTemperature);
+//            long dur = (now - lastTime) / 1000;
             if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperature) > 0) {
-                    temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
+                    temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 } else if (compareTemperature(temperature, indoorTemperature) < 0) {
-                    temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
+                    temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
                 }
             } else {
                 if (now < timeOutTime) {
+//                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
+//                            userId, 0, changeTemperature / 60.0);
                     if (compareTemperature(temperature, targetTemperature) > 0) {
-                        temperature -= changeTemperature / 60.0 * dur;
+                        temperature -= changeTemperature / 60.0;
                     } else if (compareTemperature(temperature, targetTemperature) < 0) {
-                        temperature += changeTemperature / 60.0 * dur;
+                        temperature += changeTemperature / 60.0;
                     } else {
                         this.turnOff();
                     }
@@ -168,7 +170,7 @@ public class ACThread extends Thread {
     public void turnOn(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
         startTime = timerService.getTime();
         lastTime = timerService.getTime().getTime();
-        timeOutTime = lastTime + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
+        timeOutTime = startTime.getTime() + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
         targetTemperature = _targetTemperature;
         changeTemperature = _changeTemperature;
         status = _status;
