@@ -1,6 +1,7 @@
 package com.hotel.timer.controller;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DateUtil;
 import com.hotel.common.dto.R;
 import com.hotel.common.service.timer.TimerService;
 import io.swagger.annotations.Api;
@@ -36,7 +37,9 @@ public class TimerController {
         response.setContentType("text/event-stream;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         while (true) {
-            writer.write("data: " + timerService.getTime() + "\n\n");
+            writer.write("data: "
+                    + DateUtil.format(timerService.getTime(), "yyyy-MM-dd HH:mm:ss")
+                    + "\n\n");
             writer.flush();
             Thread.sleep(1000);
         }
