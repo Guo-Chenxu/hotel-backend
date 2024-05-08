@@ -43,10 +43,6 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     // 已有调度的map
     private static final ConcurrentHashMap<String, ACThread> runningMap = new ConcurrentHashMap<>();
 
-    // todo 缺少时间片轮转调度, 目前两个想法
-    // 1. 像定时更新一样, 每隔5分钟发送一条消息, 接受到消息后开始清理超过5分钟的工作的空调
-    // 2. 第二个想法还没想好 (其实是太粪了, 很不靠谱)
-
     @DubboReference
     private CacheService cacheService;
 

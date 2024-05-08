@@ -13,6 +13,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "hotel.indoor")
 public class IndoorTemperatureConfig {
-    private Double recoverChangeTemperature; // 回归室温的变化温度 (度/分)
-    private Double indoorTemperature; // 室内温度
+    /**
+     * 回归室温的变化温度 (度/分)
+     */
+    private Double recoverChangeTemperature;
+    /**
+     * 室内温度
+     */
+    private Double indoorTemperature;
+    /**
+     * 时间片, 分钟
+     */
+    private Long timeSlice;
 }

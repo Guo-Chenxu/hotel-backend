@@ -39,6 +39,7 @@ public class ACThread extends Thread {
     private Date endTime; // 申请空调停止时间 (时间片请求时自动增加)
     private Date requestTime; // 请求服务时间
     private long lastTime; // 空调上一次计费温度
+    private long timeOutTime; // 时间片到时的时间
 
     private Integer status; // 空调状态, 0 关闭， 1 低档， 2 中档， 3 高档
 
@@ -64,7 +65,8 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         while (isRunning) {
-            long dur = ((timerService.getTime().getTime()) - lastTime) / 1000;
+            long now = timerService.getTime().getTime();
+            long dur = (now - lastTime) / 1000;
 //            log.info("用户: {}, 此时空调的状态为: {}, temperature: {}, targetTemperature: {}", userId, status, temperature, targetTemperature);
             if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperature) > 0) {
@@ -73,12 +75,18 @@ public class ACThread extends Thread {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
                 }
             } else {
-                if (compareTemperature(temperature, targetTemperature) > 0) {
-                    temperature -= changeTemperature / 60.0 * dur;
-                } else if (compareTemperature(temperature, targetTemperature) < 0) {
-                    temperature += changeTemperature / 60.0 * dur;
+                if (now < timeOutTime) {
+                    if (compareTemperature(temperature, targetTemperature) > 0) {
+                        temperature -= changeTemperature / 60.0 * dur;
+                    } else if (compareTemperature(temperature, targetTemperature) < 0) {
+                        temperature += changeTemperature / 60.0 * dur;
+                    } else {
+                        this.turnOff();
+                    }
                 } else {
-                    this.turnOff();
+                    // 时间片到时, 重新调度
+                    ACRequest acRequest = this.turnOff();
+                    acScheduleService.addOne(acRequest);
                 }
             }
             lastTime = timerService.getTime().getTime();
@@ -133,7 +141,6 @@ public class ACThread extends Thread {
 
         endTime = timerService.getTime();
         int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
-        log.info("空调关闭, 此时持续时间: {}", duration);
         if (duration > 0) {
             String totalPrice = new BigDecimal(price).multiply(new BigDecimal(duration)).toString();
 
@@ -144,7 +151,7 @@ public class ACThread extends Thread {
             log.info("空调关闭且持续时间大于0, 服务信息入库: {}", customerAC);
         }
 
-        ACRequest acRequest = ACRequest.builder().userId(userId).startTime(startTime)
+        ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
                 .targetTemperature(targetTemperature).changeTemperature(changeTemperature)
                 .status(status).price(price).build();
         log.info("空调关闭, 此次请求信息: {}", acRequest);
@@ -161,6 +168,7 @@ public class ACThread extends Thread {
     public void turnOn(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
         startTime = timerService.getTime();
         lastTime = timerService.getTime().getTime();
+        timeOutTime = lastTime + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
         targetTemperature = _targetTemperature;
         changeTemperature = _changeTemperature;
         status = _status;
