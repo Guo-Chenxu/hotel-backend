@@ -22,7 +22,7 @@ import java.util.Collections;
  * @create: 2024-03-20 10:37
  * @version: 1.0
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class StaffServiceTest {
 
@@ -34,5 +34,14 @@ public class StaffServiceTest {
         SaveStaffReq build = SaveStaffReq.builder().id("1771569627727994882")
                 .username("test123").password("test").permission(Collections.singletonList(Permission.CLEANER)).build();
         staffService.save(build);
+    }
+
+    @Test
+    public void testPermission(){
+        StringBuilder sb = new StringBuilder();
+        Arrays.asList("管理员", "保洁员", "维修员").forEach(s -> {
+            sb.append(s).append(",");
+        });
+        System.out.println(sb);
     }
 }

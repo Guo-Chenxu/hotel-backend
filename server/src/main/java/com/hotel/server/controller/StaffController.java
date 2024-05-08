@@ -106,5 +106,13 @@ public class StaffController {
         timerService.setSpeed(Long.parseLong(speed));
         return R.success();
     }
+
+    @GetMapping("/time/speed")
+    @ApiOperation("查看时间流速")
+    @SaCheckLogin
+    @CheckPermission({Permission.ADMIN})
+    public R getSpeed() {
+        return R.success("执行成功", timerService.getSpeed());
+    }
 }
 

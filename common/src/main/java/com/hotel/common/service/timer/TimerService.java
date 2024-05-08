@@ -20,4 +20,9 @@ public interface TimerService {
      * 设置时间流速
      */
     void setSpeed(long speed);
+
+    /**
+     * 查看时间流速
+     */
+    String getSpeed();
 }

@@ -57,4 +57,9 @@ public class TimerServiceImpl implements TimerService {
     public void setSpeed(long speed) {
         timeThread.setSpeed(speed);
     }
+
+    @Override
+    public String getSpeed(){
+        return String.valueOf(timeThread.getSpeed());
+    }
 }

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -34,11 +35,14 @@ public class SaveStaffReq implements Serializable {
     private String id;
 
     @ApiModelProperty("员工姓名")
+    @NotNull
     private String username;
 
     @ApiModelProperty("员工密码")
+    @NotNull
     private String password;
 
     @ApiModelProperty("员工权限")
+    @NotNull
     private List<String> permission;
 }

@@ -257,9 +257,11 @@ public class BillServiceImpl implements BillService {
                     PDFUtil.addRow(table, "  空调风速 (度/分钟)", ac.getChangeTemperature().toString());
                     PDFUtil.addRow(table, "  空调使用时长", ac.getDuration().toString());
                     PDFUtil.addRow(table, "  此次服务总价", ac.getTotalPrice());
-                    PDFUtil.addRow(table, "  服务请求时间", formatDate(ac.getRequestTime()));
+                    PDFUtil.addRow(table, "  服务请求时间", formatDate(ac.getRequestTime() == null
+                            ? ac.getCreateAt() : ac.getRequestTime()));
                     PDFUtil.addRow(table, "  服务开始时间", formatDate(ac.getCreateAt()));
-                    PDFUtil.addRow(table, "  服务结束时间", formatDate(ac.getEndTime()));
+                    PDFUtil.addRow(table, "  服务结束时间", formatDate(ac.getEndTime() == null
+                            ? ac.getCreateAt() : ac.getEndTime()));
                     cnt++;
                 }
                 PDFUtil.addRow(table, "空调总价", billStatement.getAcPrice());
