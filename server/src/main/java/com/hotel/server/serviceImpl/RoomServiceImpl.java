@@ -91,7 +91,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
             throw new RuntimeException("时间不合法, 入住时间应当大于等于当前时间, 离店时间应当大于入住时间");
         }
         Room room = Room.builder().price(bookRoomReq.getPrice())
-                .temperature(indoorTemperatureConfig.getIndoorTemperature())
+                .temperature(Double.valueOf(bookRoomReq.getIndoorTemperature()))
                 .deposit(bookRoomReq.getDeposit())
                 .indoorTemperature(bookRoomReq.getIndoorTemperature()).build();
         int insert = roomMapper.insert(room);

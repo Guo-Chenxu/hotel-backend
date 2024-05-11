@@ -65,23 +65,28 @@ public class ACThread extends Thread {
         isRunning = true;
         recover = true;
         lastTime = timerService.getTime().getTime();
+        long now = timerService.getTime().getTime();
+        long dur = (now - lastTime) / 1000;
         while (isRunning) {
-            long now = timerService.getTime().getTime();
-//            long dur = (now - lastTime) / 1000;
+            while (dur < 1) {
+                now = timerService.getTime().getTime();
+                dur = (now - lastTime) / 1000;
+            }
             if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
                 if (compareTemperature(temperature, indoorTemperature) > 0) {
-                    temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
+                    temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
                 } else if (compareTemperature(temperature, indoorTemperature) < 0) {
-                    temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0;
+                    temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
                 }
             } else {
+//                log.info("dur: {}, changetemperature: {}", dur, changeTemperature / 60.0);
                 if (now < timeOutTime) {
 //                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
 //                            userId, 0, changeTemperature / 60.0);
                     if (compareTemperature(temperature, targetTemperature) > 0) {
-                        temperature -= changeTemperature / 60.0;
+                        temperature -= changeTemperature / 60.0 * dur;
                     } else if (compareTemperature(temperature, targetTemperature) < 0) {
-                        temperature += changeTemperature / 60.0;
+                        temperature += changeTemperature / 60.0 * dur;
                     } else {
                         this.turnOff();
                     }
@@ -92,8 +97,9 @@ public class ACThread extends Thread {
                 }
             }
             lastTime = timerService.getTime().getTime();
+            dur = 0;
             webSocketServer.sendOneMessage(userId, JSON.toJSONString(this.getACStatus()));
-            mySleep(1000);
+//            mySleep(1000);
         }
     }
 
