@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("room")
 @Slf4j
-@Api(tags = "房间接口")
+@Api(tags = "(Room)表控制层")
 // @CrossOrigin
 public class RoomController {
 

@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("customer")
-@Api(tags = "顾客接口")
+@Api(tags = "顾客表(Customer)表控制层")
 @Slf4j
 // @CrossOrigin
 public class CustomerController {

@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("permission")
 @Slf4j
-@Api(tags = "权限控制接口")
+@Api(tags = "权限控制层")
 // @CrossOrigin
 public class PermissionController {
     /**
