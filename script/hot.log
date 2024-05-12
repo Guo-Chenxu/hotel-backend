@@ -1,0 +1,215 @@
+开始测试
+第 0 分钟
+房间1登录成功
+房间2登录成功
+房间3登录成功
+房间4登录成功
+房间5登录成功
+
+
+第 1 分钟
+房间 1 的空调状态是：{'temperature': 10.0, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 15.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 18.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 2 分钟
+房间 1 的空调状态是：{'temperature': 10.500000000000007, 'status': 2, 'price': '0.5', 'targetTemp': 24.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 15.0, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 3 分钟
+房间 1 的空调状态是：{'temperature': 11.000000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 24.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 15.500000000000007, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.0, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.0, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 4 分钟
+房间 1 的空调状态是：{'temperature': 11.45000000000002, 'status': 2, 'price': '0.5', 'targetTemp': 24.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 15.950000000000014, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 18.450000000000006, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 4 的空调状态是：{'temperature': 12.0, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.0, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 5 分钟
+房间 1 的空调状态是：{'temperature': 11.950000000000028, 'status': 2, 'price': '0.5', 'targetTemp': 24.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 15.450000000000006, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.950000000000014, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.0, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.0, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+
+
+第 6 分钟
+房间 1 的空调状态是：{'temperature': 12.400000000000034, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 15.950000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.450000000000006, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.500000000000007, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.999999999999996, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+
+
+第 7 分钟
+房间 1 的空调状态是：{'temperature': 13.40000000000003, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.40000000000002, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 18.05, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 12.05, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 15.899999999999993, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+
+
+第 8 分钟
+房间 1 的空调状态是：{'temperature': 14.300000000000027, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.000000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.05, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 4 的空调状态是：{'temperature': 12.550000000000008, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 16.750000000000004, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 9 分钟
+房间 1 的空调状态是：{'temperature': 15.200000000000024, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.45000000000002, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 18.05, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.000000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 16.299999999999997, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 10 分钟
+房间 1 的空调状态是：{'temperature': 16.200000000000024, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.900000000000027, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 18.05, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 4 的空调状态是：{'temperature': 12.550000000000008, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 16.700000000000003, 'status': 2, 'price': '0.5', 'targetTemp': 24.0, 'changeTemp': 0.5}
+
+
+第 11 分钟
+房间 1 的空调状态是：{'temperature': 17.100000000000037, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.40000000000002, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 18.550000000000008, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 4 的空调状态是：{'temperature': 12.950000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 16.299999999999997, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 12 分钟
+房间 1 的空调状态是：{'temperature': 18.10000000000005, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 15.900000000000013, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 3 的空调状态是：{'temperature': 19.000000000000014, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.45000000000002, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 15.79999999999999, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 13 分钟
+房间 1 的空调状态是：{'temperature': 19.000000000000064, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 16.40000000000002, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 19.40000000000002, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.000000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 15.299999999999983, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 14 分钟
+房间 1 的空调状态是：{'temperature': 20.000000000000078, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 2 的空调状态是：{'temperature': 17.400000000000034, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 18.900000000000013, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.500000000000021, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.799999999999976, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 15 分钟
+房间 1 的空调状态是：{'temperature': 20.90000000000009, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 18.300000000000047, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 19.30000000000002, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.950000000000028, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.299999999999969, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+
+
+第 16 分钟
+房间 1 的空调状态是：{'temperature': 20.400000000000084, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 19.30000000000006, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 18.80000000000001, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 13.45000000000002, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.799999999999976, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+
+
+第 17 分钟
+房间 1 的空调状态是：{'temperature': 19.900000000000077, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 20.200000000000074, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 18.300000000000004, 'status': 1, 'price': '0.333', 'targetTemp': 22.0, 'changeTemp': 0.333}
+房间 4 的空调状态是：{'temperature': 12.950000000000014, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 15.249999999999982, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 18 分钟
+房间 1 的空调状态是：{'temperature': 19.40000000000007, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 21.200000000000088, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 18.63300000000001, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 4 的空调状态是：{'temperature': 13.45000000000002, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.749999999999975, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 19 分钟
+房间 1 的空调状态是：{'temperature': 18.900000000000063, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 19.633000000000024, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 4 的空调状态是：{'temperature': 13.900000000000027, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.249999999999968, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 20 分钟
+房间 1 的空调状态是：{'temperature': 18.500000000000057, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 20.533000000000037, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 4 的空调状态是：{'temperature': 14.300000000000033, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 21 分钟
+房间 1 的空调状态是：{'temperature': 18.00000000000005, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 21.53300000000005, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 4 的空调状态是：{'temperature': 14.80000000000004, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 22 分钟
+房间 1 的空调状态是：{'temperature': 18.200000000000053, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 21.733000000000054, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 15.250000000000046, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 23 分钟
+房间 1 的空调状态是：{'temperature': 18.70000000000006, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 21.233000000000047, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 15.750000000000053, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 24 分钟
+房间 1 的空调状态是：{'temperature': 19.150000000000066, 'status': 2, 'price': '0.5', 'targetTemp': 22.0, 'changeTemp': 0.5}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 20.73300000000004, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 16.10000000000006, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 25 分钟
+房间 1 的空调状态是：{'temperature': 19.650000000000073, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 3, 'price': '1', 'targetTemp': 22.0, 'changeTemp': 1.0}
+房间 3 的空调状态是：{'temperature': 20.233000000000033, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 16.600000000000065, 'status': 2, 'price': '0.5', 'targetTemp': 25.0, 'changeTemp': 0.5}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+
+
+第 26 分钟
+房间 1 的空调状态是：{'temperature': 19.150000000000066, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 2 的空调状态是：{'temperature': 21.900000000000098, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 3 的空调状态是：{'temperature': 19.733000000000025, 'status': 4, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 4 的空调状态是：{'temperature': 17.05000000000007, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
+房间 5 的空调状态是：{'temperature': 14.099999999999966, 'status': 0, 'price': None, 'targetTemp': None, 'changeTemp': None}
