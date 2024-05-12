@@ -11,10 +11,13 @@ spring:
 #        server-addr: localhost:8848
 #        file-extension: yaml
 dubbo:
+  provider:
+    timeout: 1800000
   protocol:
     name: dubbo
     port: -1
   cloud:
     subscribed-services: timer,customer
   consumer:
+    timeout: 1800000
     check: false

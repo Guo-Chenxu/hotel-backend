@@ -36,7 +36,7 @@ public class WebSocketServer {
     // 顾客端和服务端连接的websocket
     private static final ConcurrentHashMap<String, WebSocket> webSocket2ServerMap = new ConcurrentHashMap<>();
 
-    private static final String acUrl = "http://10.29.23.17:29011/api/server/cool/watchAC/%s";
+    private static final String acUrl = "http://localhost:29011/api/server/cool/watchAC/%s";
 
     /**
      * 链接成功调用的方法

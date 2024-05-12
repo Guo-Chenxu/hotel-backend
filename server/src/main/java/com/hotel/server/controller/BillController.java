@@ -60,7 +60,7 @@ public class BillController {
 
     @GetMapping("/ping/{id}")
     public R ping(@PathVariable("id") String id) {
-        return R.success(customerService.ping(id));
+        return R.success(customerService.ping(id), timerService.getTime());
     }
 
     @GetMapping("/billStatement/{customerId}")
