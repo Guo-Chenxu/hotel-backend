@@ -60,4 +60,6 @@ replay_pid*
 
 .history
 
+!./script/*.log
+
 application-*.yml
