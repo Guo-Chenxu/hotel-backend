@@ -27,6 +27,10 @@ import java.io.Serializable;
 public class ACProperties implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("0=制冷, 1=制热")
+    @NotNull
+    private Integer mode;
+
     @ApiModelProperty("空调台数")
     @NotNull
     private Integer count;
