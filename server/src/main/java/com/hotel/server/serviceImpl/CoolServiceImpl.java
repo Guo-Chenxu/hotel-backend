@@ -160,6 +160,7 @@ public class CoolServiceImpl implements CoolService {
                 .changeTemp(indoorTemperatureConfig.getRecoverChangeTemperature())
                 .price("0").targetTemp(Double.valueOf(room.getIndoorTemperature()))
                 .status(acThread != null ? acThread.getStatus() : ACStatus.OFF)
+                .targetTemp(Double.valueOf(room.getIndoorTemperature()))
                 .build();
 
         if (acThread != null && !ACStatus.OFF.equals(resp.getStatus())) {
