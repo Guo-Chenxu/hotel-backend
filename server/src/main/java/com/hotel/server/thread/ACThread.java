@@ -148,6 +148,21 @@ public class ACThread extends Thread {
         }
         acScheduleService.removeOne(userId);
 
+        return storeACRequest();
+    }
+
+    /**
+     * 关闭
+     */
+    public ACRequest turnOffInSchedule() {
+        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
+            return null;
+        }
+
+        return storeACRequest();
+    }
+
+    private ACRequest storeACRequest() {
         endTime = timerService.getTime();
         int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
         if (duration > 0) {
@@ -193,12 +208,12 @@ public class ACThread extends Thread {
         // 先关闭 再放入等待队列
         log.info("用户 {} 空调改变参数: target={}, change={}, status={}, price={}",
                 userId, _targetTemperature, _changeTemperature, _status, _price);
-//        if (targetTemperature != null && status != null && changeTemperature != null && price != null) {
-//            if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
-//                    && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
-//                return;
-//            }
-//        }
+        if (status != null && changeTemperature != null && price != null) {
+            if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
+                    && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
+                return;
+            }
+        }
         turnOff();
         requestTime = timerService.getTime();
         this.status = ACStatus.WAITING;

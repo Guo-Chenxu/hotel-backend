@@ -104,7 +104,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
 
                     // 剥夺
                     runningMap.remove(userId);
-                    ACRequest oldRequest = acThread.turnOff();
+                    ACRequest oldRequest = acThread.turnOffInSchedule();
                     acThread.setStatus(ACStatus.WAITING);
 //                    log.info("old request: {}", oldRequest);
 //                    requestQueue.add(oldRequest);
