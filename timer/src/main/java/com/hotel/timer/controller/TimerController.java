@@ -1,5 +1,6 @@
 package com.hotel.timer.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import com.hotel.common.dto.R;
@@ -33,6 +34,7 @@ public class TimerController {
 
     @ApiOperation("获取时间, 建立连接后不断, 使用sse每1s向前端推一次当前时间")
     @GetMapping("/now")
+    @SaIgnore
     public void getTime(HttpServletResponse response) throws IOException, InterruptedException {
         response.setContentType("text/event-stream;charset=UTF-8");
         PrintWriter writer = response.getWriter();
@@ -43,5 +45,12 @@ public class TimerController {
             writer.flush();
             Thread.sleep(1000);
         }
+    }
+
+    @ApiOperation("获取当前时间")
+    @GetMapping("/time")
+    @SaIgnore
+    public R getTime() {
+        return R.success(timerService.getTime());
     }
 }

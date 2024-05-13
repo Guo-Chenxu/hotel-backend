@@ -144,15 +144,25 @@ public class CoolServiceImpl implements CoolService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ACStatusResp getACStatus(String userId) {
         ACThread acThread = threadMap.get(userId);
-        if (acThread == null) {
-            return ACStatusResp.builder().price("0").status(ACStatus.OFF).changeTemp(0.0).build();
-        }
+        Customer customer = customerService.getById(userId);
+        Room room = roomService.getById(customer.getRoom());
+//        if (acThread == null) {
+//            return ACStatusResp.builder().temperature(room.getTemperature())
+//                    .changeTemp(indoorTemperatureConfig.getRecoverChangeTemperature())
+//                    .price("0").targetTemp(Double.valueOf(room.getIndoorTemperature()))
+//                    .status(acThread.getStatus()).build();
+//        }
+        ACStatusResp resp = ACStatusResp.builder()
+                .temperature(acThread != null ? acThread.getTemperature() : room.getTemperature())
+                .changeTemp(indoorTemperatureConfig.getRecoverChangeTemperature())
+                .price("0").targetTemp(Double.valueOf(room.getIndoorTemperature()))
+                .status(acThread != null ? acThread.getStatus() : ACStatus.OFF)
+                .build();
 
-        ACStatusResp resp = ACStatusResp.builder().temperature(acThread.getTemperature())
-                .status(acThread.getStatus()).build();
-        if (!ACStatus.OFF.equals(resp.getStatus()) && !ACStatus.WAITING.equals(resp.getStatus())) {
+        if (acThread != null && !ACStatus.OFF.equals(resp.getStatus())) {
             resp.setPrice(acThread.getPrice());
             resp.setChangeTemp(acThread.getChangeTemperature());
             resp.setTargetTemp(acThread.getTargetTemperature());

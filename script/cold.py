@@ -1,15 +1,4 @@
-import json
-import time
-import requests
-
-base_url = "http://localhost:29050/api/customer"
-login_url = f"{base_url}/customer/login?name=%s&room=%d"
-watch_url = f"{base_url}/cool/watchAC"
-change_url = f"{base_url}/cool/change"
-ac_status_url = f"{base_url}/cool/acStatus"
-turn_off_url = f"{base_url}/cool/turnOff"
-
-system_time = 10
+from api import *
 
 users = {
     "用户1": {"name": "冷测试1", "room": 18},
@@ -19,75 +8,12 @@ users = {
     "用户5": {"name": "冷测试5", "room": 22},
 }
 
-
-def user_login(name, room: str):
-    url = login_url % (name, room)
-    payload = {}
-    headers = {
-        'Accept': '*/*',
-        'Connection': 'keep-alive'
-    }
-    response = requests.request(
-        "POST", url, headers=headers, data=payload)
-    return response.json()['data']['token']
-
-
-def watch_ac(token):
-    headers = {
-        'Authorization': token,
-        'Accept': '*/*',
-        'Connection': 'keep-alive',
-    }
-    requests.request("GET", watch_url, headers=headers, data={})
-
-
-def change(token: str, temp: float, status: int):
-    data = {}
-    if status is not None:
-        data['status'] = status
-    if temp is not None:
-        data['targetTemperature'] = temp
-    payload = json.dumps(data)
-    headers = {
-        'Authorization': token,
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'Connection': 'keep-alive',
-    }
-
-    requests.request(
-        "POST", change_url, headers=headers, data=payload)
-
-
-def get_status(token, no):
-    headers = {
-        'Authorization': token,
-        'Accept': '*/*',
-        'Connection': 'keep-alive',
-    }
-
-    response = requests.request(
-        "GET", ac_status_url, headers=headers, data={})
-    status = response.json()['data']
-    print(f"房间 {no} 的空调状态是：{status}")
-
-
-def turn_off(token: str):
-    headers = {
-        'Authorization': token,
-        'Accept': '*/*',
-        'Connection': 'keep-alive',
-    }
-
-    requests.request(
-        "POST", turn_off_url, headers=headers, data={})
-
 # 0
-
 
 print("开始测试")
 
 print("第 0 分钟")
+last_time = get_time()
 
 user1 = users["用户1"]
 token1 = user_login(user1['name'], user1['room'])
@@ -127,7 +53,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 # 1
@@ -145,7 +71,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -160,7 +86,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -177,7 +103,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -192,7 +118,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -207,7 +133,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -222,7 +148,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -239,7 +165,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -252,7 +178,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -269,7 +195,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -282,7 +208,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 # 11
@@ -296,7 +222,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -311,7 +237,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -324,7 +250,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -341,7 +267,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -356,7 +282,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -371,7 +297,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -386,7 +312,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -403,7 +329,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -418,7 +344,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -433,7 +359,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -446,7 +372,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -461,7 +387,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -476,7 +402,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 
@@ -491,7 +417,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-time.sleep(system_time)
+last_time = sleep(1, last_time)
 print("\n")
 
 

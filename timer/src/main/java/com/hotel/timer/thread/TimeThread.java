@@ -2,6 +2,8 @@ package com.hotel.timer.thread;
 
 import cn.hutool.core.date.DateUtil;
 import com.hotel.common.service.server.RoomService;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -13,7 +15,9 @@ import java.util.Date;
 /**
  * 模拟时间的线程
  */
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
+@Data
 public class TimeThread extends Thread {
     private static final TimeThread timeThread = new TimeThread();
 
@@ -21,7 +25,7 @@ public class TimeThread extends Thread {
 
     boolean stopped = false;
 
-    Date now;
+    private Date now;
 
     // 1秒对应speed秒
     double speed;
@@ -35,33 +39,33 @@ public class TimeThread extends Thread {
         return timeThread;
     }
 
-    public void setChannel(String _channel) {
-        this.channel = _channel;
-    }
+//    public void setChannel(String _channel) {
+//        this.channel = _channel;
+//    }
+//
+//    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
+//        this.stringRedisTemplate = stringRedisTemplate;
+//    }
 
-    public void setStringRedisTemplate(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
+//    public Date getNow() {
+//        return now;
+//    }
+//
+//    public double getSpeed() {
+//        return speed;
+//    }
+//
+//    public void setNow(Date now) {
+//        this.now = now;
+//    }
+//
+//    public void setSpeed(double speed) {
+//        this.speed = speed;
+//    }
 
-    public Date getNow() {
-        return now;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setNow(Date now) {
-        this.now = now;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public void setStop() {
-        this.stopped = true;
-    }
+//    public void setStop() {
+//        this.stopped = true;
+//    }
 
     public void finish() {
         this.stopped = true;

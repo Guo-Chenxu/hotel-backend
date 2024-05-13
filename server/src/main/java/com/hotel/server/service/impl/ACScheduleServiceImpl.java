@@ -36,6 +36,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 @Lazy
 @Service
+@Async
 public class ACScheduleServiceImpl implements ACScheduleService {
     // 请求调度队列
     private static final PriorityQueue<ACRequest> requestQueue = new PriorityQueue<>((o1, o2) -> {
@@ -63,12 +64,13 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     private CoolService coolService;
 
     /**
-     * 从已经有调度的map中删除
+     * 只有关闭需要删除，关闭的话从调度和运行队列中均需要删除
      */
     @Override
     public void removeOne(String userId) {
 //        runningMap.remove(userId);
         runningQueue.removeIf((e) -> userId.equals(e.getUserId()));
+        requestQueue.removeIf((e) -> userId.equals(e.getUserId()));
         this.newSchedule();
     }
 

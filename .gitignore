@@ -61,5 +61,6 @@ replay_pid*
 .history
 
 !script/*.log
+script/__pycache__/
 
 application-*.yml

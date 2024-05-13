@@ -19,7 +19,7 @@ public class TimerServiceImpl implements TimerService {
     private static final TimeThread timeThread = TimeThread.getInstance();
 
     @Value("${timer.speed}")
-    private long speed;
+    private double speed;
 
     @Value("${spring.redis.channel}")
     public String channel; //频道channel
