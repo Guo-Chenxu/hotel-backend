@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @create: 2024-03-20 11:34
  * @version: 1.0
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Slf4j
 public class DatabaseScriptTest {
 

@@ -41,7 +41,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("food")
 @Slf4j
-@Api(tags = "食物控制接口")
+@Api(tags = "食物表(Food)表控制层")
 // @CrossOrigin
 public class FoodController {
     @DubboReference(check = false)

@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("bill")
 @Slf4j
-@Api(tags = "财务控制接口")
+@Api(tags = "财务接口")
 // @CrossOrigin
 public class BillController {
     @DubboReference
@@ -60,7 +60,7 @@ public class BillController {
 
     @GetMapping("/ping/{id}")
     public R ping(@PathVariable("id") String id) {
-        return R.success(customerService.ping(id));
+        return R.success(customerService.ping(id), timerService.getTime());
     }
 
     @GetMapping("/billStatement/{customerId}")

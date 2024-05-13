@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 空调线程
@@ -110,7 +112,7 @@ public class ACThread extends Thread {
     private ACStatusResp getACStatus() {
         ACStatusResp resp = ACStatusResp.builder().temperature(this.getTemperature())
                 .status(this.getStatus()).build();
-        if (!ACStatus.OFF.equals(resp.getStatus()) && !ACStatus.WAITING.equals(resp.getStatus())) {
+        if (!ACStatus.OFF.equals(resp.getStatus())) {
             resp.setPrice(this.getPrice());
             resp.setChangeTemp(this.getChangeTemperature());
             resp.setTargetTemp(this.getTargetTemperature());
@@ -144,6 +146,7 @@ public class ACThread extends Thread {
      */
     public ACRequest turnOff() {
         if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
+            status = ACStatus.OFF;
             return null;
         }
         acScheduleService.removeOne(userId);
@@ -215,7 +218,10 @@ public class ACThread extends Thread {
             }
         }
         turnOff();
-        requestTime = timerService.getTime();
+        this.requestTime = timerService.getTime();
+        this.targetTemperature = _targetTemperature;
+        this.changeTemperature = _changeTemperature;
+        this.price = _price;
         this.status = ACStatus.WAITING;
         ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
                 .targetTemperature(_targetTemperature).changeTemperature(_changeTemperature)
@@ -237,8 +243,22 @@ public class ACThread extends Thread {
 //            }
 //        }
         turnOff();
-        requestTime = timerService.getTime();
+        this.requestTime = timerService.getTime();
+        this.targetTemperature = acRequest.getTargetTemperature();
+        this.changeTemperature = acRequest.getChangeTemperature();
+        this.price = acRequest.getPrice();
         this.status = ACStatus.WAITING;
         acScheduleService.addOne(acRequest);
+    }
+
+    /**
+     * 设置当前线程的各项参数
+     */
+    public void setReq(ACRequest acRequest) {
+        this.requestTime = timerService.getTime();
+        this.targetTemperature = acRequest.getTargetTemperature();
+        this.changeTemperature = acRequest.getChangeTemperature();
+        this.price = acRequest.getPrice();
+        this.status = acRequest.getStatus();
     }
 }

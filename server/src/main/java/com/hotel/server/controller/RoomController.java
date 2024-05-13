@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("room")
 @Slf4j
-@Api(tags = "房间接口")
+@Api(tags = "(Room)表控制层")
 // @CrossOrigin
 public class RoomController {
 

@@ -130,17 +130,16 @@ public class CoolServiceImpl implements CoolService {
         Page<PageRoomACResp> resp = new Page<>();
         BeanUtils.copyProperties(customerPage, resp, "records");
         resp.setRecords(customerPage.getRecords().stream().map((e) -> {
-                    ACStatusResp acStatus = this.getACStatus(String.valueOf(e.getId()));
-                    if (acStatus.getTemperature() == null) {
-                        Room room = roomService.getById(e.getRoom());
-                        acStatus.setTemperature(room.getTemperature());
-                    }
-                    return PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
-                            .customerId(String.valueOf(e.getId()))
-                            .acStatus(acStatus)
-                            .build();
-                })
-                .collect(Collectors.toList()));
+            ACStatusResp acStatus = this.getACStatus(String.valueOf(e.getId()));
+            if (acStatus.getTemperature() == null) {
+                Room room = roomService.getById(e.getRoom());
+                acStatus.setTemperature(room.getTemperature());
+            }
+            return PageRoomACResp.builder().roomId(String.valueOf(e.getRoom()))
+                    .customerId(String.valueOf(e.getId()))
+                    .acStatus(acStatus)
+                    .build();
+        }).collect(Collectors.toList()));
         return resp;
     }
 
@@ -165,8 +164,10 @@ public class CoolServiceImpl implements CoolService {
     public void turnOn(String userId, CustomerACReq customerACReq) {
         ACRequest acRequest = checkRequest(userId, customerACReq);
         ACThread acThread = threadMap.get(userId);
-        acThread.setStatus(ACStatus.WAITING);
-        acScheduleService.addOne(acRequest);
+//        acThread.setStatus(ACStatus.WAITING);
+//        acScheduleService.addOne(acRequest);
+        acThread.change(acRequest.getTargetTemperature(), acRequest.getChangeTemperature(),
+                acRequest.getStatus(), acRequest.getPrice());
     }
 
     @Override
@@ -206,6 +207,8 @@ public class CoolServiceImpl implements CoolService {
 
         ACRequest oldRequest = (ACRequest) cacheService.get(String.format(RedisKeys.AC_REQUEST_USERID, userId),
                 ACRequest.class);
+        // 先屏蔽上次请求
+//        oldRequest = null;
 
         if (customerACReq.getTargetTemperature() == null) {
             customerACReq.setTargetTemperature((oldRequest != null && oldRequest.getTargetTemperature() != null)

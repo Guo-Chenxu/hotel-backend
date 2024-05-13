@@ -9,12 +9,14 @@ import com.hotel.common.dto.R;
 import com.hotel.common.dto.response.BillResp;
 import com.hotel.common.dto.response.BillStatementResp;
 import com.hotel.common.service.server.BillService;
+import com.hotel.common.service.timer.TimerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
@@ -37,15 +39,22 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("bill")
 @Slf4j
-@Api(tags = "财务控制接口")
+@Api(tags = "财务接口")
 // @CrossOrigin
 public class BillController {
+
+    @DubboReference(check = false)
+    private TimerService timerService;
     @DubboReference(check = false)
     private BillService billService;
 
+//    public BillController(@Qualifier("timerService") TimerService timerService) {
+//        this.timerService = timerService;
+//    }
+
     @GetMapping("/ping/{id}")
     public R ping(@PathVariable("id") String id) {
-        return R.success(billService.ping(id));
+        return R.success(billService.ping(id), timerService.getTime());
     }
 
     @GetMapping("/billStatement")

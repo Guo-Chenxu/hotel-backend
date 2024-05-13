@@ -29,6 +29,8 @@ public class ACProperties implements Serializable {
 
     @ApiModelProperty("0=制冷, 1=制热")
     @NotNull
+    @Max(1)
+    @Min(0)
     private Integer mode;
 
     @ApiModelProperty("空调台数")

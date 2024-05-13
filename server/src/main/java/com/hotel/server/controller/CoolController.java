@@ -34,7 +34,7 @@ import javax.validation.constraints.Min;
 @RestController
 @RequestMapping("cool")
 @Slf4j
-@Api(tags = "空调控制接口")
+@Api(tags = "空调控制层")
 // @CrossOrigin
 public class CoolController {
     @DubboReference

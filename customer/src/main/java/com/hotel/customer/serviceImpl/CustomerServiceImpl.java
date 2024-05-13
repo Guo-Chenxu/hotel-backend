@@ -15,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -82,6 +84,9 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public List<Customer> listCustomerInRoom(List<Long> rooms) {
+        if (CollectionUtils.isEmpty(rooms)) {
+            return new ArrayList<>();
+        }
         return customerMapper.selectCustomerRoomInRoom(rooms);
     }
 }

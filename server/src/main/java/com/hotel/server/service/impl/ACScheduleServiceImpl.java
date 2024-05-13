@@ -1,5 +1,6 @@
 package com.hotel.server.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.hotel.common.constants.ACStatus;
 import com.hotel.common.constants.RedisKeys;
 import com.hotel.common.entity.ACProperties;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 空调调度线程
@@ -69,9 +74,10 @@ public class ACScheduleServiceImpl implements ACScheduleService {
      * 调度
      */
     public synchronized void schedule() {
-        log.info("=======================调度前========================");
-        log.info("运行map: {}", runningMap);
-        log.info("调度队列: {}", requestQueue);
+        String traceId = IdUtil.getSnowflakeNextIdStr();
+        log.info("=======================调度前 {}========================", traceId);
+        log.info("运行map: {}, 运行的空调个数: {}", runningMap, runningMap.size());
+        log.info("调度队列: {}, 等待的空调个数: {}", requestQueue, requestQueue.size());
         ACProperties acProperties = (ACProperties) cacheService.get(RedisKeys.AC_PROPERTIES, ACProperties.class);
         // 先满足让运行空调达到最大值
         while (runningMap.size() < acProperties.getCount() && !requestQueue.isEmpty()) {
@@ -81,12 +87,6 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     acRequest.getStatus(), acRequest.getPrice());
             runningMap.put(acRequest.getUserId(), acThread);
         }
-//        if (requestQueue.isEmpty()) {
-//            log.info("=======================调度后========================");
-//            log.info("运行map: {}", runningMap);
-//            log.info("调度队列: {}", requestQueue);
-//            return;
-//        }
 
         // 然后满足运行空调档位最高
         // 令人深思的调度方式, 使我的大脑旋转
@@ -105,10 +105,13 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     // 剥夺
                     runningMap.remove(userId);
                     ACRequest oldRequest = acThread.turnOffInSchedule();
-                    acThread.setStatus(ACStatus.WAITING);
+                    if (oldRequest != null) {
+                        addUniqueQueue(oldRequest);
+                        acThread.setReq(oldRequest);
+                        acThread.setStatus(ACStatus.WAITING);
+                    }
 //                    log.info("old request: {}", oldRequest);
 //                    requestQueue.add(oldRequest);
-                    addUniqueQueue(oldRequest);
 
                     // 占用
                     ACThread ready = (ACThread) coolService.getACThread(acRequest.getUserId());
@@ -119,9 +122,9 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                 }
             }
         }
-        log.info("=======================调度后========================");
-        log.info("运行map: {}", runningMap);
-        log.info("调度队列: {}", requestQueue);
+        log.info("=======================调度后 {}========================", traceId);
+        log.info("运行map: {}, 运行的空调个数: {}", runningMap, runningMap.size());
+        log.info("调度队列: {}, 等待的空调个数: {}", requestQueue, requestQueue.size());
     }
 
     private static void addUniqueQueue(ACRequest acRequest) {

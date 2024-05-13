@@ -40,7 +40,7 @@ import java.util.List;
 @RestController
 @RequestMapping("staff")
 @Slf4j
-@Api(tags = "酒店服务人员接口")
+@Api(tags = "酒店服务人员表(Staff)表控制层")
 // @CrossOrigin
 public class StaffController {
     /**
