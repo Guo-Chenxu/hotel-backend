@@ -91,7 +91,8 @@ public class ACThread extends Thread {
                         temperature += changeTemperature / 60.0 * dur;
                     } else {
                         ACRequest acRequest = this.turnOff();
-                        this.change(acRequest);
+                        acScheduleService.addOne(acRequest);
+//                        this.change(acRequest);
                     }
                 } else {
                     // 时间片到时, 重新调度
@@ -211,12 +212,14 @@ public class ACThread extends Thread {
         // 先关闭 再放入等待队列
         log.info("用户 {} 空调改变参数: target={}, change={}, status={}, price={}",
                 userId, _targetTemperature, _changeTemperature, _status, _price);
-        if (status != null && changeTemperature != null && price != null) {
-            if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
-                    && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
+        // 调温不会调度
+        if (status != null && price != null) {
+            if (status.equals(_status) && price.equals(_price)) {
+                targetTemperature = _targetTemperature;
                 return;
             }
         }
+
         turnOff();
         this.requestTime = timerService.getTime();
         this.targetTemperature = _targetTemperature;
@@ -226,28 +229,6 @@ public class ACThread extends Thread {
         ACRequest acRequest = ACRequest.builder().userId(userId).startTime(timerService.getTime())
                 .targetTemperature(_targetTemperature).changeTemperature(_changeTemperature)
                 .status(_status).price(_price).build();
-        acScheduleService.addOne(acRequest);
-    }
-
-    /**
-     * 调温调风
-     * 结束之前的运行, 开启一个新的请求
-     */
-    public void change(ACRequest acRequest) {
-        // 先关闭 再放入等待队列
-        log.info("用户 {} 空调改变参数: acRequest={}", userId, acRequest);
-//        if (targetTemperature != null && status != null && changeTemperature != null && price != null) {
-//            if (targetTemperature.equals(_targetTemperature) && status.equals(_status)
-//                    && changeTemperature.equals(_changeTemperature) && price.equals(_price)) {
-//                return;
-//            }
-//        }
-        turnOff();
-        this.requestTime = timerService.getTime();
-        this.targetTemperature = acRequest.getTargetTemperature();
-        this.changeTemperature = acRequest.getChangeTemperature();
-        this.price = acRequest.getPrice();
-        this.status = ACStatus.WAITING;
         acScheduleService.addOne(acRequest);
     }
 

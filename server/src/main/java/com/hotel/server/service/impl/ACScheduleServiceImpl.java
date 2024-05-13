@@ -66,7 +66,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     @Override
     public void addOne(ACRequest acRequest) {
 //        requestQueue.add(acRequest);
-        addUniqueQueue(acRequest);
+        addUniqueQueue(acRequest, requestQueue);
         this.schedule();
     }
 
@@ -106,7 +106,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
                     runningMap.remove(userId);
                     ACRequest oldRequest = acThread.turnOffInSchedule();
                     if (oldRequest != null) {
-                        addUniqueQueue(oldRequest);
+                        addUniqueQueue(oldRequest, requestQueue);
                         acThread.setReq(oldRequest);
                         acThread.setStatus(ACStatus.WAITING);
                     }
@@ -127,11 +127,11 @@ public class ACScheduleServiceImpl implements ACScheduleService {
         log.info("调度队列: {}, 等待的空调个数: {}", requestQueue, requestQueue.size());
     }
 
-    private static void addUniqueQueue(ACRequest acRequest) {
+    private static void addUniqueQueue(ACRequest acRequest, PriorityQueue<ACRequest> queue) {
         if (acRequest == null) {
             return;
         }
-        requestQueue.removeIf((e) -> Objects.equals(e.getUserId(), acRequest.getUserId()));
-        requestQueue.add(acRequest);
+        queue.removeIf((e) -> Objects.equals(e.getUserId(), acRequest.getUserId()));
+        queue.add(acRequest);
     }
 }
