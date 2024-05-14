@@ -90,6 +90,8 @@ public class ACThread extends Thread {
                     } else if (compareTemperature(temperature, targetTemperature) < 0) {
                         temperature += changeTemperature / 60.0 * dur;
 //                    } else {
+                        // todo 应该可以加1度调度的环节, 但是这样调度的优先级就不好把握
+                        //  如果一个优先级高的等待需求但是差距小于1度是否要进行调度?
 //                        ACRequest acRequest = this.turnOff();
 //                        acScheduleService.addOne(acRequest);
                     }
