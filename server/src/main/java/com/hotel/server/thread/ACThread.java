@@ -89,10 +89,9 @@ public class ACThread extends Thread {
                         temperature -= changeTemperature / 60.0 * dur;
                     } else if (compareTemperature(temperature, targetTemperature) < 0) {
                         temperature += changeTemperature / 60.0 * dur;
-                    } else {
-                        ACRequest acRequest = this.turnOff();
-                        acScheduleService.addOne(acRequest);
-//                        this.change(acRequest);
+//                    } else {
+//                        ACRequest acRequest = this.turnOff();
+//                        acScheduleService.addOne(acRequest);
                     }
                 } else {
                     // 时间片到时, 重新调度
@@ -148,6 +147,9 @@ public class ACThread extends Thread {
     public ACRequest turnOff() {
         if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
             status = ACStatus.OFF;
+            if (Objects.equals(status, ACStatus.WAITING)) {
+                acScheduleService.removeOne(userId);
+            }
             return null;
         }
         acScheduleService.removeOne(userId);
