@@ -59,4 +59,9 @@ public interface BillService {
      * 生成报表
      */
     ReportResp report(Date startTime, Date endTime, String type);
+
+    /**
+     * 获取用户房间空调的累计费用
+     */
+    String getACTotalPrice(String userId);
 }

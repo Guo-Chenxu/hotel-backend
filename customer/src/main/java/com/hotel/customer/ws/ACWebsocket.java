@@ -20,7 +20,6 @@ import java.io.PrintWriter;
  */
 @Slf4j
 public class ACWebsocket extends WebSocketListener {
-// todo 空调有些问题（但又好像不是问题），ws没有断连，当用户退出登录后房间依旧还是会扣费，但是登录的时候做了判断，避免多个线程
 
     private String userId;
 

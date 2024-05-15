@@ -117,7 +117,8 @@ public class CoolServiceImpl implements CoolService {
                 .indoorTemperatureConfig(indoorTemperatureConfig)
                 .isRunning(true).recover(true).webSocketServer(webSocketServer)
                 .timerService(timerService).billService(billService).acScheduleService(acScheduleService)
-                .indoorTemperature(Double.valueOf(room.getIndoorTemperature())).build();
+                .indoorTemperature(Double.valueOf(room.getIndoorTemperature()))
+                .currentPrice("0").totalPrice(billService.getACTotalPrice(userId)).build();
         thread.setName("ACThread-" + userId);
         thread.start();
         threadMap.put(userId, thread);
@@ -161,6 +162,8 @@ public class CoolServiceImpl implements CoolService {
                 .price("0").targetTemp(Double.valueOf(room.getIndoorTemperature()))
                 .status(acThread != null ? acThread.getStatus() : ACStatus.OFF)
                 .targetTemp(Double.valueOf(room.getIndoorTemperature()))
+                .currentPrice(acThread != null ? acThread.getCurrentPrice() : "0")
+                .totalPrice(acThread != null ? acThread.getTotalPrice() : billService.getACTotalPrice(userId))
                 .build();
 
         if (acThread != null && !ACStatus.OFF.equals(resp.getStatus())) {

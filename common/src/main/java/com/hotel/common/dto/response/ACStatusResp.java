@@ -39,4 +39,10 @@ public class ACStatusResp implements Serializable {
 
     @ApiModelProperty("空调每分钟变化温度")
     private Double changeTemp;
+
+    @ApiModelProperty("当前费用")
+    private String currentPrice;
+
+    @ApiModelProperty("累计费用")
+    private String totalPrice;
 }

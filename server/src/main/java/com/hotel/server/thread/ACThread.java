@@ -14,6 +14,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
 
@@ -56,6 +57,8 @@ public class ACThread extends Thread {
     // todo 增加当前费用和累计费用字段
     // 当前费用就实时计算，每次turnOff清0
     // 累计费用在当前费用清0时增加当前费用，初始化时从数据库中计算累计费用
+    private String currentPrice; // 当前费用
+    private String totalPrice; // 累计费用
 
     private TimerService timerService;
     private BillService billService;
@@ -94,13 +97,15 @@ public class ACThread extends Thread {
 //                            userId, 0, changeTemperature / 60.0);
                     if (compareTemperature(temperature, targetTemperature, 0.1) > 0) {
                         temperature -= changeTemperature / 60.0 * dur;
+                        changeCurrentPrice(dur);
                     } else if (compareTemperature(temperature, targetTemperature, 0.1) < 0) {
                         temperature += changeTemperature / 60.0 * dur;
+                        changeCurrentPrice(dur);
                     } else {
                         // 温度相差1度则关闭空调
                         this.lastStatus = this.status;
                         this.lastPrice = this.price;
-                        ACRequest acRequest = this.turnOff();
+                        this.turnOff();
                         this.status = ACStatus.RETURNING;
                     }
                 } else {
@@ -120,12 +125,14 @@ public class ACThread extends Thread {
      * 获取空调的当前状态
      */
     private ACStatusResp getACStatus() {
-        ACStatusResp resp = ACStatusResp.builder().temperature(this.getTemperature())
-                .status(this.getStatus()).build();
+        ACStatusResp resp = ACStatusResp.builder().temperature(this.temperature)
+                .status(this.status)
+                .currentPrice(this.currentPrice)
+                .totalPrice(this.totalPrice).build();
         if (!ACStatus.OFF.equals(resp.getStatus())) {
-            resp.setPrice(this.getPrice());
-            resp.setChangeTemp(this.getChangeTemperature());
-            resp.setTargetTemp(this.getTargetTemperature());
+            resp.setPrice(this.price);
+            resp.setChangeTemp(this.changeTemperature);
+            resp.setTargetTemp(this.targetTemperature);
         }
         return resp;
     }
@@ -155,14 +162,11 @@ public class ACThread extends Thread {
      * 关闭
      */
     public ACRequest turnOff() {
-        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)
-                || Objects.equals(status, ACStatus.RETURNING)) {
-            if (Objects.equals(status, ACStatus.WAITING)) {
-                acScheduleService.removeOne(userId);
-            }
-            status = ACStatus.OFF;
+        if (checkACStatus()) {
             return null;
         }
+
+        changeTotalPrice();
         acScheduleService.removeOne(userId);
 
         return storeACRequest();
@@ -172,16 +176,46 @@ public class ACThread extends Thread {
      * 关闭
      */
     public ACRequest turnOffInSchedule() {
-        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)
-                || Objects.equals(status, ACStatus.RETURNING)) {
-            if (Objects.equals(status, ACStatus.WAITING)) {
-                acScheduleService.removeOne(userId);
-            }
-            status = ACStatus.OFF;
+        if (checkACStatus()) {
             return null;
         }
 
+        changeTotalPrice();
         return storeACRequest();
+    }
+
+    /**
+     * 当前费用增加
+     */
+    private void changeCurrentPrice(long _dur) {
+        currentPrice = new BigDecimal(currentPrice)
+                .add(new BigDecimal(price)
+                        .divide(new BigDecimal(60), 5, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal(_dur))
+                ).toString();
+    }
+
+    /**
+     * 当前费用清0，实时费用增加
+     */
+    private void changeTotalPrice() {
+        totalPrice = new BigDecimal(totalPrice).add(new BigDecimal(currentPrice)).toString();
+        currentPrice = "0";
+    }
+
+    /**
+     * 校验空调状态
+     * 如果当前空调本身就没有开启, 则不需要再进行调度
+     * 从队列中删除后直接返回即可
+     */
+    private boolean checkACStatus() {
+        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)
+                || Objects.equals(status, ACStatus.RETURNING)) {
+            acScheduleService.removeOne(userId);
+            status = ACStatus.OFF;
+            return true;
+        }
+        return false;
     }
 
     private ACRequest storeACRequest() {

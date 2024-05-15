@@ -338,6 +338,16 @@ public class BillServiceImpl implements BillService {
         }
     }
 
+    @Override
+    public String getACTotalPrice(String userId) {
+        BigDecimal totalPrice = new BigDecimal("0");
+        List<CustomerAC> bills = customerACDao.selectAll(userId);
+        for (CustomerAC e : bills) {
+            totalPrice = totalPrice.add(new BigDecimal(e.getTotalPrice()));
+        }
+        return totalPrice.toString();
+    }
+
     /**
      * 获取房间相关报表
      */
