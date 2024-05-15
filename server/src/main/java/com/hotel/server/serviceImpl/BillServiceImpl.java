@@ -252,10 +252,10 @@ public class BillServiceImpl implements BillService {
                 int cnt = 1;
                 for (CustomerAC ac : billStatement.getAcBillList()) {
                     PDFUtil.addRow(table, String.valueOf(cnt), "");
-                    PDFUtil.addRow(table, "  空调价格", ac.getPrice());
+                    PDFUtil.addRow(table, "  空调价格 (元/分钟)", ac.getPrice());
                     PDFUtil.addRow(table, "  空调状态", ac.getStatus().toString());
                     PDFUtil.addRow(table, "  空调风速 (度/分钟)", ac.getChangeTemperature().toString());
-                    PDFUtil.addRow(table, "  空调使用时长", ac.getDuration().toString());
+                    PDFUtil.addRow(table, "  空调使用时长 (分钟)", ac.getDuration());
                     PDFUtil.addRow(table, "  此次服务总价", ac.getTotalPrice());
                     PDFUtil.addRow(table, "  服务请求时间", formatDate(ac.getRequestTime() == null
                             ? ac.getCreateAt() : ac.getRequestTime()));

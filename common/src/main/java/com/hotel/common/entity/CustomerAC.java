@@ -53,7 +53,7 @@ public class CustomerAC implements Serializable {
     /**
      * 此次服务时长 分钟
      */
-    private Integer duration;
+    private String duration;
 
     /**
      * 此次服务总价

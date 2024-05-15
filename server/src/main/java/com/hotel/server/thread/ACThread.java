@@ -54,7 +54,6 @@ public class ACThread extends Thread {
 
     private String price; // 价格
     private String lastPrice; // 上一次价格
-    // todo 增加当前费用和累计费用字段
     // 当前费用就实时计算，每次turnOff清0
     // 累计费用在当前费用清0时增加当前费用，初始化时从数据库中计算累计费用
     private String currentPrice; // 当前费用
@@ -220,12 +219,14 @@ public class ACThread extends Thread {
 
     private ACRequest storeACRequest() {
         endTime = timerService.getTime();
-        int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
-        if (duration > 0) {
-            String totalPrice = new BigDecimal(price).multiply(new BigDecimal(duration)).toString();
+//        int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
+        BigDecimal duration = BigDecimal.valueOf((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60)
+                .setScale(3, RoundingMode.HALF_UP);
+        if (duration.compareTo(BigDecimal.ZERO) > 0) {
+            String totalPrice = new BigDecimal(price).multiply(duration).toString();
 
             CustomerAC customerAC = CustomerAC.builder().customerId(userId).price(price).status(status)
-                    .changeTemperature(changeTemperature).duration(duration).totalPrice(totalPrice)
+                    .changeTemperature(changeTemperature).duration(duration.toString()).totalPrice(totalPrice)
                     .createAt(startTime).requestTime(requestTime).endTime(endTime).build();
             billService.saveACBill(customerAC);
             log.info("空调关闭且持续时间大于0, 服务信息入库: {}", customerAC);
