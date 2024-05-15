@@ -53,7 +53,9 @@ public class ACThread extends Thread {
 
     private String price; // 价格
     private String lastPrice; // 上一次价格
-    o
+    // todo 增加当前费用和累计费用字段
+    // 当前费用就实时计算，每次turnOff清0
+    // 累计费用在当前费用清0时增加当前费用，初始化时从数据库中计算累计费用
 
     private TimerService timerService;
     private BillService billService;
