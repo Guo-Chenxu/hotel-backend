@@ -86,6 +86,12 @@ public class ACScheduleServiceImpl implements ACScheduleService {
         }
     }
 
+    @Override
+    public boolean checkRequest() {
+        return !requestQueue.isEmpty();
+    }
+
+
     /**
      * 调度
      */

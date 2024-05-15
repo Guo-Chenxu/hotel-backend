@@ -13,4 +13,5 @@ public interface ACStatus {
     Integer MIDDLE = 2;
     Integer HIGH = 3;
     Integer WAITING = 4;
+    Integer RETURNING = 5;
 }

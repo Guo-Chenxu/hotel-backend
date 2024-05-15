@@ -2,7 +2,6 @@ package com.hotel.server.thread;
 
 import com.alibaba.fastjson2.JSON;
 import com.hotel.common.constants.ACStatus;
-import com.hotel.common.constants.ACTemp;
 import com.hotel.common.dto.response.ACStatusResp;
 import com.hotel.common.entity.ACRequest;
 import com.hotel.common.entity.CustomerAC;
@@ -10,7 +9,6 @@ import com.hotel.common.service.server.BillService;
 import com.hotel.common.service.timer.TimerService;
 import com.hotel.server.config.IndoorTemperatureConfig;
 import com.hotel.server.service.ACScheduleService;
-import com.hotel.server.service.impl.ACScheduleServiceImpl;
 import com.hotel.server.ws.WebSocketServer;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 空调线程
@@ -43,7 +39,8 @@ public class ACThread extends Thread {
     private long lastTime; // 空调上一次计费温度
     private long timeOutTime; // 时间片到时的时间
 
-    private Integer status; // 空调状态, 0 关闭， 1 低档， 2 中档， 3 高档
+    private Integer status; // 空调状态, 0 关闭， 1 低档， 2 中档， 3 高档 4 等待 5 回温
+    private Integer lastStatus; // 上一阶段空调状态
 
     private Double temperature; // 当前温度
     private Double targetTemperature; // 目标温度
@@ -55,6 +52,8 @@ public class ACThread extends Thread {
     private Boolean recover; // 控制是否在回归室温
 
     private String price; // 价格
+    private String lastPrice; // 上一次价格
+    o
 
     private TimerService timerService;
     private BillService billService;
@@ -74,26 +73,33 @@ public class ACThread extends Thread {
                 now = timerService.getTime().getTime();
                 dur = (now - lastTime) / 1000;
             }
-            if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)) {
-                if (compareTemperature(temperature, indoorTemperature) > 0) {
+            if (ACStatus.OFF.equals(status) || ACStatus.WAITING.equals(status)
+                    || ACStatus.RETURNING.equals(status)) {
+                if (ACStatus.RETURNING.equals(status)
+                        && compareTemperature(temperature, targetTemperature, 1) != 0) {
+                    this.change(targetTemperature, changeTemperature, lastStatus, lastPrice);
+                }
+                if (compareTemperature(temperature, indoorTemperature, 0.1) > 0) {
                     temperature -= indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
-                } else if (compareTemperature(temperature, indoorTemperature) < 0) {
+                } else if (compareTemperature(temperature, indoorTemperature, 0.1) < 0) {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
                 }
             } else {
 //                log.info("dur: {}, changetemperature: {}", dur, changeTemperature / 60.0);
-                if (now < timeOutTime) {
+                // 时间片未到达或者没有请求
+                if (now < timeOutTime || acScheduleService.checkRequest()) {
 //                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
 //                            userId, 0, changeTemperature / 60.0);
-                    if (compareTemperature(temperature, targetTemperature) > 0) {
+                    if (compareTemperature(temperature, targetTemperature, 0.1) > 0) {
                         temperature -= changeTemperature / 60.0 * dur;
-                    } else if (compareTemperature(temperature, targetTemperature) < 0) {
+                    } else if (compareTemperature(temperature, targetTemperature, 0.1) < 0) {
                         temperature += changeTemperature / 60.0 * dur;
-//                    } else {
-                        // todo 应该可以加1度调度的环节, 但是这样调度的优先级就不好把握
-                        //  如果一个优先级高的等待需求但是差距小于1度是否要进行调度?
-//                        ACRequest acRequest = this.turnOff();
-//                        acScheduleService.addOne(acRequest);
+                    } else {
+                        // 温度相差1度则关闭空调
+                        this.lastStatus = this.status;
+                        this.lastPrice = this.price;
+                        ACRequest acRequest = this.turnOff();
+                        this.status = ACStatus.RETURNING;
                     }
                 } else {
                     // 时间片到时, 重新调度
@@ -134,10 +140,10 @@ public class ACThread extends Thread {
     /**
      * 比较温度
      */
-    private int compareTemperature(double a, double b) {
-        if (a - b > ACTemp.BOUND) {
+    private int compareTemperature(double a, double b, double precision) {
+        if (a - b > precision) {
             return 1;
-        } else if (b - a > ACTemp.BOUND) {
+        } else if (b - a > precision) {
             return -1;
         }
         return 0;
@@ -147,11 +153,12 @@ public class ACThread extends Thread {
      * 关闭
      */
     public ACRequest turnOff() {
-        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
-            status = ACStatus.OFF;
+        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)
+                || Objects.equals(status, ACStatus.RETURNING)) {
             if (Objects.equals(status, ACStatus.WAITING)) {
                 acScheduleService.removeOne(userId);
             }
+            status = ACStatus.OFF;
             return null;
         }
         acScheduleService.removeOne(userId);
@@ -163,7 +170,12 @@ public class ACThread extends Thread {
      * 关闭
      */
     public ACRequest turnOffInSchedule() {
-        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)) {
+        if (Objects.equals(status, ACStatus.OFF) || Objects.equals(status, ACStatus.WAITING)
+                || Objects.equals(status, ACStatus.RETURNING)) {
+            if (Objects.equals(status, ACStatus.WAITING)) {
+                acScheduleService.removeOne(userId);
+            }
+            status = ACStatus.OFF;
             return null;
         }
 
@@ -189,6 +201,7 @@ public class ACThread extends Thread {
         log.info("空调关闭, 此次请求信息: {}", acRequest);
 
         status = ACStatus.OFF;
+        lastPrice = price;
         price = "0";
 
         return acRequest;

@@ -29,4 +29,9 @@ public interface ACScheduleService {
      * 向调度队列里面放入一个空调请求
      */
     void addOne(ACRequest acRequest);
+
+    /**
+     * 查看调度队列里面是否有请求
+     */
+    boolean checkRequest();
 }
