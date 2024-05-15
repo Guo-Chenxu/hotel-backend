@@ -63,8 +63,6 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     @DubboReference(check = false)
     private CoolService coolService;
 
-    // todo 改成同步调用，看看结果会不会正常
-
     /**
      * 只有关闭需要删除，关闭的话从调度和运行队列中均需要删除
      */
