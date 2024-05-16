@@ -59,7 +59,7 @@ public class BillStatementTest {
         resp.getFoodBillList().add(cf);
         resp.getFoodBillList().add(cf);
 
-        CustomerAC customerAC = CustomerAC.builder().price("1234").status(1).changeTemperature(1.0).duration(12).totalPrice("123").createAt(new Date()).build();
+        CustomerAC customerAC = CustomerAC.builder().price("1234").status(1).changeTemperature(1.0).duration("12").totalPrice("123").createAt(new Date()).build();
         resp.setAcBillList(new ArrayList<>());
         resp.getAcBillList().add(customerAC);
         resp.getAcBillList().add(customerAC);
