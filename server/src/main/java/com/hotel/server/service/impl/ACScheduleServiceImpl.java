@@ -9,22 +9,14 @@ import com.hotel.common.service.server.CacheService;
 import com.hotel.common.service.server.CoolService;
 import com.hotel.server.service.ACScheduleService;
 import com.hotel.server.thread.ACThread;
-import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 空调调度线程
@@ -51,7 +43,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
         if (!Objects.equals(o1.getPrice(), o2.getPrice())) {
             return new BigDecimal(o1.getPrice()).compareTo(new BigDecimal(o2.getPrice()));
         }
-        return o2.getStartTime().compareTo(o1.getStartTime());
+        return o1.getStartTime().compareTo(o2.getStartTime());
     });
 
     // 已有调度的map
@@ -83,14 +75,12 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     public void addOne(ACRequest acRequest) {
 //        requestQueue.add(acRequest);
         addUniqueQueue(acRequest, requestQueue);
-        if (!requestQueue.isEmpty()) {
-            this.newSchedule();
-        }
+        this.newSchedule();
     }
 
     @Override
-    public boolean checkRequest() {
-        return !requestQueue.isEmpty();
+    public boolean isRequestEmpty() {
+        return requestQueue.isEmpty();
     }
 
 

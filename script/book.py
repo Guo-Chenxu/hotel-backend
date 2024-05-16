@@ -5,7 +5,7 @@ url = "http://localhost:29050/api/server/room/book"
 
 payload1 = json.dumps({
     "customerName": "热测试1",
-    "startTime": "2024-05-16 03:00:00",
+    "startTime": "2024-05-16 14:00:00",
     "leaveTime": "2024-05-17 00:00:00",
     "price": "100",
     "deposit": "0",
@@ -13,7 +13,7 @@ payload1 = json.dumps({
 })
 payload2 = json.dumps({
     "customerName": "热测试2",
-    "startTime": "2024-05-16 03:00:00",
+    "startTime": "2024-05-16 14:00:00",
     "leaveTime": "2024-05-17 00:00:00",
     "price": "125",
     "deposit": "0",
@@ -21,7 +21,7 @@ payload2 = json.dumps({
 })
 payload3 = json.dumps({
     "customerName": "热测试3",
-    "startTime": "2024-05-16 03:00:00",
+    "startTime": "2024-05-16 14:00:00",
     "leaveTime": "2024-05-17 00:00:00",
     "price": "150",
     "deposit": "0",
@@ -29,7 +29,7 @@ payload3 = json.dumps({
 })
 payload4 = json.dumps({
     "customerName": "热测试4",
-    "startTime": "2024-05-16 03:00:00",
+    "startTime": "2024-05-16 14:00:00",
     "leaveTime": "2024-05-17 00:00:00",
     "price": "200",
     "deposit": "0",
@@ -37,14 +37,14 @@ payload4 = json.dumps({
 })
 payload5 = json.dumps({
     "customerName": "热测试5",
-    "startTime": "2024-05-16 03:00:00",
+    "startTime": "2024-05-16 14:00:00",
     "leaveTime": "2024-05-17 00:00:00",
     "price": "100",
     "deposit": "0",
     "indoorTemperature": "14"
 })
 
-token = '406177c6-e930-483e-90b8-6dcd27d3036b'
+token = 'af472a23-f0a8-489d-b944-662078841a4d'
 headers = {
     'Authorization': token,
     'Content-Type': 'application/json',

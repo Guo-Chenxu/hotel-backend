@@ -108,6 +108,7 @@ public class CoolServiceImpl implements CoolService {
     @Transactional(rollbackFor = Exception.class)
     public synchronized void watchAC(String userId) {
         if (threadMap.containsKey(userId)) {
+            threadMap.get(userId).setTotalPrice(billService.getACTotalPrice(userId));
             return;
         }
         Long roomId = customerService.getById(userId).getRoom();
@@ -221,8 +222,6 @@ public class CoolServiceImpl implements CoolService {
 
         ACRequest oldRequest = (ACRequest) cacheService.get(String.format(RedisKeys.AC_REQUEST_USERID, userId),
                 ACRequest.class);
-        // 先屏蔽上次请求
-//        oldRequest = null;
 
         if (customerACReq.getTargetTemperature() == null) {
             customerACReq.setTargetTemperature((oldRequest != null && oldRequest.getTargetTemperature() != null)

@@ -91,7 +91,7 @@ public class ACThread extends Thread {
             } else {
 //                log.info("dur: {}, changetemperature: {}", dur, changeTemperature / 60.0);
                 // 时间片未到达或者没有请求
-                if (now < timeOutTime || acScheduleService.checkRequest()) {
+                if (now < timeOutTime || acScheduleService.isRequestEmpty()) {
 //                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
 //                            userId, 0, changeTemperature / 60.0);
                     if (compareTemperature(temperature, targetTemperature, 0.1) > 0) {
