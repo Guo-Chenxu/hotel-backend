@@ -84,9 +84,10 @@ def get_time():
     response = requests.request(
         "GET", time_url, headers=headers, data={})
     return response.json()['data']
+    # return
 
 
-def sleep(minutes, last_time) -> int:
+def mysleep(minutes=None, last_time=None):
     print(datetime.datetime.utcfromtimestamp(
         float(last_time / 1000.0)).strftime("%Y-%m-%d %H:%M:%S.%f"))
     while get_time() - last_time < minutes * 1000 * 60:
@@ -94,3 +95,4 @@ def sleep(minutes, last_time) -> int:
     print(datetime.datetime.utcfromtimestamp(
         float(get_time() / 1000.0)).strftime("%Y-%m-%d %H:%M:%S.%f"))
     return get_time()
+    # time.sleep(10)

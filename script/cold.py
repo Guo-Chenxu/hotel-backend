@@ -53,7 +53,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 # 1
@@ -71,7 +71,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -86,7 +86,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -103,7 +103,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -118,7 +118,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -133,7 +133,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -148,7 +148,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -165,7 +165,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -178,7 +178,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -195,7 +195,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -208,7 +208,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 # 11
@@ -222,7 +222,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -237,7 +237,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -250,7 +250,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -267,7 +267,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -282,7 +282,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -297,7 +297,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -312,7 +312,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -329,7 +329,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -344,7 +344,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -359,7 +359,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -372,7 +372,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -387,7 +387,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -402,7 +402,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
@@ -417,7 +417,7 @@ get_status(token3, 3)
 get_status(token4, 4)
 get_status(token5, 5)
 
-last_time = sleep(1, last_time)
+last_time = mysleep(1, last_time)
 print("\n")
 
 
