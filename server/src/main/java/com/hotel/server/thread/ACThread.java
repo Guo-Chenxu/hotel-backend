@@ -89,14 +89,12 @@ public class ACThread extends Thread {
                     temperature += indoorTemperatureConfig.getRecoverChangeTemperature() / 60.0 * dur;
                 }
             } else {
-//                log.info("dur: {}, changetemperature: {}", dur, changeTemperature / 60.0);
                 // 时间片未到达或者没有请求
                 if (now < timeOutTime || acScheduleService.isRequestEmpty()) {
-                    if (now >= timeOutTime) {
+                    if (acScheduleService.isRequestEmpty() && now >= timeOutTime) {
                         updateTimeOutTime(timeOutTime);
                     }
-//                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
-//                            userId, 0, changeTemperature / 60.0);
+
                     if (compareTemperature(temperature, targetTemperature, 0.1) > 0) {
                         temperature -= changeTemperature / 60.0 * dur;
                         changeCurrentPrice(dur);
@@ -264,7 +262,7 @@ public class ACThread extends Thread {
      * 更新时间片到时时间
      */
     private void updateTimeOutTime(long time) {
-        timeOutTime = indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
+        this.timeOutTime = time + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
     }
 
 

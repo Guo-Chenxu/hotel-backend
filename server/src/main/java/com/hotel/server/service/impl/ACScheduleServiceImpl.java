@@ -79,7 +79,7 @@ public class ACScheduleServiceImpl implements ACScheduleService {
     }
 
     @Override
-    public boolean isRequestEmpty() {
+    public synchronized boolean isRequestEmpty() {
         return requestQueue.isEmpty();
     }
 
