@@ -2,10 +2,11 @@ import requests
 import json
 
 url = "http://localhost:29050/api/server/room/book"
+properties_url = "http://10.29.12.98:29050/api/server/cool/properties"
 
 payload1 = json.dumps({
     "customerName": "冷测试1",
-    "startTime": "2024-05-16 18:00:00",
+    "startTime": "2024-05-17 09:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "100",
     "deposit": "0",
@@ -13,7 +14,7 @@ payload1 = json.dumps({
 })
 payload2 = json.dumps({
     "customerName": "冷测试2",
-    "startTime": "2024-05-16 18:00:00",
+    "startTime": "2024-05-17 09:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "125",
     "deposit": "0",
@@ -21,7 +22,7 @@ payload2 = json.dumps({
 })
 payload3 = json.dumps({
     "customerName": "冷测试3",
-    "startTime": "2024-05-16 18:00:00",
+    "startTime": "2024-05-17 09:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "150",
     "deposit": "0",
@@ -29,7 +30,7 @@ payload3 = json.dumps({
 })
 payload4 = json.dumps({
     "customerName": "冷测试4",
-    "startTime": "2024-05-16 18:00:00",
+    "startTime": "2024-05-17 09:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "200",
     "deposit": "0",
@@ -37,14 +38,35 @@ payload4 = json.dumps({
 })
 payload5 = json.dumps({
     "customerName": "冷测试5",
-    "startTime": "2024-05-16 18:00:00",
+    "startTime": "2024-05-17 09:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "100",
     "deposit": "0",
     "indoorTemperature": "35"
 })
 
-token = 'd2ef6e69-58c3-4c50-86cb-c39138f8dd65'
+properties = json.dumps({
+    "mode": 0,
+    "count": 3,
+    "upperBoundTemperature": 28,
+    "lowerBoundTemperature": 18,
+    "defaultTargetTemp": 25,
+    "defaultStatus": 2,
+    "high": {
+        "changeTemperature": 1,
+        "price": "1"
+    },
+    "middle": {
+        "changeTemperature": 0.5,
+        "price": "0.5"
+    },
+    "low": {
+        "changeTemperature": 0.333,
+        "price": "0.333"
+    }
+})
+
+token = 'ab833908-29be-4d09-874b-ba35897e3df8'
 headers = {
     'Authorization': token,
     'Content-Type': 'application/json',
@@ -57,6 +79,8 @@ response = requests.request("POST", url, headers=headers, data=payload1)
 response = requests.request("POST", url, headers=headers, data=payload2)
 response = requests.request("POST", url, headers=headers, data=payload3)
 response = requests.request("POST", url, headers=headers, data=payload4)
-response = requests.request("POST", url, headers=headers, data=payload5)
+response1 = requests.request("POST", url, headers=headers, data=payload5)
+response2 = requests.request("POST", properties_url, headers=headers, data=properties)
 
-print(response.text)
+print(response1.text)
+print(response2.text)

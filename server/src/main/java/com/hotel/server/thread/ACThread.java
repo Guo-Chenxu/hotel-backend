@@ -92,6 +92,9 @@ public class ACThread extends Thread {
 //                log.info("dur: {}, changetemperature: {}", dur, changeTemperature / 60.0);
                 // 时间片未到达或者没有请求
                 if (now < timeOutTime || acScheduleService.isRequestEmpty()) {
+                    if (now >= timeOutTime) {
+                        updateTimeOutTime(timeOutTime);
+                    }
 //                    log.info("用户: {}, 空调运行时间间隔: {}, 改变温度: {}",
 //                            userId, 0, changeTemperature / 60.0);
                     if (compareTemperature(temperature, targetTemperature, 0.1) > 0) {
@@ -220,8 +223,8 @@ public class ACThread extends Thread {
     private ACRequest storeACRequest() {
         endTime = timerService.getTime();
 //        int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
-        BigDecimal duration = BigDecimal.valueOf((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60)
-                .setScale(3, RoundingMode.HALF_UP);
+        BigDecimal duration = BigDecimal.valueOf((endTime.getTime() - startTime.getTime()))
+                .divide(BigDecimal.valueOf(1.0 / 1000 / 60), 3, RoundingMode.HALF_UP);
         if (duration.compareTo(BigDecimal.ZERO) > 0) {
             String totalPrice = new BigDecimal(price).multiply(duration).toString();
 
@@ -250,11 +253,18 @@ public class ACThread extends Thread {
     public void turnOn(Double _targetTemperature, Double _changeTemperature, Integer _status, String _price) {
         startTime = timerService.getTime();
         lastTime = timerService.getTime().getTime();
-        timeOutTime = startTime.getTime() + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
+        updateTimeOutTime(startTime.getTime());
         targetTemperature = _targetTemperature;
         changeTemperature = _changeTemperature;
         status = _status;
         price = _price;
+    }
+
+    /**
+     * 更新时间片到时时间
+     */
+    private void updateTimeOutTime(long time) {
+        timeOutTime = indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
     }
 
 
