@@ -222,7 +222,7 @@ public class ACThread extends Thread {
         endTime = timerService.getTime();
 //        int duration = (int) Math.ceil((endTime.getTime() - startTime.getTime()) * 1.0 / 1000 / 60);
         BigDecimal duration = BigDecimal.valueOf((endTime.getTime() - startTime.getTime()))
-                .divide(BigDecimal.valueOf(1.0 / 1000 / 60), 3, RoundingMode.HALF_UP);
+                .divide(BigDecimal.valueOf(1.0 * 1000 * 60), 3, RoundingMode.HALF_UP);
         if (duration.compareTo(BigDecimal.ZERO) > 0) {
             String totalPrice = new BigDecimal(price).multiply(duration).toString();
 
@@ -263,6 +263,7 @@ public class ACThread extends Thread {
      */
     private void updateTimeOutTime(long time) {
         this.timeOutTime = time + indoorTemperatureConfig.getTimeSlice() * 60 * 1000;
+        log.info("用户 {} 空调开启, 服务开始时间时间: {}, 更新时间片到时时间: {}", userId, this.startTime, this.timeOutTime);
     }
 
 
