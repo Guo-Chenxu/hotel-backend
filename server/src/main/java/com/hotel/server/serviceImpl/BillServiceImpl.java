@@ -171,8 +171,8 @@ public class BillServiceImpl implements BillService {
     private BigDecimal calRoomPrice(Date startTime, Date endTime, String price) {
         long diffInMilliseconds = endTime.getTime() - startTime.getTime();
         long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMilliseconds);
-        long nights = diffInDays - 1;
-        return new BigDecimal(price).multiply(new BigDecimal(nights > 1 ? nights : 1));
+//        long nights = diffInDays == 0 ? 1 : diffInDays;
+        return new BigDecimal(price).multiply(new BigDecimal(diffInDays > 1 ? diffInDays : 1));
     }
 
     /**

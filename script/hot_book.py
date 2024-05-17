@@ -6,7 +6,7 @@ properties_url = "http://10.29.12.98:29050/api/server/cool/properties"
 
 payload1 = json.dumps({
     "customerName": "热测试1",
-    "startTime": "2024-05-17 11:00:00",
+    "startTime": "2024-05-17 22:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "100",
     "deposit": "0",
@@ -14,7 +14,7 @@ payload1 = json.dumps({
 })
 payload2 = json.dumps({
     "customerName": "热测试2",
-    "startTime": "2024-05-17 11:00:00",
+    "startTime": "2024-05-17 22:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "125",
     "deposit": "0",
@@ -22,7 +22,7 @@ payload2 = json.dumps({
 })
 payload3 = json.dumps({
     "customerName": "热测试3",
-    "startTime": "2024-05-17 11:00:00",
+    "startTime": "2024-05-17 22:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "150",
     "deposit": "0",
@@ -30,7 +30,7 @@ payload3 = json.dumps({
 })
 payload4 = json.dumps({
     "customerName": "热测试4",
-    "startTime": "2024-05-17 11:00:00",
+    "startTime": "2024-05-17 22:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "200",
     "deposit": "0",
@@ -38,7 +38,7 @@ payload4 = json.dumps({
 })
 payload5 = json.dumps({
     "customerName": "热测试5",
-    "startTime": "2024-05-17 11:00:00",
+    "startTime": "2024-05-17 22:00:00",
     "leaveTime": "2024-05-20 00:00:00",
     "price": "100",
     "deposit": "0",
@@ -66,7 +66,7 @@ properties = json.dumps({
     }
 })
 
-token = '0b94aee0-3ddc-47c4-a7fc-8f352d607cb4'
+token = '7c8473a3-2ca1-4d60-bfe1-689a3e18acb5'
 headers = {
     'Authorization': token,
     'Content-Type': 'application/json',
