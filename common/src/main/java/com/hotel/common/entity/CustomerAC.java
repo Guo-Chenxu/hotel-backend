@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -33,6 +34,7 @@ public class CustomerAC implements Serializable {
     /**
      * 顾客id
      */
+    @Indexed(name = "idx_customerId")
     private String customerId;
 
     /**

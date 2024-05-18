@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -34,6 +35,7 @@ public class BillStatement implements Serializable {
     /**
      * 顾客id
      */
+    @Indexed(name = "idx_customerId")
     private String customerId;
 
     /**
