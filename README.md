@@ -6,9 +6,8 @@
 
 数据库使用 MySQL、Redis、MongoDB
 
-
-本仓库为后端仓库
-
 前端酒店端地址：[https://github.com/Rablady/hotel-admin.git](https://github.com/Rablady/hotel-admin.git)
 
-前端顾客段地址：[https://github.com/Guo-Chenxu/hotel-front.git](https://github.com/Guo-Chenxu/hotel-front.git)
+前端顾客端地址：[https://github.com/Guo-Chenxu/hotel-front.git](https://github.com/Guo-Chenxu/hotel-front.git)
+
+后端地址：[https://github.com/Guo-Chenxu/hotel-backend.git](https://github.com/Guo-Chenxu/hotel-backend.git)
